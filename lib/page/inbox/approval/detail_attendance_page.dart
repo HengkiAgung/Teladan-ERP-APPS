@@ -1,10 +1,11 @@
-import 'package:comtelindo_erp/models/Request/UserAttendanceRequest.dart';
+import 'package:comtelindo_erp/models/Attendance/UserAttendanceRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class DetailAttendancePage extends StatefulWidget {
   UserAttendanceRequest userAttendanceRequest; 
-  DetailAttendancePage({super.key,required this.userAttendanceRequest});
+  DetailAttendancePage({super.key, required this.userAttendanceRequest});
 
   @override
   // ignore: no_logic_in_create_state

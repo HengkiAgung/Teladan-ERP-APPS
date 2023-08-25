@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../components/error_notification_component.dart';
 import '../config.dart';
-import '../models/User/User.dart';
+import '../models/Employee/User.dart';
 
 class Auth {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -94,8 +94,6 @@ class Auth {
   Future<void> deleteToken() async {
     await storage.delete(key: 'token');
     await storage.deleteAll();
-    
-    var value = await storage.read(key: 'token');
   }
 
   Future<User?> getUser(BuildContext context) async {

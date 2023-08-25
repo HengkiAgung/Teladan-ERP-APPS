@@ -3,7 +3,7 @@ import 'package:comtelindo_erp/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../models/Request/UserAttendanceRequest.dart';
+import '../../../models/Attendance/UserAttendanceRequest.dart';
 
 class AttendancePage extends StatelessWidget {
   const AttendancePage({super.key});

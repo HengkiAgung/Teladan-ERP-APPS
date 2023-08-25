@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../config.dart';
-import '../models/Request/UserAttendanceRequest.dart';
+import '../models/Attendance/UserAttendanceRequest.dart';
 import '../utils/auth.dart';
 
 class ApprovalRepository {
@@ -21,7 +21,6 @@ class ApprovalRepository {
     );
 
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body)["data"][0]["user"]);
       Iterable it = jsonDecode(response.body)["data"];
       List<UserAttendanceRequest> userAttendance = it.map((e) {
         var attendance = UserAttendanceRequest.fromJson(e);

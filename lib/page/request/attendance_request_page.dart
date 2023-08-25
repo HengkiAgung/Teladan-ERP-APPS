@@ -1,4 +1,5 @@
-import 'package:comtelindo_erp/models/Request/UserAttendanceRequest.dart';
+import 'package:comtelindo_erp/models/Attendance/UserAttendanceRequest.dart';
+import 'package:comtelindo_erp/page/request/form/form_attendance_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
         Container(
           height: (MediaQuery.of(context).size.height) - 280,
           child: FutureBuilder<List<UserAttendanceRequest>>(
-            future: RequestRepository().getAlluserAttendance(),
+            future: RequestRepository().getAllUserAttendanceRequest(),
             builder: (BuildContext context, AsyncSnapshot<List<UserAttendanceRequest>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // While waiting for the result, you can show a loading indicator.
@@ -106,7 +107,14 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
             })
         ),
         GestureDetector(
-          onTap: () async {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FormAttendanceRequestPage(),
+              ),
+            );
+          },
           child: Container(
             margin: const EdgeInsets.all(15),
             padding: const EdgeInsets.all(15),

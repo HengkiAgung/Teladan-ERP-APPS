@@ -11,7 +11,6 @@ class ErrorNotificationComponent {
         ),
       ),
       builder: (BuildContext context) {
-        List<int> variantSelected = [];
 
         return Container(
           decoration: const BoxDecoration(

@@ -67,9 +67,6 @@ class DetailAttendance extends StatelessWidget {
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
-            print(snapshot.data!.check_in_latitude);
-            print(snapshot.data!.check_in_longitude);
-            print(snapshot.data!.check_in_file);
             return ListView(
               children: [
                 snapshot.data!.check_in_latitude != 0

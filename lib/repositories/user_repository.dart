@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:intl/intl.dart';
 
+import 'package:comtelindo_erp/models/Employee/UserEmployment.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
-import '../models/User/User.dart';
+import '../models/Employee/User.dart';
 import '../utils/auth.dart';
 
 class UserRepository {
@@ -67,4 +66,26 @@ class UserRepository {
 
     return jsonDecode(response.body);
   }
+
+  Future<UserEmployment> getUserEmploymentData() async {
+    String? token = await Auth().getToken();
+
+    final response = await http.get(
+      Uri.parse("${Config.apiUrl}/user/employment/data"),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      UserEmployment user = UserEmployment.fromJson(jsonDecode(response.body)["data"]);
+
+      return user;
+    }
+
+    return UserEmployment.fromJson({});
+  }
+
 }

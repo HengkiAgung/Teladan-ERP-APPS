@@ -1,35 +1,31 @@
-import '../User/User.dart';
+import '../Employee/User.dart';
 
-class UserAttendanceRequest {
+class UserShiftRequest {
   late int id;
   late User? user;
   late User? approvalLine;
   late String status;
+  late int working_shift_id;
   late String date;
   late String notes;
-  late String check_in;
-  late String check_out;
 
-  UserAttendanceRequest({
+  UserShiftRequest({
     required this.id,
     required this.user,
     required this.approvalLine,
     required this.status,
+    required this.working_shift_id,
     required this.date,
     required this.notes,
-    required this.check_in,
-    required this.check_out,
   });
 
-  UserAttendanceRequest.fromJson(Map<String, dynamic> json) {
+  UserShiftRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     user = User.fromJson(json['user'] ?? {});
     approvalLine = User.fromJson(json['approval_line'] ?? {});
-    print("Asdf");
     status = json['status'] ?? "";
+    working_shift_id = json['working_shift_id'] ?? 0;
     date = json['date'] ?? "";
     notes = json['notes'] ?? "";
-    check_in = json['check_in'] ?? "";
-    check_out = json['check_out'] ?? "";
   }
 }

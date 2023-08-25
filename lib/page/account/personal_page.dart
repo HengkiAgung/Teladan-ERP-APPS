@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../components/error_notification_component.dart';
-import '../../models/User/User.dart';
+import '../../models/Employee/User.dart';
 import '../../repositories/user_repository.dart';
 
 class PersonalPage extends StatelessWidget {
@@ -74,15 +74,15 @@ class PersonalPage extends StatelessWidget {
             _emailController.text = snapshot.data!.email;
             _phoneController.text = snapshot.data!.kontak;
             _placeOfBirthController.text =
-                snapshot.data!.userPersonalData.place_of_birth;
+                snapshot.data!.userPersonalData!.place_of_birth;
             _birthdateController.text =
-                snapshot.data!.userPersonalData.birthdate;
+                snapshot.data!.userPersonalData!.birthdate;
             _maritalStatusController.text =
-                snapshot.data!.userPersonalData.marital_status;
-            _genderController.text = snapshot.data!.userPersonalData.gender;
-            _religionController.text = snapshot.data!.userPersonalData.religion;
+                snapshot.data!.userPersonalData!.marital_status;
+            _genderController.text = snapshot.data!.userPersonalData!.gender;
+            _religionController.text = snapshot.data!.userPersonalData!.religion;
             _bloodTypeController.text =
-                snapshot.data!.userPersonalData.blood_type;
+                snapshot.data!.userPersonalData!.blood_type;
 
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -102,6 +102,7 @@ class PersonalPage extends StatelessWidget {
 
                   // name
                   TextField(
+                    readOnly: true,
                     controller: _nameController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -114,6 +115,7 @@ class PersonalPage extends StatelessWidget {
 
                   // email
                   TextField(
+                    readOnly: true,
                     controller: _emailController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -126,6 +128,7 @@ class PersonalPage extends StatelessWidget {
 
                   // phone
                   TextField(
+                    readOnly: true,
                     controller: _phoneController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -138,6 +141,7 @@ class PersonalPage extends StatelessWidget {
 
                   // placeOfBirth
                   TextField(
+                    readOnly: true,
                     controller: _placeOfBirthController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -150,6 +154,7 @@ class PersonalPage extends StatelessWidget {
 
                   // birthdate
                   TextField(
+                    readOnly: true,
                     controller: _birthdateController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -162,6 +167,7 @@ class PersonalPage extends StatelessWidget {
 
                   // maritalStatus
                   TextField(
+                    readOnly: true,
                     controller: _maritalStatusController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -174,6 +180,7 @@ class PersonalPage extends StatelessWidget {
 
                   // gender
                   TextField(
+                    readOnly: true,
                     controller: _genderController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -186,6 +193,7 @@ class PersonalPage extends StatelessWidget {
 
                   // religion
                   TextField(
+                    readOnly: true,
                     controller: _religionController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -198,6 +206,7 @@ class PersonalPage extends StatelessWidget {
 
                   // bloodType
                   TextField(
+                    readOnly: true,
                     controller: _bloodTypeController,
                     obscureText: false,
                     decoration: const InputDecoration(
@@ -206,45 +215,6 @@ class PersonalPage extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 40,
-                  ),
-
-                  GestureDetector(
-                    onTap: () async {
-                      var updated = await UserRepository().updateUserPersonalData(
-                        _nameController.text,
-                        _emailController.text,
-                        _phoneController.text,
-                        _placeOfBirthController.text,
-                        _birthdateController.text,
-                        _maritalStatusController.text,
-                        _genderController.text,
-                        _religionController.text,
-                        _bloodTypeController.text,
-                      );
-
-                      if (updated) {
-                        
-                      } else {
-                          final errorMessage = updated['message'];
-                          ErrorNotificationComponent().showModal(context, errorMessage);
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text(
-                        'Simpan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),

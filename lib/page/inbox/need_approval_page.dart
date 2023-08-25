@@ -249,6 +249,5 @@ class NeedApprovalPage extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

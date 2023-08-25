@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../models/Attendance.dart';
-import '../models/User/User.dart';
+import '../models/Employee/User.dart';
 import '../repositories/attendance_repository.dart';
 import '../utils/auth.dart';
 
@@ -148,7 +148,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                               ),
                               snapshot.data!.check_in != ""
                                   ? Text(
-                                      snapshot.data!.check_in!.split(' ')[1],
+                                      snapshot.data!.check_in.split(' ')[1],
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         textStyle: TextStyle(
@@ -186,7 +186,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                               ),
                               snapshot.data!.check_out != ""
                                   ? Text(
-                                      snapshot.data!.check_out!.split(' ')[1],
+                                      snapshot.data!.check_out.split(' ')[1],
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         textStyle: TextStyle(

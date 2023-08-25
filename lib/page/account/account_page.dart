@@ -1,6 +1,6 @@
+import 'package:comtelindo_erp/page/account/employment_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'personal_page.dart';
@@ -17,18 +17,11 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        // top profile
         Container(
           padding:
               const EdgeInsets.only(left: 15, right: 15, top: 36, bottom: 36),
           child: Row(
             children: [
-              // "user.image" != "" ?
-              //   CircleAvatar(
-              //     radius: 30, // Image radius
-              //     backgroundImage: NetworkImage(user.image ?? "")
-              //   )
-              //   :
               const CircleAvatar(
                 radius: 30, // Image radius
                 backgroundImage: AssetImage("images/profile_placeholder.jpg"),
@@ -131,7 +124,14 @@ class _AccountPageState extends State<AccountPage> {
 
               // Info Pekerjaan
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EmploymentPage(),
+                    ),
+                  );
+                },
                 child: Row(
                   children: [
                     Icon(Icons.perm_contact_cal_rounded),

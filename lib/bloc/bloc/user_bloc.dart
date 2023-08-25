@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../models/User/User.dart';
+import '../../models/Employee/User.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

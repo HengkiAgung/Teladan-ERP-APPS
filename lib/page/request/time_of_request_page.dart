@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../models/Request/UserAttendanceRequest.dart';
+import '../../models/Attendance/UserAttendanceRequest.dart';
 import '../../repositories/request_repository.dart';
 
 class TimeOfRequestPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class _TimeOfRequestPageState extends State<TimeOfRequestPage> {
         Container(
           height: (MediaQuery.of(context).size.height) - 280,
           child: FutureBuilder<List<UserAttendanceRequest>>(
-            future: RequestRepository().getAlluserAttendance(),
+            future: RequestRepository().getAllUserAttendanceRequest(),
             builder: (BuildContext context, AsyncSnapshot<List<UserAttendanceRequest>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // While waiting for the result, you can show a loading indicator.
@@ -126,6 +126,6 @@ class _TimeOfRequestPageState extends State<TimeOfRequestPage> {
           ),
         ),
       ],
-    );;
+    );
   }
 }

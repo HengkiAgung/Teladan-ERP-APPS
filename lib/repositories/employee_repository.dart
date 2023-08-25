@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../config.dart';
-import '../models/User/User.dart';
+import '../models/Employee/User.dart';
 import '../utils/auth.dart';
 
 class EmployeeRepository {

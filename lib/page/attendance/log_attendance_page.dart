@@ -64,10 +64,10 @@ class _LogAttendanceState extends State<LogAttendance> {
                       lastDate: new DateTime(2024),
                       firstDate: new DateTime(2019),
                     );
-                    if (picked != null && picked != null) {
+                    if (picked != null) {
                       setState(() {
-                        var startDate = picked.start;
-                        var endDate = picked.end;
+                        // var startDate = picked.start;
+                        // var endDate = picked.end;
                       });
                     }
                   },

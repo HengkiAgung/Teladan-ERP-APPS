@@ -1,7 +1,7 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/User/User.dart';
+import '../models/Employee/User.dart';
 import '../repositories/employee_repository.dart';
 
 class EmployeePage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _EmployeePageState extends State<EmployeePage> {
                           user.foto_file != "" ?
                             CircleAvatar(
                               radius: 25, // Image radius
-                              backgroundImage: NetworkImage(user.foto_file ?? "")
+                              backgroundImage: NetworkImage(user.foto_file)
                             )
                             :
                             const CircleAvatar(
