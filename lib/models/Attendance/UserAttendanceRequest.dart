@@ -1,4 +1,5 @@
 import '../Employee/User.dart';
+import '../Employee/WorkingShift.dart';
 
 class UserAttendanceRequest {
   late int id;
@@ -9,6 +10,7 @@ class UserAttendanceRequest {
   late String notes;
   late String check_in;
   late String check_out;
+  late WorkingShift? workingShift;
 
   UserAttendanceRequest({
     required this.id,
@@ -19,12 +21,14 @@ class UserAttendanceRequest {
     required this.notes,
     required this.check_in,
     required this.check_out,
+    required this.workingShift,
   });
 
   UserAttendanceRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     user = User.fromJson(json['user'] ?? {});
-    approvalLine = User.fromJson(json['approval_line'] ?? {});
+    workingShift = WorkingShift.fromJson(json['shift'] ?? {});
+    approvalLine = json['approval_line'] is int ? null : User.fromJson(json['approval_line'] ?? {});
     status = json['status'] ?? "";
     date = json['date'] ?? "";
     notes = json['notes'] ?? "";

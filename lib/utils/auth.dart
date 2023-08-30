@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 
 import '../components/error_notification_component.dart';
 import '../config.dart';
-import '../models/Employee/User.dart';
 
 class Auth {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -83,7 +82,7 @@ class Auth {
 
   Future<String?> getToken() async {
     var value = await storage.read(key: 'token');
-
+    print(value ?? "tidak ada");
     return value;
   }
 
@@ -94,29 +93,5 @@ class Auth {
   Future<void> deleteToken() async {
     await storage.delete(key: 'token');
     await storage.deleteAll();
-  }
-
-  Future<User?> getUser(BuildContext context) async {
-    String? token = await getToken();
-
-    final response = await http.get(
-      Uri.parse("${Config.apiUrl}/user/me"),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-
-      User user = User.fromJson(jsonDecode(response.body)["data"]);
-
-      return user;
-    }
-
-    await deleteToken();
-
-    return null;
   }
 }

@@ -1,8 +1,12 @@
 import 'package:comtelindo_erp/page/account/employment_page.dart';
+import 'package:comtelindo_erp/page/account/payroll/payroll_page.dart';
+import 'package:comtelindo_erp/utils/auth.dart';
+import 'package:comtelindo_erp/utils/middleware.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../components/avatar_profile_component.dart';
 import 'personal_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -17,48 +21,7 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        Container(
-          padding:
-              const EdgeInsets.only(left: 15, right: 15, top: 36, bottom: 36),
-          child: Row(
-            children: [
-              const CircleAvatar(
-                radius: 30, // Image radius
-                backgroundImage: AssetImage("images/profile_placeholder.jpg"),
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "user.username",
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 51, 51, 51),
-                    ),
-                  ),
-                  Text(
-                    "user.phoneNumber",
-                    style: GoogleFonts.poppins(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Text(
-                    "user.email",
-                    style: GoogleFonts.poppins(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
-            ],
-          ),
-        ),
+        AvatarProfileComponent(),
 
         // Info Saya
         Container(
@@ -265,33 +228,43 @@ class _AccountPageState extends State<AccountPage> {
               ),
 
               // Info payroll
-              Row(
-                children: [
-                  Icon(Icons.payments_rounded),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Info payroll',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 51, 51, 51),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PayrollPage(),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.payments_rounded),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Info payroll',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 51, 51, 51),
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Dafter anggota keluarga karyawan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey,
+                        Text(
+                          'Dafter anggota keluarga karyawan',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 20,
@@ -387,7 +360,10 @@ class _AccountPageState extends State<AccountPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Auth().deleteToken();
+                  Middleware().redirectToLogin(context);
+                },
                 child: Row(
                   children: [
                     Icon(Icons.logout),

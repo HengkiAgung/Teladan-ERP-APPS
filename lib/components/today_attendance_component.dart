@@ -1,3 +1,4 @@
+import 'package:comtelindo_erp/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -5,7 +6,6 @@ import 'package:intl/intl.dart';
 import '../models/Attendance.dart';
 import '../models/Employee/User.dart';
 import '../repositories/attendance_repository.dart';
-import '../utils/auth.dart';
 
 class TodayAttendanceComponent extends StatefulWidget {
   const TodayAttendanceComponent({super.key});
@@ -42,7 +42,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           FutureBuilder<User?>(
-            future: Auth().getUser(context),
+            future: UserRepository().getUser(),
             builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // While waiting for the result, you can show a loading indicator.

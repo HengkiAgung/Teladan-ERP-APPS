@@ -7,6 +7,7 @@ class WorkingShift {
   late String break_end;
   late int late_check_in;
   late int late_check_out;
+
   late int min_check_in;
   late int max_check_out;
   late int overtime_before;
@@ -22,6 +23,7 @@ class WorkingShift {
     required this.break_end,
     required this.late_check_in,
     required this.late_check_out,
+
     required this.min_check_in,
     required this.max_check_out,
     required this.overtime_before,
@@ -38,6 +40,7 @@ class WorkingShift {
     break_end = json['break_end'] ?? "";
     late_check_in = json['late_check_in'] ?? 0;
     late_check_out = json['late_check_out'] ?? 0;
+    
     min_check_in = json['min_check_in'] ?? 0;
     max_check_out = json['max_check_out'] ?? 0;
     overtime_before = json['overtime_before'] ?? 0;

@@ -1,3 +1,4 @@
+import 'package:comtelindo_erp/repositories/request_repository.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +15,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay? _selectedTimeIn = null;
   TimeOfDay? _selectedTimeOut = null;
-  String ? _selectedFilePath = null;
+  PlatformFile? _selectedFile = null;
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
@@ -72,7 +73,9 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
         ),
         child: Expanded(
           child: InkWell(
-            onTap: () async {},
+            onTap: () async {
+              RequestRepository().makeAttendanceRequest(context, _selectedDate, _selectedTimeIn, _selectedTimeOut, _descriptionController, _selectedFile);
+            },
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -152,7 +155,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                             ),
                           ),
                           Text(
-                            "" + _selectedDate.year.toString() + "/" + _selectedDate.month.toString() + "/" + _selectedDate.day.toString(),
+                            "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day}",
                             // '',
                             style: GoogleFonts.poppins(
                               fontSize: 15,
@@ -321,7 +324,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                     onTap: () async {
                       final file = await FilePicker.platform.pickFiles();
                       if (file == null) return;
-                      setState(() => _selectedFilePath = file.files.first.path);
+                      setState(() => _selectedFile = file.files.first);
                     },
                     child: Container(
                       decoration: const BoxDecoration(
@@ -354,7 +357,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                             child: const Icon(Icons.add),
                           ),
                           Text(
-                            _selectedFilePath == null ? "Max file 10MB" : _selectedFilePath!,
+                            _selectedFile?.path ?? "Max file 10MB",
                             style: GoogleFonts.poppins(
                               fontSize: 11,
                               color: Colors.grey,

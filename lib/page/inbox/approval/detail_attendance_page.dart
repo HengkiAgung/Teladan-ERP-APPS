@@ -187,46 +187,25 @@ class _DetailAttendancePageState extends State<DetailAttendancePage> {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  "Tanggal",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                Expanded(
+                  child: Text(
+                    "Tanggal",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-                Spacer(),
-                Text(
-                  userAttendanceRequest.date,
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10,),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  "Check-In",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  userAttendanceRequest.check_in,
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.black,
+                Expanded(
+                  child: Text(
+                    userAttendanceRequest.date,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -235,22 +214,25 @@ class _DetailAttendancePageState extends State<DetailAttendancePage> {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  "Check-Out",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                Expanded(
+                  child: Text(
+                    "Check-In",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-                Spacer(),
-                Text(
-                  userAttendanceRequest.check_out,
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.black,
+                Expanded(
+                  child: Text(
+                    userAttendanceRequest.check_in,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -259,22 +241,53 @@ class _DetailAttendancePageState extends State<DetailAttendancePage> {
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  "Reason",
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                Expanded(
+                  child: Text(
+                    "Check-Out",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-                Spacer(),
-                Text(
-                  userAttendanceRequest.notes,
-                  textAlign: TextAlign.left,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.black,
+                Expanded(
+                  child: Text(
+                    userAttendanceRequest.check_out,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    "Reason",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    userAttendanceRequest.notes,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],

@@ -1,20 +1,23 @@
+import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
+
 import '../Employee/User.dart';
 
 class UserShiftRequest {
   late int id;
   late User? user;
+  late WorkingShift workingShift;
   late User? approvalLine;
   late String status;
-  late int working_shift_id;
   late String date;
   late String notes;
+  late String comment;
 
   UserShiftRequest({
     required this.id,
     required this.user,
     required this.approvalLine,
     required this.status,
-    required this.working_shift_id,
+    required this.workingShift,
     required this.date,
     required this.notes,
   });
@@ -22,10 +25,11 @@ class UserShiftRequest {
   UserShiftRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     user = User.fromJson(json['user'] ?? {});
+    workingShift = WorkingShift.fromJson(json['working_shift'] ?? {});
     approvalLine = User.fromJson(json['approval_line'] ?? {});
     status = json['status'] ?? "";
-    working_shift_id = json['working_shift_id'] ?? 0;
     date = json['date'] ?? "";
     notes = json['notes'] ?? "";
+    comment = json['comment'] ?? "";
   }
 }

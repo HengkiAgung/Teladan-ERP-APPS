@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../components/error_notification_component.dart';
 import '../../models/Employee/User.dart';
 import '../../repositories/user_repository.dart';
 

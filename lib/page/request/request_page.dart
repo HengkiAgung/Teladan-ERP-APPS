@@ -1,10 +1,10 @@
-import 'package:comtelindo_erp/page/request/shift_request_page.dart';
-import 'package:comtelindo_erp/page/request/time_of_request_page.dart';
+import 'package:comtelindo_erp/page/request/shift/shift_request_page.dart';
+import 'package:comtelindo_erp/page/request/time_off/time_off_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'attendance_request_page.dart';
+import 'attendance/attendance_request_page.dart';
 
 class RequestPage extends StatefulWidget {
   const RequestPage({super.key});
@@ -19,7 +19,7 @@ class _RequestPageState extends State<RequestPage> {
   final List<Widget> _listWidget = [
     const AttendanceRequestPage(),
     const ShiftRequestPage(),
-    const TimeOfRequestPage(),
+    const TimeOffRequestPage(),
   ];
   void _onNavBarTapped(int index) {
     setState(() {

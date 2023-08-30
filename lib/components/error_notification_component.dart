@@ -24,7 +24,7 @@ class ErrorNotificationComponent {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 14, left: 14),
+                  padding: const EdgeInsets.only(right: 14, left: 14, bottom: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

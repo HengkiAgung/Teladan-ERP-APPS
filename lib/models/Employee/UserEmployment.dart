@@ -16,7 +16,6 @@ class UserEmployment {
   late User approvalLine;
   late User? user;
 
-
   UserEmployment({
     required this.id,
     required this.employee_id,

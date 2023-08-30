@@ -49,20 +49,6 @@ class AttendancePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Container(
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-
-                  },
-                  icon: const Icon(
-                    Icons.calendar_month_outlined,
-                  ),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: FutureBuilder<List<UserAttendanceRequest>>(
               future: ApprovalRepository().getApprovalAttendance(),
@@ -134,13 +120,6 @@ class AttendancePage extends StatelessWidget {
                                     ),
                                     Text(
                                       request.date,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 10,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      request.notes,
                                       style: GoogleFonts.poppins(
                                         fontSize: 10,
                                         color: Colors.grey,

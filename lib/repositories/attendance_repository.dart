@@ -31,7 +31,7 @@ class AttendanceRepository {
 
     if (response.statusCode == 200) {
       Attendance attendance =
-          Attendance.fromJson(jsonDecode(response.body)["data"]);
+          Attendance.fromJson(jsonDecode(response.body)["data"] ?? {});
 
       return attendance;
     }
@@ -140,7 +140,7 @@ class AttendanceRepository {
             // ignore: use_build_context_synchronously
             ErrorNotificationComponent().showModal(
               context,
-              'Error uploading file. ${await response.stream.bytesToString()}',
+              'Error uploading file.',
             );
 
             return false;
@@ -209,7 +209,7 @@ class AttendanceRepository {
             // ignore: use_build_context_synchronously
             ErrorNotificationComponent().showModal(
               context,
-              'Error uploading file. ${await response.stream.bytesToString()}',
+              'Error uploading file.',
             );
 
             return false;
@@ -237,11 +237,11 @@ class AttendanceRepository {
     }
   }
 
-  Future<List<Attendance>> getHistoryAttendance() async {
+  Future<List<Attendance>> getHistoryAttendance({String page = "1"}) async {
     String? token = await Auth().getToken();
 
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-attendance/history'),
+      Uri.parse('$_baseUrl/cmt-attendance/history?page=$page'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../models/Employee/User.dart';
 import '../repositories/employee_repository.dart';
 
@@ -52,16 +54,15 @@ class _EmployeePageState extends State<EmployeePage> {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          user.foto_file != "" ?
-                            CircleAvatar(
-                              radius: 25, // Image radius
-                              backgroundImage: NetworkImage(user.foto_file)
-                            )
-                            :
-                            const CircleAvatar(
-                              radius: 25, // Image radius
-                              backgroundImage: AssetImage("images/profile_placeholder.jpg"),
-                            ),
+                          user.foto_file != ""
+                              ? CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: NetworkImage(user.foto_file))
+                              : const CircleAvatar(
+                                  radius: 25, // Image radius
+                                  backgroundImage: AssetImage(
+                                      "images/profile_placeholder.jpg"),
+                                ),
                           const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,9 +93,17 @@ class _EmployeePageState extends State<EmployeePage> {
                             ],
                           ),
                           Spacer(),
-                          Icon(Icons.phone),
-                          SizedBox(width: 12,),
-                          Icon(Icons.mail),
+                          GestureDetector(
+                            onTap: () => launch("tel://${user.kontak}"),
+                            child: Icon(Icons.phone),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          GestureDetector(
+                            onTap: () => launch("mailto:${user.email}"),
+                            child: Icon(Icons.mail),
+                          ),
                         ],
                       ),
                     ),

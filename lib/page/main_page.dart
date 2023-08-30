@@ -1,6 +1,8 @@
 import 'package:comtelindo_erp/page/account/account_page.dart';
 import 'package:comtelindo_erp/page/employee_page.dart';
 import 'package:comtelindo_erp/page/inbox/inbox_page.dart';
+import 'package:comtelindo_erp/utils/auth.dart';
+import 'package:comtelindo_erp/utils/middleware.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -16,6 +18,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int bottomNavIndex = 0;
+  late BuildContext context;
 
   _MainPageState({required this.bottomNavIndex});
 
@@ -53,11 +56,14 @@ class _MainPageState extends State<MainPage> {
   void _onBottomNavBarTapped(int index) {
     setState(() {
       bottomNavIndex = index;
+
+      Middleware().authenticated(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       body: _listWidget[bottomNavIndex],
       bottomNavigationBar: BottomNavigationBar(

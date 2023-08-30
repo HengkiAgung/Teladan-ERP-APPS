@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'page/login_page.dart';
 import 'page/main_page.dart';
+import 'repositories/user_repository.dart';
 import 'utils/auth.dart';
 
 void main() {
@@ -11,13 +12,13 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
-  Future<bool> isLogin(BuildContext context) async {
+  Future<bool> isLogin() async {
+    var user = await UserRepository().getUser();
+
     var token = await Auth().getToken();
     if (token == null) {
       return false;
     } 
-
-    var user = await Auth().getUser(context);
 
     return user != null;
   }
@@ -34,7 +35,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       home: FutureBuilder<bool>(
-        future: isLogin(context),
+        future: isLogin(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the result, you can show a loading indicator.
