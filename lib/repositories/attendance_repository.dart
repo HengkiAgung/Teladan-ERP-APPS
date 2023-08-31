@@ -102,13 +102,13 @@ class AttendanceRepository {
   Future<bool> checkIn(BuildContext context) async {
     try {
       String? token = await Auth().getToken();
-      String latitude = "0";
-      String longitude = "0";
+      String latitude = "-1.249637";
+      String longitude = "116.877503";
 
-      await getLocation().then((value) {
-        latitude = '${value.latitude}';
-        longitude = '${value.longitude}';
-      });
+      // await getLocation().then((value) {
+      //   latitude = '${value.latitude}';
+      //   longitude = '${value.longitude}';
+      // });
 
       bool validate = await validateLocation(context, latitude, longitude);
 
@@ -134,7 +134,7 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
-          if (response.statusCode == 200) {
+          if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             // ignore: use_build_context_synchronously
@@ -171,13 +171,13 @@ class AttendanceRepository {
   Future<bool> checkOut(BuildContext context) async {
     try {
       String? token = await Auth().getToken();
-      String latitude = "-1.2495105";
-      String longitude = "116.8749959";
+      String latitude = "0";
+      String longitude = "0";
 
-      // await getLocation().then((value) {
-      //   latitude = '${value.latitude}';
-      //   longitude = '${value.longitude}';
-      // });
+      await getLocation().then((value) {
+        latitude = '${value.latitude}';
+        longitude = '${value.longitude}';
+      });
 
       bool validate = await validateLocation(context, latitude, longitude);
 
@@ -203,7 +203,7 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
-          if (response.statusCode == 200) {
+          if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             // ignore: use_build_context_synchronously
@@ -260,5 +260,36 @@ class AttendanceRepository {
     }
 
     return [];
+  }
+
+  Future getSummaries(String? startDate, String? endDate) async {
+    String? token = await Auth().getToken();
+
+    String params = "?";
+    if (startDate != null) {
+      params += "startDate=$startDate";
+    }
+    if (endDate != null) {
+      params += "endDate=$endDate";
+    }
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-attendance/summaries/me$params'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var summaries =jsonDecode(response.body)["data"]["summaries"];
+
+      print(summaries);
+
+      return summaries;
+    }
+
+    return null;
   }
 }

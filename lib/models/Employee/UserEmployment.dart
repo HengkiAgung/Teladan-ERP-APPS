@@ -39,9 +39,8 @@ class UserEmployment {
     barcode = json['barcode'] ?? "";
     subBranch = SubBranch.fromJson(json['working_schedule'] ?? {});
     workingScheduleShift = WorkingScheduleShift.fromJson(json['working_schedule'] ?? {});
-    employmentStatus = EmploymentStatus.fromJson(json['working_schedule'] ?? {});
-    approvalLine = User.fromJson(json['approval_line'] ?? {});
+    approvalLine = User.fromJson(json['approval_line'] is !int ? json['approval_line'] : {});
     user = User.fromJson(json['user'] ?? {});
-    employmentStatus = EmploymentStatus.fromJson(json['working_schedule'] ?? {});
+    employmentStatus = EmploymentStatus.fromJson(json['employment_status'] ?? {});
   }
 }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/Attendance/UserShiftRequest.dart';
+import '../../../models/Employee/WorkingShift.dart';
 import '../../../repositories/request_repository.dart';
+import 'detail_shift_request_page.dart';
 
 class ShiftRequestPage extends StatefulWidget {
   const ShiftRequestPage({super.key});
@@ -14,15 +16,16 @@ class ShiftRequestPage extends StatefulWidget {
 
 class _ShiftRequestPageState extends State<ShiftRequestPage> {
   List<UserShiftRequest> _logShiftRequest = [];
+  WorkingShift currentShift = WorkingShift.fromJson({}); 
 
   late ScrollController _scrollController;
   int page = 1;
 
   void fetchAttendance() async {
-    var newLog =
-        await RequestRepository().getAllUserShiftRequest(page: page.toString());
+    var newLog = await RequestRepository().getAllUserShiftRequest(page: page.toString());
     setState(() {
-      _logShiftRequest.addAll(newLog);
+      currentShift = newLog[1];
+      _logShiftRequest.addAll(newLog[0]);
     });
   }
 
@@ -83,7 +86,14 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                   ),
                 ),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailShiftRequestPage(id: shift.id),
+                      ),
+                    );
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
@@ -143,7 +153,7 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const FormShiftRequestPage(),
+                builder: (context) => FormShiftRequestPage(currentShift: currentShift),
               ),
             );
           },

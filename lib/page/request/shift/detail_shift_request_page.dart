@@ -1,26 +1,27 @@
+import 'package:comtelindo_erp/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../components/avatar_profile_component.dart';
 import '../../../models/Attendance/UserAttendanceRequest.dart';
-import '../../../models/Attendance/UserLeaveRequest.dart';
+import '../../../models/Attendance/UserShiftRequest.dart';
 import '../../../repositories/request_repository.dart';
 
-class DetailTimeOffRequestPage extends StatefulWidget {
+class DetailShiftRequestPage extends StatefulWidget {
   final int id;
-  const DetailTimeOffRequestPage({super.key, required this.id});
+  const DetailShiftRequestPage({super.key, required this.id});
 
   @override
   // ignore: no_logic_in_create_state
-  State<DetailTimeOffRequestPage> createState() =>
-      DetailTimeOffRequestPageState(id: id);
+  State<DetailShiftRequestPage> createState() =>
+      DetailShiftRequestPageState(id: id);
 }
 
-class DetailTimeOffRequestPageState
-    extends State<DetailTimeOffRequestPage> {
+class DetailShiftRequestPageState
+    extends State<DetailShiftRequestPage> {
   final int id;
 
-  DetailTimeOffRequestPageState({required this.id});
+  DetailShiftRequestPageState({required this.id});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,10 +62,10 @@ class DetailTimeOffRequestPageState
           const Spacer()
         ],
       ),
-      body: FutureBuilder<UserLeaveRequest>(
-        future: RequestRepository().getDetailUserLeaveRequest(id),
+      body: FutureBuilder<UserShiftRequest>(
+        future: RequestRepository().getDetailUserShiftRequest(id),
         builder: (BuildContext context,
-            AsyncSnapshot<UserLeaveRequest> snapshot) {
+            AsyncSnapshot<UserShiftRequest> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the result, you can show a loading indicator.
             // return const CircularProgressIndicator();
@@ -79,7 +80,7 @@ class DetailTimeOffRequestPageState
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
-            UserLeaveRequest request = snapshot.data!;
+            UserShiftRequest request = snapshot.data!;
 
             Color colorStatus;
 
@@ -131,7 +132,7 @@ class DetailTimeOffRequestPageState
                     children: [
                       Expanded(
                         child: Text(
-                          "Tanggal Mulai",
+                          "Tanggal",
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: Colors.grey,
@@ -140,7 +141,7 @@ class DetailTimeOffRequestPageState
                       ),
                       Expanded(
                         child: Text(
-                          request.start_date,
+                          request.date,
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: const Color.fromARGB(255, 51, 51, 51),
@@ -168,7 +169,7 @@ class DetailTimeOffRequestPageState
                     children: [
                       Expanded(
                         child: Text(
-                          "Tanggal Selesai",
+                          "Shift",
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: Colors.grey,
@@ -177,44 +178,7 @@ class DetailTimeOffRequestPageState
                       ),
                       Expanded(
                         child: Text(
-                          request.end_date,
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: const Color.fromARGB(255, 51, 51, 51),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20,
-                    horizontal: 15,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 0.5,
-                        color: Color.fromARGB(160, 158, 158, 158),
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Total hari",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          request.taken.toString(),
+                          "${request.workingShift.name}, ${request.workingShift.working_start} - ${request.workingShift.working_end}",
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: const Color.fromARGB(255, 51, 51, 51),

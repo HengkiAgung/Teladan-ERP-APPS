@@ -36,7 +36,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
     String formattedDate = formatter.format(now);
 
     return Container(
-      decoration: BoxDecoration(color: Colors.red),
+      decoration: const BoxDecoration(color: Colors.red),
       padding: const EdgeInsets.all(15.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -53,7 +53,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                 return Text('Error: ${snapshot.error}');
               } else {
                 return Container(
-                  margin: EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 10),
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +61,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                       Text(
                         "Selamat $time",
                         style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(fontWeight: FontWeight.bold),
                           fontSize: 16,
                           color: Colors.white,
                         ),
@@ -69,12 +69,12 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                       Text(
                         snapshot.data!.name,
                         style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(fontWeight: FontWeight.bold),
                           fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Text(
@@ -84,7 +84,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                     ],
@@ -122,7 +122,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Spacer(),
+                          const Spacer(),
                           Column(
                             children: [
                               TextButton(
@@ -148,19 +148,19 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                               ),
                               snapshot.data!.check_in != ""
                                   ? Text(
-                                      snapshot.data!.check_in.split(' ')[1],
+                                      snapshot.data!.check_in.split(' ')[1].substring(0, snapshot.data!.check_in.split(' ')[1].length - 3),
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
+                                        textStyle: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                         fontSize: 16,
                                         color: Colors.amber,
                                       ),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ],
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Column(
                             children: [
                               TextButton(
@@ -186,24 +186,24 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                               ),
                               snapshot.data!.check_out != ""
                                   ? Text(
-                                      snapshot.data!.check_out.split(' ')[1],
+                                      snapshot.data!.check_out.split(' ')[1].substring(0, snapshot.data!.check_out.split(' ')[1].length - 3),
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
-                                        textStyle: TextStyle(
+                                        textStyle: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                         fontSize: 16,
                                         color: Colors.amber,
                                       ),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ],
                           ),
-                          Spacer(),
+                          const Spacer(),
                         ],
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         top: 10,
                         bottom: 20,
                       ),
@@ -212,7 +212,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                         snapshot.data!.date,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(fontWeight: FontWeight.bold),
                           fontSize: 16,
                           color: Colors.white,
                         ),

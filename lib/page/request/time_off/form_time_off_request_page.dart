@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../repositories/request_repository.dart';
+import '../../main_page.dart';
 
 class FormTimeOffRequestPage extends StatefulWidget {
   const FormTimeOffRequestPage({super.key});
@@ -89,6 +90,80 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
               if (makeRequest) {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const MainPage(index: 2),
+                  ),
+                );
+                // ignore: use_build_context_synchronously
+                showModalBottomSheet<void>(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (BuildContext context) {
+
+                    return Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 14, left: 14, bottom: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          '',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  
+                                  Text(
+                                    "Time off berhasil diajukan",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
               }
             },
             child: Container(

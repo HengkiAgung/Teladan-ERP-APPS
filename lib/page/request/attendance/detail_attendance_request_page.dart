@@ -15,8 +15,7 @@ class DetailAttendanceRequestPage extends StatefulWidget {
       DetailAttendanceRequestPageState(id: id);
 }
 
-class DetailAttendanceRequestPageState
-    extends State<DetailAttendanceRequestPage> {
+class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage> {
   final int id;
 
   DetailAttendanceRequestPageState({required this.id});

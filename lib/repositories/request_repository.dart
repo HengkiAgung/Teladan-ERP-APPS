@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:comtelindo_erp/models/Attendance/LeaveRequestCategory.dart';
 import 'package:comtelindo_erp/models/Attendance/UserAttendanceRequest.dart';
+import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -144,7 +145,7 @@ class RequestRepository {
     }
   }
 
-  Future<List<UserShiftRequest>> getAllUserShiftRequest({String page = "1"}) async {
+  Future<List<dynamic>> getAllUserShiftRequest({String page = "1"}) async {
     String? token = await Auth().getToken();
 
     final response = await http.post(
@@ -163,10 +164,116 @@ class RequestRepository {
         return attendance;
       }).toList();
 
-      return userShift;
+      WorkingShift currentShift = WorkingShift.fromJson(jsonDecode(response.body)["data"]["currentShift"]);
+
+      return [userShift, currentShift];
     }
 
     return [];
+  }
+  
+  Future<UserShiftRequest> getDetailUserShiftRequest(int id) async {
+    String? token = await Auth().getToken();
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cmt-request/personal/shift/get/detail'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'id': id,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      UserShiftRequest userShiftRequest = UserShiftRequest.fromJson(jsonDecode(response.body)["data"]);
+
+      return userShiftRequest;
+    }
+
+    return UserShiftRequest.fromJson(jsonDecode(response.body));
+  }
+  
+  Future<List<WorkingShift>> getAllWorkingShift() async {
+    String? token = await Auth().getToken();
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/shift/get/working-shift'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Iterable it = jsonDecode(response.body)["data"];
+      List<WorkingShift> shift = it.map((e) {
+        var attendance = WorkingShift.fromJson(e);
+        return attendance;
+      }).toList();
+
+      return shift;
+    }
+
+    return [];
+  }
+
+  Future<bool> makeShiftRequest(
+    BuildContext context,
+    DateTime date,
+    String working_shift_id,
+    String? reason,
+  ) async {
+    String? token = await Auth().getToken();
+    DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
+
+    if (working_shift_id == null || working_shift_id == "") {
+      // ignore: use_build_context_synchronously
+      ErrorNotificationComponent().showModal(
+        context,
+        'Shift baru wajib diisi!',
+      );
+      return false;
+    }
+
+    if (date.isBefore(now)) {
+      // ignore: use_build_context_synchronously
+      ErrorNotificationComponent().showModal(
+        context,
+        'Tanggal mulai tidak boleh lebih kecil dari sekarang!',
+      );
+      return false;
+    }
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cmt-request/personal/shift/make'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'date': "${date.year}-${date.month}-${date.day}",
+        'working_shift_id': working_shift_id,
+        'notes': reason,
+      }),
+    );
+
+    if (int.parse(response.statusCode.toString()[0]) == 2) {
+
+      // ignore: use_build_context_synchronously
+      return true;
+      
+    } else {
+      final errorMessage = json.decode(response.body)['message'];
+
+      ErrorNotificationComponent().showModal(context, errorMessage);
+
+      return false;
+    }
   }
 
   Future<List<UserLeaveRequest>> getAllUserTimeOffRequest({String page = "1"}) async {
@@ -193,7 +300,7 @@ class RequestRepository {
 
     return [];
   }
-  
+
   Future<bool> makeLeaveRequest(
     BuildContext context,
     DateTime startDate,
@@ -315,7 +422,7 @@ class RequestRepository {
     return [];
   }
 
-  Future<UserLeaveRequest> getDetailUserLeaveRequestRequest(int id) async {
+  Future<UserLeaveRequest> getDetailUserLeaveRequest(int id) async {
     String? token = await Auth().getToken();
 
     final response = await http.post(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/Attendance.dart';
 import '../../repositories/attendance_repository.dart';
@@ -67,6 +68,7 @@ class DetailAttendance extends StatelessWidget {
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
+            print(snapshot.data!.check_in_file);
             return ListView(
               children: [
                 snapshot.data!.check_in_latitude != 0
@@ -266,11 +268,16 @@ class DetailAttendance extends StatelessWidget {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  Text(
-                                    "Lihat Lokasi",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
+                                  GestureDetector(
+                                    onTap: () {
+                                      launch("https://www.google.com/maps/search/?api=1&query=${snapshot.data!.check_in_latitude},${snapshot.data!.check_in_longitude}");
+                                    },
+                                    child: Text(
+                                      "Lihat Lokasi",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Colors.amber,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -478,11 +485,16 @@ class DetailAttendance extends StatelessWidget {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  Text(
-                                    "Lihat Lokasi",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
+                                  GestureDetector(
+                                    onTap: () {
+                                      launch("https://www.google.com/maps/search/?api=1&query=${snapshot.data!.check_out_latitude},${snapshot.data!.check_out_longitude}");
+                                    },
+                                    child: Text(
+                                      "Lihat Lokasi",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Colors.amber,
+                                      ),
                                     ),
                                   ),
                                 ],
