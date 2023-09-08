@@ -449,4 +449,26 @@ class RequestRepository {
 
     return UserLeaveRequest.fromJson(jsonDecode(response.body));
   }
+
+  Future<bool> cancelRequest({required int id, required String type}) async {
+    String? token = await Auth().getToken();
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cmt-request/personal/$type/cancle'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'id': id,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
+  }
 }

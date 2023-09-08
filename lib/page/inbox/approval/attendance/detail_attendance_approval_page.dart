@@ -1,8 +1,8 @@
-import 'package:teladan/components/approval_action_component.dart';
-import 'package:teladan/models/Attendance/UserAttendanceRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../components/approval_action_component.dart';
+import '../../../../models/Attendance/UserAttendanceRequest.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../repositories/approval_repository.dart';
 
