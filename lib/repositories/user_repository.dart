@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:comtelindo_erp/models/Employee/UserEmployment.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,6 +7,7 @@ import '../config.dart';
 import '../models/Employee/User.dart';
 import '../models/Employee/UserBPJS.dart';
 import '../models/Employee/UserBank.dart';
+import '../models/Employee/UserEmployment.dart';
 import '../models/Employee/UserSalary.dart';
 import '../models/Employee/UserTax.dart';
 import '../utils/auth.dart';

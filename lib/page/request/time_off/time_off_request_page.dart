@@ -1,5 +1,4 @@
-import 'package:comtelindo_erp/page/request/shift/form_shift_request_page.dart';
-import 'package:comtelindo_erp/page/request/time_off/detail_time_off_request_page.dart';
+import 'package:teladan/page/request/time_off/detail_time_off_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

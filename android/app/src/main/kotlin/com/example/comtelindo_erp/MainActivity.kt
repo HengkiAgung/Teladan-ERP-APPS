@@ -1,4 +1,4 @@
-package com.example.comtelindo_erp
+package com.comtelindo.teladan
 
 import io.flutter.embedding.android.FlutterActivity
 

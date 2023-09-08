@@ -1,5 +1,5 @@
-import 'package:comtelindo_erp/page/request/shift/shift_request_page.dart';
-import 'package:comtelindo_erp/page/request/time_off/time_off_request_page.dart';
+import 'package:teladan/page/request/shift/shift_request_page.dart';
+import 'package:teladan/page/request/time_off/time_off_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,7 +99,7 @@ class _RequestPageState extends State<RequestPage> {
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Text(
-                      "Time Of",
+                      "Time Off",
                       style: GoogleFonts.poppins(
                         fontSize: 15,
                         color: navIndex == 2 ?Colors.amber : Colors.black,

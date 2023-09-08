@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/page/main_page.dart';
+import 'package:teladan/page/main_page.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/auth.dart';
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushReplacement<void, void>(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const MainPage(index: 0),
+                        builder: (BuildContext context) => MainPage(index: 0),
                       ),
                     );
                   };

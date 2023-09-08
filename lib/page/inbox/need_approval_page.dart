@@ -1,6 +1,9 @@
-import 'package:comtelindo_erp/page/inbox/approval/attendance_page.dart';
+import 'package:teladan/page/inbox/approval/attendance/attendance_approval_page.dart';
+import 'package:teladan/page/inbox/approval/time_off/time_off_approval_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'approval/shift/shift_approval_page.dart';
 
 class NeedApprovalPage extends StatelessWidget {
   const NeedApprovalPage({super.key});
@@ -15,12 +18,12 @@ class NeedApprovalPage extends StatelessWidget {
           // Cuti
           GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => PersonalPage(),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TimeOffApprovalPage(),
+                ),
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20),
@@ -43,7 +46,7 @@ class NeedApprovalPage extends StatelessWidget {
                     width: 12,
                   ),
                   Text(
-                    "Time Of",
+                    "Time Off",
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       color: const Color.fromARGB(255, 51, 51, 51),
@@ -65,7 +68,7 @@ class NeedApprovalPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AttendancePage(),
+                  builder: (context) => const AttendanceApprovalPage(),
                 ),
               );
             },
@@ -107,61 +110,61 @@ class NeedApprovalPage extends StatelessWidget {
           ),
         
           // Lembur
-          GestureDetector(
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => PersonalPage(),
-              //   ),
-              // );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
-                border: Border(
-                  bottom: BorderSide(
-                    width: 0.5,
-                    color: Color.fromARGB(160, 158, 158, 158),
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  const Icon(Icons.access_time),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    "Lembur",
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      color: const Color.fromARGB(255, 51, 51, 51),
-                    ),
-                  ),
-                  const Spacer(),
-                  const Icon(Icons.keyboard_arrow_right_rounded),
-                  const SizedBox(
-                    width: 12,
-                  )
-                ],
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     // Navigator.push(
+          //     //   context,
+          //     //   MaterialPageRoute(
+          //     //     builder: (context) => PersonalPage(),
+          //     //   ),
+          //     // );
+          //   },
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(vertical: 20),
+          //     decoration: const BoxDecoration(
+          //       color: Color.fromARGB(255, 255, 255, 255),
+          //       border: Border(
+          //         bottom: BorderSide(
+          //           width: 0.5,
+          //           color: Color.fromARGB(160, 158, 158, 158),
+          //         ),
+          //       ),
+          //     ),
+          //     child: Row(
+          //       children: [
+          //         const SizedBox(
+          //           width: 12,
+          //         ),
+          //         const Icon(Icons.access_time),
+          //         const SizedBox(
+          //           width: 12,
+          //         ),
+          //         Text(
+          //           "Lembur",
+          //           style: GoogleFonts.poppins(
+          //             fontSize: 13,
+          //             color: const Color.fromARGB(255, 51, 51, 51),
+          //           ),
+          //         ),
+          //         const Spacer(),
+          //         const Icon(Icons.keyboard_arrow_right_rounded),
+          //         const SizedBox(
+          //           width: 12,
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
         
-          // Perubahan Shif
+          // Perubahan Shift
           GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => PersonalPage(),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ShiftApprovalPage(),
+                ),
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20),

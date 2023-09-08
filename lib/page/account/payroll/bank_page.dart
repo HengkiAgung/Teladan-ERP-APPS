@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/models/Employee/UserBank.dart';
+import 'package:teladan/models/Employee/UserBank.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/models/Attendance/LeaveRequestCategory.dart';
+import 'package:teladan/models/Attendance/LeaveRequestCategory.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +16,7 @@ class FormTimeOffRequestPage extends StatefulWidget {
 class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
+  bool onSubmit = true;
 
   PlatformFile? _selectedFile;
   String? _categoryId;
@@ -75,9 +76,10 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
             ),
           ],
         ),
-        child: Expanded(
-          child: InkWell(
-            onTap: () async {
+        child: InkWell(
+          onTap: () async {
+            if (onSubmit) {
+              onSubmit = false;
               bool makeRequest = await RequestRepository().makeLeaveRequest(
                 context,
                 _startDate,
@@ -94,7 +96,7 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MainPage(index: 2),
+                    builder: (BuildContext context) => MainPage(index: 2),
                   ),
                 );
                 // ignore: use_build_context_synchronously
@@ -165,20 +167,20 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
                   },
                 );
               }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                'Kirim',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              'Kirim',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),

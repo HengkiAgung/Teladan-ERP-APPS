@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/models/Attendance/LeaveRequestCategory.dart';
+import 'LeaveRequestCategory.dart';
 
 import '../Employee/User.dart';
 

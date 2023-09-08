@@ -1,7 +1,7 @@
-import 'package:comtelindo_erp/page/account/payroll/bank_page.dart';
-import 'package:comtelindo_erp/page/account/payroll/bpjs_page.dart';
-import 'package:comtelindo_erp/page/account/payroll/salary_page.dart';
-import 'package:comtelindo_erp/page/account/payroll/tax_page.dart';
+import 'package:teladan/page/account/payroll/bank_page.dart';
+import 'package:teladan/page/account/payroll/bpjs_page.dart';
+import 'package:teladan/page/account/payroll/salary_page.dart';
+import 'package:teladan/page/account/payroll/tax_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

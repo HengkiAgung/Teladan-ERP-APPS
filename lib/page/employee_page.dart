@@ -102,7 +102,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                       ),
                                     ),
                                     Text(
-                                      user.kontak,
+                                    user.kontak != "" ? "+62 ${user.kontak}" : "",
                                       style: GoogleFonts.poppins(
                                         fontSize: 10,
                                         color: Colors.grey,
@@ -112,7 +112,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 ),
                                 Spacer(),
                                 GestureDetector(
-                                  onTap: () => launch("tel://${user.kontak}"),
+                                  onTap: () => launch("tel:0${user.kontak}"),
                                   child: Icon(Icons.phone),
                                 ),
                                 SizedBox(
@@ -127,7 +127,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 ),
                                 GestureDetector(
                                   onTap: () =>
-                                      launch("https://wa.me/${user.kontak}"),
+                                      launch("https://wa.me/+62${user.kontak}"),
                                   child: const Image(
                                     height: 23,
                                     image: AssetImage("images/whatsapp.png"),

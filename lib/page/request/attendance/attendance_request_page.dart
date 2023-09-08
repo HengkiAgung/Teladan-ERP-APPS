@@ -1,6 +1,6 @@
-import 'package:comtelindo_erp/models/Attendance/UserAttendanceRequest.dart';
-import 'package:comtelindo_erp/page/request/attendance/detail_attendance_request_page.dart';
-import 'package:comtelindo_erp/page/request/attendance/form_attendance_request_page.dart';
+import 'package:teladan/models/Attendance/UserAttendanceRequest.dart';
+import 'package:teladan/page/request/attendance/detail_attendance_request_page.dart';
+import 'package:teladan/page/request/attendance/form_attendance_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

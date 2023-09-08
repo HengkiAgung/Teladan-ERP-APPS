@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/repositories/user_repository.dart';
+import '../repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +19,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
   Widget build(BuildContext context) {
     DateTime now = new DateTime.now();
     var formatter = new DateFormat('hh');
-    int formattedHour = int.parse(formatter.format(now)) + 12;
+    int formattedHour = int.parse(formatter.format(now));
 
     String time;
     if (formattedHour >= 5 && formattedHour < 11) {
@@ -36,7 +36,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
     String formattedDate = formatter.format(now);
 
     return Container(
-      decoration: const BoxDecoration(color: Colors.red),
+      decoration: BoxDecoration(color: Colors.amber.shade800),
       padding: const EdgeInsets.all(15.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -126,6 +126,7 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                           Column(
                             children: [
                               TextButton(
+
                                 onPressed: () async {
                                   if (snapshot.data!.check_in == "") {
                                     bool attend = await AttendanceRepository()
@@ -165,7 +166,8 @@ class _TodayAttendanceComponentState extends State<TodayAttendanceComponent> {
                             children: [
                               TextButton(
                                 onPressed: () async {
-                                  if (snapshot.data!.check_in != "") {
+                                  print(snapshot.data!.check_out);
+                                  if (snapshot.data!.check_out == "") {
                                     bool attend = await AttendanceRepository()
                                         .checkOut(context);
 

@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/page/request/shift/form_shift_request_page.dart';
+import 'package:teladan/page/request/shift/form_shift_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -112,13 +112,14 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                                 color: const Color.fromARGB(255, 51, 51, 51),
                               ),
                             ),
+                            shift.approvalLine!.name != "" ?
                             Text(
                               "Approved by: ${shift.approvalLine!.name}",
                               style: GoogleFonts.poppins(
                                 fontSize: 11,
                                 color: Colors.grey,
                               ),
-                            ),
+                            ) : SizedBox(),
                             Text(
                               "Status",
                               style: GoogleFonts.poppins(

@@ -1,6 +1,6 @@
 {
-    "name": "comtelindo_erp",
-    "short_name": "comtelindo_erp",
+    "name": "teladan",
+    "short_name": "teladan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

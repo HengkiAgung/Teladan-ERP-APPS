@@ -1,5 +1,5 @@
-import 'package:comtelindo_erp/models/Employee/WorkingSchedule.dart';
-import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
+import 'WorkingSchedule.dart';
+import 'WorkingShift.dart';
 
 class WorkingScheduleShift {
   late int id;

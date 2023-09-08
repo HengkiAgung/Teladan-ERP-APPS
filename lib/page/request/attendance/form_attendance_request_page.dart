@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/repositories/request_repository.dart';
+import 'package:teladan/repositories/request_repository.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +18,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
   TimeOfDay? _selectedTimeIn = null;
   TimeOfDay? _selectedTimeOut = null;
   PlatformFile? _selectedFile = null;
+  bool onSubmit = true;
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
@@ -73,11 +74,17 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
             ),
           ],
         ),
-        child: Expanded(
-          child: InkWell(
-            onTap: () async {
-              bool request = await RequestRepository().makeAttendanceRequest(context, _selectedDate, _selectedTimeIn, _selectedTimeOut, _descriptionController, _selectedFile);
-
+        child: InkWell(
+          onTap: () async {
+            if (onSubmit) {
+              onSubmit = false;
+              bool request = await RequestRepository().makeAttendanceRequest(
+                  context,
+                  _selectedDate,
+                  _selectedTimeIn,
+                  _selectedTimeOut,
+                  _descriptionController,
+                  _selectedFile);
 
               if (request) {
                 // ignore: use_build_context_synchronously
@@ -86,7 +93,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MainPage(index: 2),
+                    builder: (BuildContext context) => MainPage(index: 2),
                   ),
                 );
                 // ignore: use_build_context_synchronously
@@ -98,7 +105,6 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                     ),
                   ),
                   builder: (BuildContext context) {
-
                     return Container(
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -111,12 +117,14 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 14, left: 14, bottom: 30),
+                              padding: const EdgeInsets.only(
+                                  right: 14, left: 14, bottom: 30),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 20, bottom: 20),
                                     child: Row(
                                       children: [
                                         GestureDetector(
@@ -139,7 +147,6 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                                       ],
                                     ),
                                   ),
-                                  
                                   Text(
                                     "Kehadiran berhasil diajukan",
                                     style: GoogleFonts.poppins(
@@ -157,20 +164,20 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                   },
                 );
               }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                'Kirim',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              'Kirim',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),
@@ -265,8 +272,11 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap:() async {
-                      TimeOfDay? newTime = await showTimePicker(context: context, initialTime: TimeOfDay.now(),);
+                    onTap: () async {
+                      TimeOfDay? newTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
                       if (newTime == null) return;
                       setState(() => _selectedTimeIn = newTime);
                     },
@@ -290,7 +300,9 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                             ),
                           ),
                           Text(
-                            _selectedTimeIn == null ? "-" : "${_selectedTimeIn!.hour}:${_selectedTimeIn!.minute}",
+                            _selectedTimeIn == null
+                                ? "-"
+                                : "${_selectedTimeIn!.hour}:${_selectedTimeIn!.minute}",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                             ),
@@ -317,8 +329,11 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap:() async {
-                      TimeOfDay? newTime = await showTimePicker(context: context, initialTime: TimeOfDay.now(),);
+                    onTap: () async {
+                      TimeOfDay? newTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
                       if (newTime == null) return;
                       setState(() => _selectedTimeOut = newTime);
                     },
@@ -342,7 +357,9 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                             ),
                           ),
                           Text(
-                            _selectedTimeOut == null ? "-" : "${_selectedTimeOut!.hour}:${_selectedTimeOut!.minute}",
+                            _selectedTimeOut == null
+                                ? "-"
+                                : "${_selectedTimeOut!.hour}:${_selectedTimeOut!.minute}",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                             ),
@@ -431,7 +448,8 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                             margin: const EdgeInsets.symmetric(vertical: 12),
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
                               border: Border.all(
                                 color: Colors.grey,
                               ),

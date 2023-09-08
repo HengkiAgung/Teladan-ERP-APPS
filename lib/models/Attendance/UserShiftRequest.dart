@@ -1,4 +1,4 @@
-import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
+import '../Employee/WorkingShift.dart';
 
 import '../Employee/User.dart';
 
@@ -26,7 +26,11 @@ class UserShiftRequest {
     id = json['id'] ?? 0;
     user = User.fromJson(json['user'] ?? {});
     workingShift = WorkingShift.fromJson(json['working_shift'] ?? {});
-    approvalLine = User.fromJson(json['approval_line'] ?? {});
+    if (json['approval_line'] is int) {
+      approvalLine = null;      
+    } else {
+      approvalLine = User.fromJson(json['approval_line'] ?? {});
+    }
     status = json['status'] ?? "";
     date = json['date'] ?? "";
     notes = json['notes'] ?? "";

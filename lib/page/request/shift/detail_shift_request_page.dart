@@ -1,11 +1,11 @@
-import 'package:comtelindo_erp/models/Attendance/UserShiftRequest.dart';
+import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../components/avatar_profile_component.dart';
-import '../../../models/Attendance/UserAttendanceRequest.dart';
-import '../../../models/Attendance/UserShiftRequest.dart';
+import '../../../models/Employee/User.dart';
 import '../../../repositories/request_repository.dart';
+import '../../../repositories/user_repository.dart';
 
 class DetailShiftRequestPage extends StatefulWidget {
   final int id;
@@ -17,8 +17,7 @@ class DetailShiftRequestPage extends StatefulWidget {
       DetailShiftRequestPageState(id: id);
 }
 
-class DetailShiftRequestPageState
-    extends State<DetailShiftRequestPage> {
+class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
   final int id;
 
   DetailShiftRequestPageState({required this.id});
@@ -64,8 +63,8 @@ class DetailShiftRequestPageState
       ),
       body: FutureBuilder<UserShiftRequest>(
         future: RequestRepository().getDetailUserShiftRequest(id),
-        builder: (BuildContext context,
-            AsyncSnapshot<UserShiftRequest> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<UserShiftRequest> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the result, you can show a loading indicator.
             // return const CircularProgressIndicator();
@@ -90,14 +89,31 @@ class DetailShiftRequestPageState
               colorStatus = Colors.green;
             } else {
               colorStatus = Colors.red.shade900;
-              
             }
 
             return ListView(
               children: [
-                AvatarProfileComponent(),
+                FutureBuilder<User?>(
+                  future: UserRepository().getUser(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While waiting for the result, you can show a loading indicator.
+                      // return const CircularProgressIndicator();
+                      return const Text('Loading');
+                    } else if (snapshot.hasError) {
+                      // Handle the error case here.
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return AvatarProfileComponent(
+                        user: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: (MediaQuery.of(context).size.width / 2) - 60),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: (MediaQuery.of(context).size.width / 2) - 60),
                   padding: EdgeInsets.symmetric(
                     vertical: 10,
                   ),
@@ -226,91 +242,94 @@ class DetailShiftRequestPageState
                     ],
                   ),
                 ),
-                request.approvalLine!.email != "" 
-                ?
-                Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 15,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 0.5,
-                            color: Color.fromARGB(160, 158, 158, 158),
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                request.approvalLine!.email != ""
+                    ? Column(
                         children: [
-                          Expanded(
-                            child: Text(
-                              "Approved by",
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                color: Colors.grey,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 15,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 0.5,
+                                  color: Color.fromARGB(160, 158, 158, 158),
+                                ),
                               ),
                             ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Approved by",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    request.approvalLine!.name +
+                                        ", " +
+                                        request.approvalLine!.email,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Expanded(
-                            child: Text(
-                              request.approvalLine!.name + ", " + request.approvalLine!.email,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                color: const Color.fromARGB(255, 51, 51, 51),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 15,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 0.5,
+                                  color: Color.fromARGB(160, 158, 158, 158),
+                                ),
                               ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Catatan ",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    request.comment != ""
+                                        ? request.comment
+                                        : "-",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 15,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 0.5,
-                            color: Color.fromARGB(160, 158, 158, 158),
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Catatan ",
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              request.comment != "" ? request.comment : "-",
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                color: const Color.fromARGB(255, 51, 51, 51),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  
-                  ],
-                )
-                :
-                SizedBox(),
+                      )
+                    : SizedBox(),
               ],
             );
           }

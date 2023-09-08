@@ -68,10 +68,9 @@ class DetailAttendance extends StatelessWidget {
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
-            print(snapshot.data!.check_in_file);
             return ListView(
               children: [
-                snapshot.data!.check_in_latitude != 0
+                snapshot.data!.check_in != ""
                     ? Column(
                         children: [
                           Padding(
@@ -107,9 +106,9 @@ class DetailAttendance extends StatelessWidget {
                                       TileLayer(
                                         urlTemplate:
                                             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName: 'com.example.app',
+                                        userAgentPackageName: 'com.comtelindo.app',
                                       ),
-                                      MarkerLayer(
+                                      snapshot.data!.check_in_latitude != 0 ? MarkerLayer(
                                         markers: [
                                           Marker(
                                             point: LatLng(
@@ -123,7 +122,7 @@ class DetailAttendance extends StatelessWidget {
                                                 Icons.location_on_outlined),
                                           ),
                                         ],
-                                      ),
+                                      ) : const SizedBox(),
                                     ],
                                   ),
                                 ),
@@ -132,7 +131,7 @@ class DetailAttendance extends StatelessWidget {
                                     placeholder:
                                         const AssetImage("images/loading.gif"),
                                     image: NetworkImage(
-                                        snapshot.data!.check_in_file),
+                                        snapshot.data!.check_in_file != "" ? snapshot.data!.check_in_file : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
                                   ),
                                 ),
                               ],
@@ -299,7 +298,7 @@ class DetailAttendance extends StatelessWidget {
                           ),
                         ),
                       ),
-                snapshot.data!.check_out_latitude != 0
+                snapshot.data!.check_out != ""
                     ? Column(
                         children: [
                           Padding(
@@ -318,23 +317,26 @@ class DetailAttendance extends StatelessWidget {
                           Container(
                             height: 200,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
                                   width: 200,
                                   child: FlutterMap(
                                     options: MapOptions(
-                                      center: LatLng(snapshot.data!.check_out_latitude,
+                                      center: LatLng(
+                                        snapshot.data!.check_out_latitude,
                                         snapshot.data!.check_out_longitude,
                                       ),
-                                      zoom: 0,
+                                      zoom: 14,
                                     ),
                                     children: [
                                       TileLayer(
                                         urlTemplate:
                                             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName: 'com.example.app',
+                                        userAgentPackageName: 'com.comtelindo.app',
                                       ),
-                                      MarkerLayer(
+                                      snapshot.data!.check_out_latitude != 0 ? MarkerLayer(
                                         markers: [
                                           Marker(
                                             point: LatLng(
@@ -348,13 +350,18 @@ class DetailAttendance extends StatelessWidget {
                                                 Icons.location_on_outlined),
                                           ),
                                         ],
-                                      ),
+                                      ) : const SizedBox(),
                                     ],
                                   ),
                                 ),
+                                
                                 Container(
-                                  width: 200,
-                                  child: Text("Ini Image"),
+                                  child: FadeInImage(
+                                    placeholder:
+                                        const AssetImage("images/loading.gif"),
+                                    image: NetworkImage(
+                                        snapshot.data!.check_out_file != "" ? snapshot.data!.check_out_file : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                  ),
                                 ),
                               ],
                             ),

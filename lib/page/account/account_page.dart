@@ -1,12 +1,15 @@
-import 'package:comtelindo_erp/page/account/employment_page.dart';
-import 'package:comtelindo_erp/page/account/payroll/payroll_page.dart';
-import 'package:comtelindo_erp/utils/auth.dart';
-import 'package:comtelindo_erp/utils/middleware.dart';
+import 'package:teladan/page/account/employment_page.dart';
+import 'package:teladan/page/account/payroll/payroll_page.dart';
+import 'package:teladan/utils/auth.dart';
+import 'package:teladan/utils/middleware.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/avatar_profile_component.dart';
+import '../../models/Employee/User.dart';
+import '../../repositories/user_repository.dart';
 import 'personal_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -21,7 +24,23 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        AvatarProfileComponent(),
+        FutureBuilder<User?>(
+          future: UserRepository().getUser(),
+          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // While waiting for the result, you can show a loading indicator.
+              // return const CircularProgressIndicator();
+              return const Text('Loading');
+            } else if (snapshot.hasError) {
+              // Handle the error case here.
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return AvatarProfileComponent(
+                user: snapshot.data!,
+              );
+            }
+          },
+        ),
 
         // Info Saya
         Container(
@@ -129,103 +148,103 @@ class _AccountPageState extends State<AccountPage> {
               ),
 
               // Info Kontak Darurat
-              Row(
-                children: [
-                  Icon(Icons.emergency),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Info Kontak Darurat',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 51, 51, 51),
-                        ),
-                      ),
-                      Text(
-                        'Kontak darurat yang dapat dihubungi',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.emergency),
+              //     const SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Info Kontak Darurat',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 13,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color.fromARGB(255, 51, 51, 51),
+              //           ),
+              //         ),
+              //         Text(
+              //           'Kontak darurat yang dapat dihubungi',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 11,
+              //             color: Colors.grey,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 
               // Info Keluarga
-              Row(
-                children: [
-                  Icon(Icons.group),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Info Keluarga',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 51, 51, 51),
-                        ),
-                      ),
-                      Text(
-                        'Dafter anggota keluarga karyawan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.group),
+              //     const SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Info Keluarga',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 13,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color.fromARGB(255, 51, 51, 51),
+              //           ),
+              //         ),
+              //         Text(
+              //           'Dafter anggota keluarga karyawan',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 11,
+              //             color: Colors.grey,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 
               // Pendikan dan Pengalaman
-              Row(
-                children: [
-                  Icon(Icons.cases_outlined),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Pendikan dan Pengalaman',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 51, 51, 51),
-                        ),
-                      ),
-                      Text(
-                        'Dafter anggota keluarga karyawan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.cases_outlined),
+              //     const SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Pendikan dan Pengalaman',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 13,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color.fromARGB(255, 51, 51, 51),
+              //           ),
+              //         ),
+              //         Text(
+              //           'Dafter anggota keluarga karyawan',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 11,
+              //             color: Colors.grey,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 
               // Info payroll
               GestureDetector(
@@ -271,39 +290,38 @@ class _AccountPageState extends State<AccountPage> {
               ),
 
               // File Saya
-              Row(
-                children: [
-                  Icon(Icons.folder),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'File Saya',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 51, 51, 51),
-                        ),
-                      ),
-                      Text(
-                        'Dafter anggota keluarga karyawan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.folder),
+              //     const SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'File Saya',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 13,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color.fromARGB(255, 51, 51, 51),
+              //           ),
+              //         ),
+              //         Text(
+              //           'Dafter anggota keluarga karyawan',
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 11,
+              //             color: Colors.grey,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 
-              
               const SizedBox(
                 height: 20,
               ),
@@ -316,7 +334,9 @@ class _AccountPageState extends State<AccountPage> {
 
         // kujungi web
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            launch("https://erp.comtelindo.com/");
+          },
           child: Container(
             color: Colors.white,
             padding: EdgeInsets.all(16),

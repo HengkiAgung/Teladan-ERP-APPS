@@ -1,8 +1,8 @@
-import 'package:comtelindo_erp/components/error_notification_component.dart';
-import 'package:comtelindo_erp/page/login_page.dart';
-import 'package:comtelindo_erp/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../components/error_notification_component.dart';
+import '../page/login_page.dart';
+import '../repositories/user_repository.dart';
 import 'auth.dart';
 
 class Middleware {

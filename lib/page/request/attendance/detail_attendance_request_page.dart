@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../components/avatar_profile_component.dart';
+import '../../../config.dart';
 import '../../../models/Attendance/UserAttendanceRequest.dart';
+import '../../../models/Employee/User.dart';
 import '../../../repositories/request_repository.dart';
+import '../../../repositories/user_repository.dart';
 
 class DetailAttendanceRequestPage extends StatefulWidget {
   final int id;
@@ -15,7 +19,8 @@ class DetailAttendanceRequestPage extends StatefulWidget {
       DetailAttendanceRequestPageState(id: id);
 }
 
-class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage> {
+class DetailAttendanceRequestPageState
+    extends State<DetailAttendanceRequestPage> {
   final int id;
 
   DetailAttendanceRequestPageState({required this.id});
@@ -87,14 +92,31 @@ class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage
               colorStatus = Colors.green;
             } else {
               colorStatus = Colors.red.shade900;
-              
             }
 
             return ListView(
               children: [
-                AvatarProfileComponent(),
+                FutureBuilder<User?>(
+                  future: UserRepository().getUser(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While waiting for the result, you can show a loading indicator.
+                      // return const CircularProgressIndicator();
+                      return const Text('Loading');
+                    } else if (snapshot.hasError) {
+                      // Handle the error case here.
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return AvatarProfileComponent(
+                        user: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: (MediaQuery.of(context).size.width / 2) - 60),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: (MediaQuery.of(context).size.width / 2) - 60),
                   padding: EdgeInsets.symmetric(
                     vertical: 10,
                   ),
@@ -212,7 +234,9 @@ class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage
                       ),
                       Expanded(
                         child: Text(
-                          request.workingShift!.working_start + "-" + request.workingShift!.working_end,
+                          request.workingShift!.working_start +
+                              "-" +
+                              request.workingShift!.working_end,
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: const Color.fromARGB(255, 51, 51, 51),
@@ -334,6 +358,50 @@ class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage
                     ],
                   ),
                 ),
+
+                request.file != null ? Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 15,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 0.5,
+                        color: Color.fromARGB(160, 158, 158, 158),
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "File",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            launch("${Config.storageUrl}/request/attendance/${request.file}");
+                          },
+                          child: Text(
+                            request.file!,
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ) : const SizedBox(),
               ],
             );
           }

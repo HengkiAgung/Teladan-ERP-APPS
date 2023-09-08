@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
@@ -99,16 +100,60 @@ class AttendanceRepository {
     return false;
   }
 
+  void loadingIndicator(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (BuildContext context) {
+
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 14, left: 14, bottom: 40, top: 40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Sedang mengirim data...",
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<bool> checkIn(BuildContext context) async {
     try {
       String? token = await Auth().getToken();
-      String latitude = "-1.249637";
-      String longitude = "116.877503";
+      String latitude = "0";
+      String longitude = "0";
 
-      // await getLocation().then((value) {
-      //   latitude = '${value.latitude}';
-      //   longitude = '${value.longitude}';
-      // });
+      await getLocation().then((value) {
+        latitude = '${value.latitude}';
+        longitude = '${value.longitude}';
+      });
 
       bool validate = await validateLocation(context, latitude, longitude);
 
@@ -123,6 +168,7 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
+        loadingIndicator(context);
         request.files.add(imageFile);
 
         request.headers['Accept'] = 'application/json';
@@ -134,6 +180,7 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
+          Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
@@ -146,6 +193,7 @@ class AttendanceRepository {
             return false;
           }
         } catch (e) {
+          Navigator.pop(context);
           // ignore: use_build_context_synchronously
           ErrorNotificationComponent().showModal(
             context,
@@ -284,8 +332,6 @@ class AttendanceRepository {
 
     if (response.statusCode == 200) {
       var summaries =jsonDecode(response.body)["data"]["summaries"];
-
-      print(summaries);
 
       return summaries;
     }

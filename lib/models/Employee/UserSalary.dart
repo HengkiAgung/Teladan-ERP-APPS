@@ -1,7 +1,6 @@
-import 'package:comtelindo_erp/models/Employee/PaymentSchedule.dart';
-
 import 'Department.dart';
 import 'Division.dart';
+import 'PaymentSchedule.dart';
 import 'ProrateSetting.dart';
 import 'Role.dart';
 import 'Team.dart';

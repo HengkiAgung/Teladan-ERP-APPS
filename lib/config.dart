@@ -1,3 +1,5 @@
 class Config {
-  static String apiUrl = "http://172.27.4.165:8000/api";
+  static String url = "https://erp.comtelindo.com";
+  static String apiUrl = "$url/api";
+  static String storageUrl = "$url/storage";
 }

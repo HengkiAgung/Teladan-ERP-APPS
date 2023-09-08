@@ -1,15 +1,16 @@
 import 'dart:convert';
 
-import 'package:comtelindo_erp/models/Attendance/LeaveRequestCategory.dart';
-import 'package:comtelindo_erp/models/Attendance/UserAttendanceRequest.dart';
-import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import '../components/error_notification_component.dart';
 import '../config.dart';
+import '../models/Attendance/LeaveRequestCategory.dart';
+import '../models/Attendance/UserAttendanceRequest.dart';
 import '../models/Attendance/UserLeaveRequest.dart';
 import '../models/Attendance/UserShiftRequest.dart';
+import '../models/Employee/WorkingShift.dart';
 import '../utils/auth.dart';
 
 class RequestRepository {
@@ -122,6 +123,9 @@ class RequestRepository {
 
     try {
       final response = await request.send();
+ 
+      final responseString = await response.stream.bytesToString();
+      final message = jsonDecode(responseString)["message"];
 
       if (int.parse(response.statusCode.toString()[0]) == 2) {
         return true;
@@ -129,7 +133,7 @@ class RequestRepository {
         // ignore: use_build_context_synchronously
         ErrorNotificationComponent().showModal(
           context,
-          'Error uploading file.',
+          message,
         );
 
         return false;
@@ -200,7 +204,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
 
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-request/personal/shift/get/working-shift'),
+      Uri.parse('$_baseUrl/cmt-request/shift/get/working-shift'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -400,7 +404,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
 
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-request/personal/time-off/get/category'),
+      Uri.parse('$_baseUrl/cmt-request/get/category'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

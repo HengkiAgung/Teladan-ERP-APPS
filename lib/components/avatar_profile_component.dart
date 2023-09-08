@@ -5,75 +5,61 @@ import '../models/Employee/User.dart';
 import '../repositories/user_repository.dart';
 
 class AvatarProfileComponent extends StatelessWidget {
+  final User user;
+
+  const AvatarProfileComponent({super.key, required this.user});
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-      future: UserRepository().getUser(),
-      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // While waiting for the result, you can show a loading indicator.
-          // return const CircularProgressIndicator();
-          return Container(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 36,
-              bottom: 36,
-            ),
-            child: const Text('Loading'),
-          );
-        } else if (snapshot.hasError) {
-          // Handle the error case here.
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return Container(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 36,
-              bottom: 36,
-            ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30, // Image radius
+    return Container(
+      padding: const EdgeInsets.only(
+        left: 15,
+        right: 15,
+        top: 36,
+        bottom: 36,
+      ),
+      child: Row(
+        children: [
+          user.foto_file != ""
+              ? CircleAvatar(
+                  radius: 25, // Image radius
+                  backgroundImage: NetworkImage(user.foto_file))
+              : const CircleAvatar(
+                  radius: 25, // Image radius
                   backgroundImage: AssetImage("images/profile_placeholder.jpg"),
                 ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      snapshot.data!.name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 51, 51, 51),
-                      ),
-                    ),
-                    Text(
-                      snapshot.data!.kontak,
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      snapshot.data!.email,
-                      style: GoogleFonts.poppins(
-                        fontSize: 10,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                user.name,
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 51, 51, 51),
                 ),
-                Spacer(),
-              ],
-            ),
-          );
-        }
-      },
+              ),
+              Text(
+                user.kontak != "" ? "+62 ${user.kontak}" : "",
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+              Text(
+                user.email,
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+        ],
+      ),
     );
   }
 }

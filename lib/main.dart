@@ -18,14 +18,13 @@ class MainApp extends StatelessWidget {
     var token = await Auth().getToken();
     if (token == null) {
       return false;
-    } 
+    }
 
     return user != null;
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -39,10 +38,41 @@ class MainApp extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the result, you can show a loading indicator.
-            return const CircularProgressIndicator();
+            return Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'images/logo-comtel-nig.png', // Replace with your logo asset path
+                      width: 100.0, // Adjust the width as needed
+                      height: 100.0, // Adjust the height as needed
+                    ),
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      'Teladan by Comtelindo',
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    const Text(
+                      'Loading... ',
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             // Handle the error case here.
-            return Text('Error: ${snapshot.error}');
+            return MainPage(index: 0, error: true,);
           } else {
             // Use the snapshot data to determine which widget to show.
             return snapshot.data ?? false ? MainPage(index: 0) : LoginPage();

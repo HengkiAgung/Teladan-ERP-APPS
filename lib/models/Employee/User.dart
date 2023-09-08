@@ -41,7 +41,7 @@ class User {
     name = json['name'] ?? "";
     email = json['email'] ?? "";
     signFile = json['signFile'] ?? "";
-    kontak = json['phoneNumber'] ?? "";
+    kontak = json['kontak'] ?? "";
     status = json['status'] ?? 0;
     foto_file = json['foto_file'] ?? "";
     userPersonalData = json['user_personal_data'] != null ? UserPersonalData.fromJson(json['user_personal_data']) : null;

@@ -1,5 +1,5 @@
-import 'package:comtelindo_erp/components/text_field_component.dart';
-import 'package:comtelindo_erp/models/Employee/WorkingShift.dart';
+import 'package:teladan/components/text_field_component.dart';
+import 'package:teladan/models/Employee/WorkingShift.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,6 +22,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
 
   DateTime date = DateTime.now();
   String? working_shift_id;
+  bool onSubmit = true;
 
   final TextEditingController _reasonController = TextEditingController();
 
@@ -53,7 +54,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
             padding: const EdgeInsets.only(left: 50),
             child: Center(
               child: Text(
-                "Request Time Off",
+                "Request Shift",
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -78,9 +79,10 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
             ),
           ],
         ),
-        child: Expanded(
-          child: InkWell(
-            onTap: () async {
+        child: InkWell(
+          onTap: () async {
+            if (onSubmit) {
+              onSubmit = false;
               bool makeRequest = await RequestRepository().makeShiftRequest(
                 context,
                 date,
@@ -95,7 +97,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MainPage(index: 2),
+                    builder: (BuildContext context) => MainPage(index: 2),
                   ),
                 );
                 // ignore: use_build_context_synchronously
@@ -167,20 +169,20 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                 );
 
               }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                'Kirim',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              'Kirim',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),
