@@ -15,9 +15,7 @@ import '../utils/auth.dart';
 class UserRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<User> getUser() async {
-    const FlutterSecureStorage storage = FlutterSecureStorage();
-    var token = await storage.read(key: 'token');
+  Future<User> getUser(String token) async {
 
     final response = await http.get(
       Uri.parse("${Config.apiUrl}/user/me"),
@@ -59,42 +57,6 @@ class UserRepository {
     }
 
     return User.fromJson({});
-  }
-
-  Future updateUserPersonalData(
-    String name,
-    String email,
-    String kontak,
-    String place_of_birth,
-    String birthdate,
-    String marital_status,
-    String gender,
-    String religion,
-    String blood_type,
-  ) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/user/update/personal/data'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-          'name' : name,
-          'email' : email,
-          'kontak' : kontak,
-          'place_of_birth' : place_of_birth,
-          'birthdate' : birthdate,
-          'marital_status' : marital_status,
-          'gender' : gender,
-          'religion' : religion,
-          'blood_type' : blood_type,
-        }),
-    );
-
-    return jsonDecode(response.body);
   }
 
   Future<UserEmployment> getUserEmploymentData() async {

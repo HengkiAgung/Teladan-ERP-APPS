@@ -10,163 +10,68 @@ import '../utils/auth.dart';
 class ApprovalRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<List<UserAttendanceRequest>> getAttendanceApproval({String page = "1"}) async {
+  Future<List<dynamic>> getRequest({
+    String page = "1",
+    required String key,
+    required String type,
+    required dynamic model,
+    required String token,
+  }) async {
     String? token = await Auth().getToken();
 
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/attendance/get'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'page': page,
-      })
-    );
+    final response =
+        await http.post(Uri.parse('$_baseUrl/cmt-request/$type/get'),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode({
+              'page': page,
+            }));
 
     if (jsonDecode(response.body)["status"] == "success") {
-      Iterable it = jsonDecode(response.body)["data"]['userAttendanceRequest'];
-      List<UserAttendanceRequest> userAttendance = it.map((e) {
-        var attendance = UserAttendanceRequest.fromJson(e);
-        return attendance;
+      Iterable it = jsonDecode(response.body)["data"][key];
+      return it.map((e) {
+        var data = model.fromJson(e);
+        return data;
       }).toList();
-
-      return userAttendance;
     }
 
     return [];
   }
 
-  Future<UserAttendanceRequest> getDetailAttendanceApproval(String id) async {
-    String? token = await Auth().getToken();
-
+  Future<dynamic> getDetailAttendanceRequest({
+    required String id,
+    required String type,
+    required dynamic model,
+    required String token,
+  }) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/attendance/get/detail'),
+      Uri.parse('$_baseUrl/cmt-request/$type/get/detail'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-          'id': id,
-        }),
+        'id': id,
+      }),
     );
 
     if (jsonDecode(response.body)["status"] == "success") {
-      var attendance = UserAttendanceRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return attendance;
+      return model.fromJson(jsonDecode(response.body)["data"]);
     }
 
-    return UserAttendanceRequest.fromJson({});
+    return model.fromJson({});
   }
 
-  Future<List<UserShiftRequest>> getShiftApproval({String page = "1"}) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/shift/get'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'page': page,
-      })
-    );
-
-    if (jsonDecode(response.body)["status"] == "success") {
-      Iterable it = jsonDecode(response.body)["data"]['userShiftRequest'];
-      List<UserShiftRequest> userShift = it.map((e) {
-        var attendance = UserShiftRequest.fromJson(e);
-        return attendance;
-      }).toList();
-
-      return userShift;
-    }
-
-    return [];
-  }
-
-  Future<UserShiftRequest> getDetailShiftApproval(String id) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/shift/get/detail'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-          'id': id,
-        }),
-    );
-
-    if (jsonDecode(response.body)["status"] == "success") {
-      var attendance = UserShiftRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return attendance;
-    }
-
-    return UserShiftRequest.fromJson({});
-  }
-
-  Future<List<UserLeaveRequest>> getTimeOffApproval({String page = "1"}) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/timeoff/get'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'page': page,
-      })
-    );
-
-    if (jsonDecode(response.body)["status"] == "success") {
-      Iterable it = jsonDecode(response.body)["data"]['userTimeOffRequest'];
-      List<UserLeaveRequest> userLeave = it.map((e) {
-        var attendance = UserLeaveRequest.fromJson(e);
-        return attendance;
-      }).toList();
-
-      return userLeave;
-    }
-
-    return [];
-  }
-
-  Future<UserLeaveRequest> getDetailTimeOffApproval(String id) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/timeoff/get/detail'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-          'id': id,
-        }),
-    );
-
-    if (jsonDecode(response.body)["status"] == "success") {
-      var attendance = UserLeaveRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return attendance;
-    }
-
-    return UserLeaveRequest.fromJson({});
-  }
-  
-    Future<bool> updateApproval({required String type, required String id, required String status, String? comment}) async {
+  Future<bool> updateRequest({
+    required String type,
+    required String id,
+    required String status,
+    String? comment,
+  }) async {
     String? token = await Auth().getToken();
 
     final response = await http.post(
@@ -177,10 +82,10 @@ class ApprovalRepository {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-          'id': id,
-          'status': status,
-          'comment': comment,
-        }),
+        'id': id,
+        'status': status,
+        'comment': comment,
+      }),
     );
 
     if (jsonDecode(response.body)["status"] == "success") {

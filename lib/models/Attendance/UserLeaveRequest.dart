@@ -15,19 +15,7 @@ class UserLeaveRequest {
   late String comment;
   late String file;
 
-  UserLeaveRequest({
-    required this.id,
-    required this.user,
-    required this.approvalLine,
-    required this.leaveRequestCategory,
-    required this.status,
-    required this.start_date,
-    required this.end_date,
-    required this.taken,
-    required this.notes,
-    required this.comment,
-    required this.file,
-  });
+  UserLeaveRequest();
 
   UserLeaveRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;

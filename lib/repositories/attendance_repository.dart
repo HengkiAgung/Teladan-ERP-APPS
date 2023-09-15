@@ -15,9 +15,7 @@ import '../utils/auth.dart';
 class AttendanceRepository {
   static final String _baseUrl = Config.apiUrl;
   
-  Future<Attendance> getAttendanceDetail(String date) async {
-    String? token = await Auth().getToken();
-
+  Future<Attendance> getAttendanceDetail({required String date, required String token}) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/history/detail'),
       headers: {
@@ -240,6 +238,7 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
+        loadingIndicator(context);
         request.files.add(imageFile);
 
         request.headers['Accept'] = 'application/json';
@@ -285,9 +284,7 @@ class AttendanceRepository {
     }
   }
 
-  Future<List<Attendance>> getHistoryAttendance({String page = "1"}) async {
-    String? token = await Auth().getToken();
-
+  Future<List<Attendance>> getHistoryAttendance({String page = "1", required String token}) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/cmt-attendance/history?page=$page'),
       headers: {

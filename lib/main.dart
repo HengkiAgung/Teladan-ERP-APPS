@@ -1,30 +1,75 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
+import 'bloc/approval/approval_bloc.dart';
+import 'bloc/attendance_detail/attendance_detail_bloc.dart';
+import 'bloc/employee/employee_bloc.dart';
+import 'bloc/request/request_bloc.dart';
+import 'bloc/user/user_bloc.dart';
+import 'bloc/attendance_daily/attendance_daily_bloc.dart';
+import 'bloc/attendance_log/attendance_log_bloc.dart';
 import 'page/login_page.dart';
 import 'page/main_page.dart';
-import 'repositories/user_repository.dart';
-import 'utils/auth.dart';
+
+class SimpleBlocObserver extends BlocObserver {
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('${bloc.runtimeType} $change');
+  }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print('${bloc.runtimeType} $transition');
+  }
+
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    print('${bloc.runtimeType} $error $stackTrace');
+    super.onError(bloc, error, stackTrace);
+  }
+}
+
 
 void main() {
-  runApp(const MainApp());
+  Bloc.observer = SimpleBlocObserver();
+
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<ApprovalBloc>(
+        create: (context) => ApprovalBloc(),
+      ),
+      BlocProvider<AttendanceDailyBloc>(
+        create: (context) => AttendanceDailyBloc(),
+      ),
+      BlocProvider<AttendanceDetailBloc>(
+        create: (context) => AttendanceDetailBloc(),
+      ),
+      BlocProvider<AttendanceLogBloc>(
+        create: (context) => AttendanceLogBloc(),
+      ),
+      BlocProvider<EmployeeBloc>(
+        create: (context) => EmployeeBloc(),
+      ),
+      BlocProvider<RequestBloc>(
+        create: (context) => RequestBloc(),
+      ),
+      BlocProvider<UserBloc>(
+        create: (context) => UserBloc(),
+      ),
+    ],
+    child: Container(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
-  Future<bool> isLogin() async {
-    var user = await UserRepository().getUser();
-
-    var token = await Auth().getToken();
-    if (token == null) {
-      return false;
-    }
-
-    return user != null;
-  }
-
   @override
   Widget build(BuildContext context) {
+    context.read<UserBloc>().add(GetUser());
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -33,11 +78,9 @@ class MainApp extends StatelessWidget {
           secondary: const Color(0xFFFFC107),
         ),
       ),
-      home: FutureBuilder<bool>(
-        future: isLogin(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the result, you can show a loading indicator.
+      home: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
             return Scaffold(
               backgroundColor: Colors.white,
               body: Center(
@@ -70,15 +113,13 @@ class MainApp extends StatelessWidget {
                 ),
               ),
             );
-          } else if (snapshot.hasError) {
-            // Handle the error case here.
-            return MainPage(index: 0, error: true,);
+          } else if (state is UserLoadSuccess) {
+              return state.user.id == 0 ? MainPage(index: 0) : const LoginPage();
           } else {
-            // Use the snapshot data to determine which widget to show.
-            return snapshot.data ?? false ? MainPage(index: 0) : LoginPage();
+            return MainPage(index: 0, error: true,);
           }
         },
-      ),
+      )
     );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../components/error_notification_component.dart';
+import '../models/Employee/User.dart';
 import '../page/login_page.dart';
 import '../repositories/user_repository.dart';
 import 'auth.dart';
 
 class Middleware {
-  Future<void> authenticated(BuildContext context) async {    
-    var user = await UserRepository().getUser();
+  Future<void> authenticated(BuildContext context, User user) async {    
 
     if (user.email == "") {
       // ignore: use_build_context_synchronously

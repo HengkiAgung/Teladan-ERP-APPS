@@ -14,20 +14,7 @@ class UserAttendanceRequest {
   late String check_out;
   late WorkingShift? workingShift;
 
-  UserAttendanceRequest({
-    required this.id,
-    required this.user,
-    required this.approvalLine,
-    required this.status,
-    required this.date,
-    required this.notes,
-    required this.check_in,
-    required this.check_out,
-    required this.workingShift,
-    required this.comment,
-    required this.file,
-
-  });
+  UserAttendanceRequest();
 
   UserAttendanceRequest.fromJson(Map<String, dynamic> json) {
     // print(json['user']);

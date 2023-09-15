@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../models/Attendance.dart';
 import '../../repositories/attendance_repository.dart';
 
 class DetailAttendance extends StatelessWidget {
-  final String date;
-  const DetailAttendance({super.key, required this.date});
+  const DetailAttendance({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,9 @@ class DetailAttendance extends StatelessWidget {
           const Spacer()
         ],
       ),
-      body: FutureBuilder<Attendance>(
-        future: AttendanceRepository().getAttendanceDetail(date),
-        builder: (BuildContext context, AsyncSnapshot<Attendance> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<AttendanceDetailBloc, AttendanceDetailState>(
+        builder: (context, state) {
+          if (state is AttendanceDetailLoading) {
             // While waiting for the result, you can show a loading indicator.
             // return const CircularProgressIndicator();
             return Text(
@@ -64,13 +64,12 @@ class DetailAttendance extends StatelessWidget {
                 color: Colors.white,
               ),
             );
-          } else if (snapshot.hasError) {
-            // Handle the error case here.
-            return Text('Error: ${snapshot.error}');
-          } else {
+          } else if (state is AttendanceDetailLoadSuccess) {
+            Attendance attendance = state.attendance;
+
             return ListView(
               children: [
-                snapshot.data!.check_in != ""
+                attendance.check_in != ""
                     ? Column(
                         children: [
                           Padding(
@@ -97,8 +96,8 @@ class DetailAttendance extends StatelessWidget {
                                   child: FlutterMap(
                                     options: MapOptions(
                                       center: LatLng(
-                                        snapshot.data!.check_in_latitude,
-                                        snapshot.data!.check_in_longitude,
+                                        attendance.check_in_latitude,
+                                        attendance.check_in_longitude,
                                       ),
                                       zoom: 14,
                                     ),
@@ -106,23 +105,27 @@ class DetailAttendance extends StatelessWidget {
                                       TileLayer(
                                         urlTemplate:
                                             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName: 'com.comtelindo.app',
+                                        userAgentPackageName:
+                                            'com.comtelindo.app',
                                       ),
-                                      snapshot.data!.check_in_latitude != 0 ? MarkerLayer(
-                                        markers: [
-                                          Marker(
-                                            point: LatLng(
-                                                snapshot
-                                                    .data!.check_in_latitude,
-                                                snapshot
-                                                    .data!.check_in_longitude),
-                                            width: 20,
-                                            height: 20,
-                                            builder: (context) => const Icon(
-                                                Icons.location_on_outlined),
-                                          ),
-                                        ],
-                                      ) : const SizedBox(),
+                                      attendance.check_in_latitude != 0
+                                          ? MarkerLayer(
+                                              markers: [
+                                                Marker(
+                                                  point: LatLng(
+                                                      attendance
+                                                          .check_in_latitude,
+                                                      attendance
+                                                          .check_in_longitude),
+                                                  width: 20,
+                                                  height: 20,
+                                                  builder: (context) =>
+                                                      const Icon(Icons
+                                                          .location_on_outlined),
+                                                ),
+                                              ],
+                                            )
+                                          : const SizedBox(),
                                     ],
                                   ),
                                 ),
@@ -130,8 +133,10 @@ class DetailAttendance extends StatelessWidget {
                                   child: FadeInImage(
                                     placeholder:
                                         const AssetImage("images/loading.gif"),
-                                    image: NetworkImage(
-                                        snapshot.data!.check_in_file != "" ? snapshot.data!.check_in_file : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                    image: NetworkImage(attendance.check_in_file !=
+                                            ""
+                                        ? attendance.check_in_file
+                                        : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
                                   ),
                                 ),
                               ],
@@ -167,8 +172,8 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.check_in != ""
-                                        ? snapshot.data!.check_in
+                                    attendance.check_in != ""
+                                        ? attendance.check_in
                                             .split(' ')[1]
                                             .substring(0, 5)
                                         : "-",
@@ -211,7 +216,7 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.shift_name,
+                                    attendance.shift_name,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -228,7 +233,7 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.date,
+                                    attendance.date,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -269,7 +274,8 @@ class DetailAttendance extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      launch("https://www.google.com/maps/search/?api=1&query=${snapshot.data!.check_in_latitude},${snapshot.data!.check_in_longitude}");
+                                      launch(
+                                          "https://www.google.com/maps/search/?api=1&query=${attendance.check_in_latitude},${attendance.check_in_longitude}");
                                     },
                                     child: Text(
                                       "Lihat Lokasi",
@@ -298,7 +304,7 @@ class DetailAttendance extends StatelessWidget {
                           ),
                         ),
                       ),
-                snapshot.data!.check_out != ""
+                attendance.check_out != ""
                     ? Column(
                         children: [
                           Padding(
@@ -325,8 +331,8 @@ class DetailAttendance extends StatelessWidget {
                                   child: FlutterMap(
                                     options: MapOptions(
                                       center: LatLng(
-                                        snapshot.data!.check_out_latitude,
-                                        snapshot.data!.check_out_longitude,
+                                        attendance.check_out_latitude,
+                                        attendance.check_out_longitude,
                                       ),
                                       zoom: 14,
                                     ),
@@ -334,33 +340,38 @@ class DetailAttendance extends StatelessWidget {
                                       TileLayer(
                                         urlTemplate:
                                             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName: 'com.comtelindo.app',
+                                        userAgentPackageName:
+                                            'com.comtelindo.app',
                                       ),
-                                      snapshot.data!.check_out_latitude != 0 ? MarkerLayer(
-                                        markers: [
-                                          Marker(
-                                            point: LatLng(
-                                                snapshot
-                                                    .data!.check_out_latitude,
-                                                snapshot
-                                                    .data!.check_out_longitude),
-                                            width: 20,
-                                            height: 20,
-                                            builder: (context) => const Icon(
-                                                Icons.location_on_outlined),
-                                          ),
-                                        ],
-                                      ) : const SizedBox(),
+                                      attendance.check_out_latitude != 0
+                                          ? MarkerLayer(
+                                              markers: [
+                                                Marker(
+                                                  point: LatLng(
+                                                      attendance
+                                                          .check_out_latitude,
+                                                      attendance
+                                                          .check_out_longitude),
+                                                  width: 20,
+                                                  height: 20,
+                                                  builder: (context) =>
+                                                      const Icon(Icons
+                                                          .location_on_outlined),
+                                                ),
+                                              ],
+                                            )
+                                          : const SizedBox(),
                                     ],
                                   ),
                                 ),
-                                
                                 Container(
                                   child: FadeInImage(
                                     placeholder:
                                         const AssetImage("images/loading.gif"),
-                                    image: NetworkImage(
-                                        snapshot.data!.check_out_file != "" ? snapshot.data!.check_out_file : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                    image: NetworkImage(attendance.check_out_file !=
+                                            ""
+                                        ? attendance.check_out_file
+                                        : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
                                   ),
                                 ),
                               ],
@@ -396,7 +407,7 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.check_out,
+                                    attendance.check_out,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -436,7 +447,7 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.shift_name,
+                                    attendance.shift_name,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -453,7 +464,7 @@ class DetailAttendance extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data!.date,
+                                    attendance.date,
                                     style: GoogleFonts.poppins(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -494,7 +505,8 @@ class DetailAttendance extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      launch("https://www.google.com/maps/search/?api=1&query=${snapshot.data!.check_out_latitude},${snapshot.data!.check_out_longitude}");
+                                      launch(
+                                          "https://www.google.com/maps/search/?api=1&query=${attendance.check_out_latitude},${attendance.check_out_longitude}");
                                     },
                                     child: Text(
                                       "Lihat Lokasi",
@@ -525,6 +537,8 @@ class DetailAttendance extends StatelessWidget {
                       ),
               ],
             );
+          } else {
+            return Text('Error to load attendance');
           }
         },
       ),

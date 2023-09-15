@@ -16,11 +16,11 @@ import '../utils/auth.dart';
 class RequestRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<List<UserAttendanceRequest>> getAllUserAttendanceRequest({String page = "1"}) async {
+  Future<List<dynamic>> getAllUserRequest({String page = "1", required String type, required String key, required dynamic model}) async {
     String? token = await Auth().getToken();
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/attendance/get?page=$page'),
+      Uri.parse('$_baseUrl/cmt-request/personal/$type/get?page=$page'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -29,23 +29,21 @@ class RequestRepository {
     );
 
     if (response.statusCode == 200) {
-      Iterable it = jsonDecode(response.body)["data"]['userAttendanceRequest'];
-      List<UserAttendanceRequest> userAttendance = it.map((e) {
-        var attendance = UserAttendanceRequest.fromJson(e);
-        return attendance;
+      Iterable it = jsonDecode(response.body)["data"][key];
+      return it.map((e) {
+        var data = model.fromJson(e);
+        return data;
       }).toList();
 
-      return userAttendance;
     }
-
     return [];
   }
 
-  Future<UserAttendanceRequest> getDetailUserAttendanceRequest(int id) async {
+  Future<dynamic> getDetailRequest({required String id, required String type, required dynamic model}) async {
     String? token = await Auth().getToken();
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/attendance/get/detail'),
+      Uri.parse('$_baseUrl/cmt-request/personal/$type/get/detail'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -57,12 +55,10 @@ class RequestRepository {
     );
 
     if (response.statusCode == 200) {
-      UserAttendanceRequest userAttendanceRequest = UserAttendanceRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return userAttendanceRequest;
+      return model.fromJson(jsonDecode(response.body)["data"]);
     }
 
-    return UserAttendanceRequest.fromJson(jsonDecode(response.body));
+    return model.fromJson({});
   }
 
   Future<bool> makeAttendanceRequest(
@@ -149,57 +145,6 @@ class RequestRepository {
     }
   }
 
-  Future<List<dynamic>> getAllUserShiftRequest({String page = "1"}) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/shift/get?page=$page'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      Iterable it = jsonDecode(response.body)["data"]['userShiftRequest'];
-      List<UserShiftRequest> userShift = it.map((e) {
-        var attendance = UserShiftRequest.fromJson(e);
-        return attendance;
-      }).toList();
-
-      WorkingShift currentShift = WorkingShift.fromJson(jsonDecode(response.body)["data"]["currentShift"]);
-
-      return [userShift, currentShift];
-    }
-
-    return [];
-  }
-  
-  Future<UserShiftRequest> getDetailUserShiftRequest(int id) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/shift/get/detail'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'id': id,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      UserShiftRequest userShiftRequest = UserShiftRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return userShiftRequest;
-    }
-
-    return UserShiftRequest.fromJson(jsonDecode(response.body));
-  }
-  
   Future<List<WorkingShift>> getAllWorkingShift() async {
     String? token = await Auth().getToken();
 
@@ -278,31 +223,6 @@ class RequestRepository {
 
       return false;
     }
-  }
-
-  Future<List<UserLeaveRequest>> getAllUserTimeOffRequest({String page = "1"}) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/time-off/get?page=$page'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      Iterable it = jsonDecode(response.body)["data"]['userLeaveRequest'];
-      List<UserLeaveRequest> userShift = it.map((e) {
-        var attendance = UserLeaveRequest.fromJson(e);
-        return attendance;
-      }).toList();
-
-      return userShift;
-    }
-
-    return [];
   }
 
   Future<bool> makeLeaveRequest(
@@ -424,30 +344,6 @@ class RequestRepository {
     }
 
     return [];
-  }
-
-  Future<UserLeaveRequest> getDetailUserLeaveRequest(int id) async {
-    String? token = await Auth().getToken();
-
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/time-off/get/detail'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'id': id,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      UserLeaveRequest userAttendanceRequest = UserLeaveRequest.fromJson(jsonDecode(response.body)["data"]);
-
-      return userAttendanceRequest;
-    }
-
-    return UserLeaveRequest.fromJson(jsonDecode(response.body));
   }
 
   Future<bool> cancelRequest({required int id, required String type}) async {

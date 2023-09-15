@@ -12,15 +12,7 @@ class UserShiftRequest {
   late String notes;
   late String comment;
 
-  UserShiftRequest({
-    required this.id,
-    required this.user,
-    required this.approvalLine,
-    required this.status,
-    required this.workingShift,
-    required this.date,
-    required this.notes,
-  });
+  UserShiftRequest();
 
   UserShiftRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;

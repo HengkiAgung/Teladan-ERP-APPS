@@ -8,9 +8,7 @@ import '../utils/auth.dart';
 class EmployeeRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<List<User>> getAllUser() async {
-    String? token = await Auth().getToken();
-
+  Future<List<User>> getAllUser({required String token}) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/cmt-employee/all'),
       headers: {
