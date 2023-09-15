@@ -1,8 +1,10 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../bloc/employee/employee_bloc.dart';
 import '../models/Employee/User.dart';
 import '../repositories/employee_repository.dart';
 
@@ -16,6 +18,12 @@ class EmployeePage extends StatefulWidget {
 class _EmployeePageState extends State<EmployeePage> {
   @override
   Widget build(BuildContext context) {
+    final employee = BlocProvider.of<EmployeeBloc>(context);
+
+    if (employee.state is! EmployeeLoadSuccess) {
+      context.read<EmployeeBloc>().add(GetEmployee());
+    } 
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -33,23 +41,16 @@ class _EmployeePageState extends State<EmployeePage> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<User>>(
-              future: EmployeeRepository().getAllUser(),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // While waiting for the result, you can show a loading indicator.
-                  // return const CircularProgressIndicator();
+            child: BlocBuilder<EmployeeBloc, EmployeeState>(
+              builder: (context, state) {
+                if (state is EmployeeLoading) {
                   return const Text('Loading');
-                } else if (snapshot.hasError) {
-                  // Handle the error case here.
-                  return Text('Error: ${snapshot.error}');
-                } else {
+                } else if (state is EmployeeLoadSuccess) {
                   return ListView.builder(
-                    itemCount:
-                        snapshot.data == null ? 0 : snapshot.data!.length,
+                    itemCount: state.employee.length,
                     itemBuilder: (BuildContext context, int index) {
-                      var user = snapshot.data![index];
+                      var user = state.employee[index];
+
                       return Container(
                         padding: const EdgeInsets.only(
                           right: 10,
@@ -102,7 +103,9 @@ class _EmployeePageState extends State<EmployeePage> {
                                       ),
                                     ),
                                     Text(
-                                    user.kontak != "" ? "+62 ${user.kontak}" : "",
+                                      user.kontak != ""
+                                          ? "+62 ${user.kontak}"
+                                          : "",
                                       style: GoogleFonts.poppins(
                                         fontSize: 10,
                                         color: Colors.grey,
@@ -120,7 +123,8 @@ class _EmployeePageState extends State<EmployeePage> {
                                 ),
                                 GestureDetector(
                                   onTap: () => launch("mailto:${user.email}"),
-                                  child: Icon(Icons.mail_outline, size: 25, color: Colors.red),
+                                  child: Icon(Icons.mail_outline,
+                                      size: 25, color: Colors.red),
                                 ),
                                 SizedBox(
                                   width: 15,
@@ -141,6 +145,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     },
                   );
                 }
+                return const Text('Error to load employee');
               },
             ),
           ),

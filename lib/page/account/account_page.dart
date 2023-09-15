@@ -1,3 +1,4 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/page/account/employment_page.dart';
 import 'package:teladan/page/account/payroll/payroll_page.dart';
 import 'package:teladan/utils/auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../bloc/user/user_bloc.dart';
 import '../../components/avatar_profile_component.dart';
 import '../../models/Employee/User.dart';
 import '../../repositories/user_repository.dart';
@@ -22,23 +24,25 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
+    final account = BlocProvider.of<UserBloc>(context);
+
+    if (account.state is! UserLoadSuccess) {
+      context.read<UserBloc>().add(GetUser());
+    }
+
+    final attendanceLog = BlocProvider.of<UserBloc>(context);
     return ListView(
-      children: <Widget>[
-        FutureBuilder<User?>(
-          future: UserRepository().getUser(),
-          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // While waiting for the result, you can show a loading indicator.
-              // return const CircularProgressIndicator();
-              return const Text('Loading');
-            } else if (snapshot.hasError) {
-              // Handle the error case here.
-              return Text('Error: ${snapshot.error}');
-            } else {
-              return AvatarProfileComponent(
-                user: snapshot.data!,
-              );
+      children: [
+        BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            if (state is UserLoading) {
+              return const Text('Loading...');
+            } else if (state is UserLoadSuccess) {
+                return AvatarProfileComponent(
+                  user: state.user,
+                );
             }
+            return const Text('Failed to load user data');
           },
         ),
 
