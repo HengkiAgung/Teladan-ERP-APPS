@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-import 'bloc/approval/approval_bloc.dart';
+import 'bloc/approval_detail/approval_detail_bloc.dart';
+import 'bloc/approval_list/approval_list_bloc.dart';
 import 'bloc/attendance_detail/attendance_detail_bloc.dart';
+import 'bloc/attendance_today/attendance_today_bloc.dart';
 import 'bloc/employee/employee_bloc.dart';
 import 'bloc/request/request_bloc.dart';
 import 'bloc/user/user_bloc.dart';
-import 'bloc/attendance_daily/attendance_daily_bloc.dart';
 import 'bloc/attendance_log/attendance_log_bloc.dart';
 import 'page/login_page.dart';
 import 'page/main_page.dart';
@@ -37,11 +38,14 @@ void main() {
 
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider<ApprovalBloc>(
-        create: (context) => ApprovalBloc(),
+      BlocProvider<ApprovalListBloc>(
+        create: (context) => ApprovalListBloc(),
       ),
-      BlocProvider<AttendanceDailyBloc>(
-        create: (context) => AttendanceDailyBloc(),
+      BlocProvider<ApprovalDetailBloc>(
+        create: (context) => ApprovalDetailBloc(),
+      ),
+      BlocProvider<AttendanceTodayBloc>(
+        create: (context) => AttendanceTodayBloc(),
       ),
       BlocProvider<AttendanceDetailBloc>(
         create: (context) => AttendanceDetailBloc(),

@@ -1,8 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:teladan/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../models/Attendance/UserShiftRequest.dart';
 import 'detail_shift_approval_page.dart';
 
@@ -14,27 +16,23 @@ class ShiftApprovalPage extends StatefulWidget {
 }
 
 class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
-  List<UserShiftRequest> userShiftRequest = [];
+  List<UserShiftRequest> _request = [];
 
   late ScrollController _scrollController;
   int page = 1;
-
-  void fetchShiftRequest() async {
-    var data =
-        await ApprovalRepository().getShiftApproval(page: page.toString());
-    setState(() {
-      userShiftRequest.addAll(data);
-    });
-  }
 
   _scrollListener() {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      setState(() {
-        page++;
-      });
-      fetchShiftRequest();
+      context.read<ApprovalListBloc>().add(
+            ScrollFetch(
+              page: page++,
+              key: 'userAttendanceRequest',
+              type: 'attendance',
+              model: UserShiftRequest,
+            ),
+          );
     }
   }
 
@@ -42,7 +40,7 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    fetchShiftRequest();
+
     super.initState();
   }
 
@@ -85,36 +83,48 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
           const Spacer()
         ],
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: userShiftRequest.length,
-        itemBuilder: (BuildContext context, int index) {
-          var request = userShiftRequest[index];
-          return RequestItemComponent(
-            fun: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailShiftApprovalPage(
-                    id: request.id.toString(),
+      body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
+          builder: (context, state) {
+        if (state is ApprovalListLoading) {
+          return Text("loading...");
+        } else if (state is ApprovalListLoadFailure) {
+          return Text("Failed to load attendance log");
+        } else if (state is ApprovalListLoadSuccess) {
+          setState(() {
+            _request = state.request as List<UserShiftRequest>;
+          });
+        }
+        return ListView.builder(
+          controller: _scrollController,
+          itemCount: _request.length,
+          itemBuilder: (BuildContext context, int index) {
+            var request = _request[index];
+            return RequestItemComponent(
+              fun: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailShiftApprovalPage(
+                      id: request.id.toString(),
+                    ),
+                  ),
+                );
+              },
+              title: request.user!.name,
+              status: request.status,
+              children: [
+                Text(
+                  "Tanggal ${request.date}",
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    color: Colors.grey,
                   ),
                 ),
-              );
-            },
-            title: request.user!.name,
-            status: request.status,
-            children: [
-              Text(
-                "Tanggal ${request.date}",
-                style: GoogleFonts.poppins(
-                  fontSize: 11,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+              ],
+            );
+          },
+        );
+      }),
     );
   }
 }

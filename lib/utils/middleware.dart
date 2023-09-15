@@ -7,7 +7,8 @@ import '../repositories/user_repository.dart';
 import 'auth.dart';
 
 class Middleware {
-  Future<void> authenticated(BuildContext context, User user) async {    
+  Future<void> authenticated(BuildContext context, String token) async {    
+    var user = await UserRepository().getUser(token);
 
     if (user.email == "") {
       // ignore: use_build_context_synchronously

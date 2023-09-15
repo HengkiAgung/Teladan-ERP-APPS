@@ -1,7 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../repositories/approval_repository.dart';
@@ -20,45 +22,11 @@ class DetailShiftApprovalPage extends StatefulWidget {
 
 class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
   String id;
-  late List<UserShiftRequest> userShiftRequest = [];
-  final TextEditingController commentController = TextEditingController();
-
-  void fetchAttendance() async {
-    var data = await ApprovalRepository().getDetailShiftApproval(id);
-    setState(() {
-      userShiftRequest.addAll([data]);
-    });
-  }
-
-  @override
-  void initState() {
-    fetchAttendance();
-    super.initState();
-  }
 
   _DetailShiftApprovalPageState({required this.id});
 
   @override
   Widget build(BuildContext context) {
-    var shift =
-        userShiftRequest.isNotEmpty ? userShiftRequest[0].workingShift : null;
-    List<List<String>> stringChildren = [];
-
-    if (userShiftRequest.isNotEmpty) {
-      stringChildren.addAll([
-        ["Tanggal absensi", userShiftRequest[0].date],
-        [
-          "Shift",
-          "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
-        ],
-        ["Reason", userShiftRequest[0].notes],
-      ]);
-
-      if (userShiftRequest[0].comment != "") {
-        stringChildren.add(["Comment", userShiftRequest[0].comment]);
-      }
-    }
-
     // var shift = userShiftRequest[0].user!.userEmployment!.workingScheduleShift.workingShift;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -98,25 +66,52 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
           const Spacer()
         ],
       ),
-      bottomNavigationBar:
-          userShiftRequest.isNotEmpty && userShiftRequest[0].status == "Waiting"
-              ? 
-              ApprovalActionComponent(
-                type: "shift",
-                id: userShiftRequest[0].id.toString(),
-                source: DetailShiftApprovalPage(
-                  id: userShiftRequest[0].id.toString(),
-                ),
-              )
-              : null,
-      body: userShiftRequest.isNotEmpty
-          ? DetailRequestComponent(
-              user: userShiftRequest[0].user!,
-              status: userShiftRequest[0].status,
-              displayAction: true,
-              stringChildren: stringChildren,
-            )
-          : const SizedBox(),
+      body: BlocBuilder<ApprovalDetailBloc, ApprovalDetailState>(
+        builder: (context, state) {
+          if (state is ApprovalDetailLoading) {
+            return const Text("Loading...");
+          } else if (state is ApprovalDetailLoadSuccess) {
+            var request = state.request as UserShiftRequest;
+            var shift = request.workingShift;
+            List<List<String>> stringChildren = [];
+
+            stringChildren.addAll([
+              ["Tanggal absensi", request.date],
+              [
+                "Shift",
+                "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
+              ],
+              ["Reason", request.notes],
+            ]);
+
+            if (request.comment != "") {
+              stringChildren.add(["Comment", request.comment]);
+            }
+
+            return Column(
+                children: [
+                  Expanded(
+                    child: DetailRequestComponent(
+                      user: request.user!,
+                      status: request.status,
+                      stringChildren: stringChildren,
+                    ),
+                  ),
+                  request.status == "Waiting"
+                      ? ApprovalActionComponent(
+                          type: "shift",
+                          id: request.id.toString(),
+                          source: DetailShiftApprovalPage(
+                            id: request.id.toString(),
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              );
+          }
+          return const Text("Failed to load request");
+        },
+      )
     );
   }
 }

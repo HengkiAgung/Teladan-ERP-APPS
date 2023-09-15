@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
@@ -20,40 +22,11 @@ class DetailTimeOffApprovalPage extends StatefulWidget {
 
 class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
   String id;
-  late List<UserLeaveRequest> userTimeOffRequest = [];
-  final TextEditingController commentController = TextEditingController();
-
-  void fetch() async {
-    var data = await ApprovalRepository().getDetailTimeOffApproval(id);
-    setState(() {
-      userTimeOffRequest.addAll([data]);
-    });
-  }
-
-  @override
-  void initState() {
-    fetch();
-    super.initState();
-  }
 
   _DetailTimeOffApprovalPageState({required this.id});
 
   @override
   Widget build(BuildContext context) {
-    List<List<String>> stringChildren = [];
-
-    if (userTimeOffRequest.isNotEmpty) {
-      stringChildren.addAll([
-        ["Tanggal absensi", userTimeOffRequest[0].start_date],
-        ["Reason", userTimeOffRequest[0].notes],
-      ]);
-
-      if (userTimeOffRequest[0].comment != "") {
-        stringChildren.add(["Comment", userTimeOffRequest[0].comment]);
-      }
-    }
-
-    print("objectBuild");
     // var shift = userTimeOffRequest[0].user!.userEmployment!.workingScheduleTimeOff.workingTimeOff;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -93,26 +66,55 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
           const Spacer()
         ],
       ),
-      bottomNavigationBar: userTimeOffRequest.isNotEmpty &&
-              userTimeOffRequest[0].status == "Waiting"
-          ? ApprovalActionComponent(
-              type: "time-off",
-              id: userTimeOffRequest[0].id.toString(),
-              source: DetailTimeOffApprovalPage(
-                id: userTimeOffRequest[0].id.toString(),
-              ),
-            )
-          : null,
-      body: userTimeOffRequest.isNotEmpty
-          ? DetailRequestComponent(
-              user: userTimeOffRequest[0].user!,
-              status: userTimeOffRequest[0].status,
-              displayAction: true,
-              stringChildren: stringChildren,
-              file: userTimeOffRequest[0].file,
-              type: "timeoff",
-            )
-          : const SizedBox(),
+      body: BlocBuilder<ApprovalDetailBloc, ApprovalDetailState>(
+        builder: (context, state) {
+          if (state is ApprovalDetailLoading) {
+            return const Text("Loading...");
+          } else if (state is ApprovalDetailLoadSuccess) {
+            var shift = state.request.user!.userEmployment!.workingScheduleShift
+                .workingShift;
+            var request = state.request;
+
+            List<List<String>> stringChildren = [];
+
+            if (request.isNotEmpty) {
+              stringChildren.addAll([
+                ["Tanggal absensi", request.start_date],
+                ["Reason", request.notes],
+              ]);
+
+              if (request.comment != "") {
+                stringChildren.add(["Comment", request.comment]);
+              }
+            }
+
+            return Column(
+              children: [
+                Expanded(
+                  child: DetailRequestComponent(
+                    user: request.user!,
+                    status: request.status,
+                    stringChildren: stringChildren,
+                    file: request.file,
+                    type: "timeoff",
+                  ),
+                ),
+                request.status == "Waiting"
+                    ? ApprovalActionComponent(
+                        type: "time-off",
+                        id: request.id.toString(),
+                        source: DetailTimeOffApprovalPage(
+                          id: request.id.toString(),
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
+            );
+          }
+
+          return const Text("Failed to load request");
+        },
+      ),
     );
   }
 }

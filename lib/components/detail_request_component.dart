@@ -12,14 +12,12 @@ class DetailRequestComponent extends StatefulWidget {
   String status;
   String? file;
   String? type;
-  bool displayAction;
   void Function()? fun;
 
   DetailRequestComponent({
     super.key,
     required this.user,
     required this.status,
-    required this.displayAction,
     this.file = null,
     this.type = null,
     required this.stringChildren,
@@ -31,7 +29,6 @@ class DetailRequestComponent extends StatefulWidget {
   State<DetailRequestComponent> createState() => _DetailRequestComponentState(
         user: user,
         status: status,
-        displayAction: displayAction,
         stringChildren: stringChildren,
         file: file,
         type: type,
@@ -43,7 +40,6 @@ class _DetailRequestComponentState extends State<DetailRequestComponent> {
   User user;
   List<List<String>> stringChildren;
   String status;
-  bool displayAction;
   String? file;
   String? type;
   void Function()? fun;
@@ -51,7 +47,6 @@ class _DetailRequestComponentState extends State<DetailRequestComponent> {
   _DetailRequestComponentState({
     required this.user,
     required this.status,
-    required this.displayAction,
     required this.file,
     required this.type,
     required this.stringChildren,
@@ -72,7 +67,7 @@ class _DetailRequestComponentState extends State<DetailRequestComponent> {
 
     List<Widget> children = stringChildren.map((List<String> text) {
       return Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 20,
           horizontal: 15,
         ),

@@ -1,9 +1,12 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:teladan/page/inbox/approval/attendance/detail_attendance_approval_page.dart';
 import 'package:teladan/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../models/Attendance/UserAttendanceRequest.dart';
 
 class AttendanceApprovalPage extends StatefulWidget {
@@ -14,27 +17,23 @@ class AttendanceApprovalPage extends StatefulWidget {
 }
 
 class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
-  List<UserAttendanceRequest> userAttendanceRequest = [];
+  List<UserAttendanceRequest> _userAttendanceRequest = [];
 
   late ScrollController _scrollController;
   int page = 1;
-
-  void fetchAttendanceRequest() async {
-    var data =
-        await ApprovalRepository().getAttendanceApproval(page: page.toString());
-    setState(() {
-      userAttendanceRequest.addAll(data);
-    });
-  }
 
   _scrollListener() {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      setState(() {
-        page++;
-      });
-      fetchAttendanceRequest();
+      context.read<ApprovalListBloc>().add(
+            ScrollFetch(
+              page: page++,
+              key: 'userAttendanceRequest',
+              type: 'attendance',
+              model: UserAttendanceRequest,
+            ),
+          );
     }
   }
 
@@ -42,7 +41,7 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    fetchAttendanceRequest();
+
     super.initState();
   }
 
@@ -85,50 +84,67 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
           const Spacer()
         ],
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: userAttendanceRequest.length,
-        itemBuilder: (BuildContext context, int index) {
-          var request = userAttendanceRequest[index];
-          return RequestItemComponent(
-            fun: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DetailAttendanceApprovalPage(
-                          id: request.id.toString(),
-                        )),
+      body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
+        builder: (context, state) {
+          if (state is ApprovalListLoading) {
+            return Text("loading...");
+          } else if (state is ApprovalListLoadFailure) {
+            return Text("Failed to load attendance log");
+          } else if (state is ApprovalListLoadSuccess) {
+            setState(() {
+              _userAttendanceRequest =
+                  state.request as List<UserAttendanceRequest>;
+            });
+          }
+
+          return ListView.builder(
+            controller: _scrollController,
+            itemCount: _userAttendanceRequest.length,
+            itemBuilder: (BuildContext context, int index) {
+              var request = _userAttendanceRequest[index];
+              return RequestItemComponent(
+                fun: () {
+                  context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: request.id.toString(), type: "attendance", model: UserAttendanceRequest));
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailAttendanceApprovalPage(
+                              id: request.id.toString(),
+                            )),
+                  );
+                },
+                title: request.user!.name,
+                status: request.status,
+                children: [
+                  Text(
+                    "Tanggal ${request.date}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  request.check_in != ""
+                      ? Text(
+                          "Check In pada ${request.check_in}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : SizedBox(),
+                  request.check_out != ""
+                      ? Text(
+                          "Check Out pada ${request.check_out}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : SizedBox(),
+                ],
               );
             },
-            title: request.user!.name,
-            status: request.status,
-            children: [
-              Text(
-                "Tanggal ${request.date}",
-                style: GoogleFonts.poppins(
-                  fontSize: 11,
-                  color: Colors.grey,
-                ),
-              ),
-              request.check_in != ""
-                  ? Text(
-                      "Check In pada ${request.check_in}",
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : SizedBox(),
-              request.check_out != ""
-                  ? Text(
-                      "Check Out pada ${request.check_out}",
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : SizedBox(),
-            ],
           );
         },
       ),

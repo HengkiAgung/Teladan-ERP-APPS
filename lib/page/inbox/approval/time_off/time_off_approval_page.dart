@@ -1,8 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:teladan/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
 import 'detail_time_off_approval_page.dart';
 
@@ -14,27 +16,23 @@ class TimeOffApprovalPage extends StatefulWidget {
 }
 
 class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
-  List<UserLeaveRequest> userTimeOffRequest = [];
+  List<UserLeaveRequest> _request = [];
 
   late ScrollController _scrollController;
   int page = 1;
-
-  void fetchTimeOffRequest() async {
-    var data =
-        await ApprovalRepository().getTimeOffApproval(page: page.toString());
-    setState(() {
-      userTimeOffRequest.addAll(data);
-    });
-  }
 
   _scrollListener() {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      setState(() {
-        page++;
-      });
-      fetchTimeOffRequest();
+      context.read<ApprovalListBloc>().add(
+            ScrollFetch(
+              page: page++,
+              key: 'userTimeOffRequest',
+              type: 'time-off',
+              model: UserLeaveRequest,
+            ),
+          );
     }
   }
 
@@ -42,7 +40,7 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    fetchTimeOffRequest();
+
     super.initState();
   }
 
@@ -85,33 +83,47 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
           const Spacer()
         ],
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: userTimeOffRequest.length,
-        itemBuilder: (BuildContext context, int index) {
-          var request = userTimeOffRequest[index];
-          return RequestItemComponent(
-            fun: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailTimeOffApprovalPage(
-                    id: request.id.toString(),
+      body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
+        builder: (context, state) {
+          if (state is ApprovalListLoading) {
+            return Text("loading...");
+          } else if (state is ApprovalListLoadFailure) {
+            return Text("Failed to load attendance log");
+          } else if (state is ApprovalListLoadSuccess) {
+            setState(() {
+              _request = state.request as List<UserLeaveRequest>;
+            });
+          }
+
+          return ListView.builder(
+            controller: _scrollController,
+            itemCount: _request.length,
+            itemBuilder: (BuildContext context, int index) {
+              var request = _request[index];
+              return RequestItemComponent(
+                fun: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailTimeOffApprovalPage(
+                        id: request.id.toString(),
+                      ),
+                    ),
+                  );
+                },
+                title: request.user!.name,
+                status: request.status,
+                children: [
+                  Text(
+                    "Tanggal ${request.start_date} - ${request.end_date}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
+                ],
               );
             },
-            title: request.user!.name,
-            status: request.status,
-            children: [
-              Text(
-                "Tanggal ${request.start_date} - ${request.end_date}",
-                style: GoogleFonts.poppins(
-                  fontSize: 11,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
           );
         },
       ),
