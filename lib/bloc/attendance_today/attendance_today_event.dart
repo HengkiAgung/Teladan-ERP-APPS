@@ -8,3 +8,5 @@ class AttendanceTodayEvent extends Equatable {
 }
 
 class GetAttendanceToday extends AttendanceTodayEvent {}
+
+class LogOut extends AttendanceTodayEvent {}

@@ -1,8 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/models/Attendance/LeaveRequestCategory.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../bloc/request_leavel_list/request_leave_list_bloc.dart';
 import '../../../repositories/request_repository.dart';
 import '../../main_page.dart';
 
@@ -93,12 +95,7 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
                 // ignore: use_build_context_synchronously
-                Navigator.pushReplacement<void, void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => MainPage(index: 2),
-                  ),
-                );
+                context.read<RequestLeaveListBloc>().add(const GetRequestList());
                 // ignore: use_build_context_synchronously
                 showModalBottomSheet<void>(
                   context: context,

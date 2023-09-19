@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/summaries/summaries_bloc.dart';
 import 'package:teladan/page/account/account_page.dart';
 import 'package:teladan/page/employee_page.dart';
 import 'package:teladan/page/inbox/inbox_page.dart';
@@ -72,6 +73,12 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final summaries = BlocProvider.of<SummariesBloc>(context);
+
+    if (summaries.state is! SummariesLoadSuccess) {
+      context.read<SummariesBloc>().add(GetAttendanceSummaries());
+    } 
+
     this.context = context;
     return Scaffold(
       body: error

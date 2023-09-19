@@ -16,7 +16,10 @@ class UserRepository {
   static final String _baseUrl = Config.apiUrl;
 
   Future<User> getUser(String token) async {
-
+    print(token);
+    if (token == "" || token == null) {
+      return User.fromJson({});
+    }
     final response = await http.get(
       Uri.parse("${Config.apiUrl}/user/me"),
       headers: {

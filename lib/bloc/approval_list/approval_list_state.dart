@@ -19,12 +19,6 @@ class ApprovalListLoadSuccess extends ApprovalListState {
   const ApprovalListLoadSuccess(this.request);
 }
 
-class ApprovalListDetailLoadSuccess extends ApprovalListState {
-  final dynamic request;
-
-  const ApprovalListDetailLoadSuccess(this.request);
-}
-
 class ApprovalListLoadFailure extends ApprovalListState {
   final String error;
 

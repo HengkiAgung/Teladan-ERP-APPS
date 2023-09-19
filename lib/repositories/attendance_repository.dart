@@ -6,10 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:teladan/components/modal_bottom_sheet_component.dart';
 
-import '../components/error_notification_component.dart';
 import '../models/Attendance.dart';
 import '../config.dart';
+import '../models/Summaries.dart';
 import '../utils/auth.dart';
 
 class AttendanceRepository {
@@ -93,53 +94,10 @@ class AttendanceRepository {
     }
 
     final errorMessage = json.decode(response.body)['message'];
-    ErrorNotificationComponent().showModal(context, errorMessage);
+    Navigator.pop(context);
+    ModalBottomSheetComponent().errorIndicator(context, errorMessage);
 
     return false;
-  }
-
-  void loadingIndicator(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (BuildContext context) {
-
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 14, left: 14, bottom: 40, top: 40),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sedang mengirim data...",
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Future<bool> checkIn(BuildContext context) async {
@@ -148,14 +106,19 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
+      // ignore: use_build_context_synchronously
+      ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
+
       await getLocation().then((value) {
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
       });
-
+      
       bool validate = await validateLocation(context, latitude, longitude);
+      // ignore: use_build_context_synchronously
 
       if (validate) {
+        Navigator.pop(context);
         var request = http.MultipartRequest(
           'POST',
           Uri.parse('$_baseUrl/cmt-attendance/attend/check-in'),
@@ -166,7 +129,9 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
-        loadingIndicator(context);
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+
         request.files.add(imageFile);
 
         request.headers['Accept'] = 'application/json';
@@ -178,25 +143,21 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             // ignore: use_build_context_synchronously
-            ErrorNotificationComponent().showModal(
-              context,
-              'Error uploading file.',
-            );
+            ModalBottomSheetComponent().errorIndicator(context, "Error uploading file.");
+
 
             return false;
           }
         } catch (e) {
-          Navigator.pop(context);
           // ignore: use_build_context_synchronously
-          ErrorNotificationComponent().showModal(
-            context,
-            'Error sending request: $e',
-          );
+          ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
+
 
           return false;
         }
@@ -205,10 +166,7 @@ class AttendanceRepository {
       return false;
     } catch (e) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        e.toString(),
-      );
+      ModalBottomSheetComponent().errorIndicator(context, e.toString());
 
       return false;
     }
@@ -220,14 +178,20 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
+      // ignore: use_build_context_synchronously
+      ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
+      
       await getLocation().then((value) {
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
       });
-
+      
       bool validate = await validateLocation(context, latitude, longitude);
 
       if (validate) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+
         var request = http.MultipartRequest(
           'POST',
           Uri.parse('$_baseUrl/cmt-attendance/attend/check-out'),
@@ -238,7 +202,10 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
-        loadingIndicator(context);
+        
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+
         request.files.add(imageFile);
 
         request.headers['Accept'] = 'application/json';
@@ -249,24 +216,21 @@ class AttendanceRepository {
 
         try {
           final response = await request.send();
-
+          
+          // ignore: use_build_context_synchronously
+          Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             // ignore: use_build_context_synchronously
-            ErrorNotificationComponent().showModal(
-              context,
-              'Error uploading file.',
-            );
+            ModalBottomSheetComponent().errorIndicator(context, "Error uploading file.");
+
 
             return false;
           }
         } catch (e) {
           // ignore: use_build_context_synchronously
-          ErrorNotificationComponent().showModal(
-            context,
-            'Error sending request: $e',
-          );
+          ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
 
           return false;
         }
@@ -275,10 +239,7 @@ class AttendanceRepository {
       return false;
     } catch (e) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        e.toString(),
-      );
+      ModalBottomSheetComponent().errorIndicator(context, e.toString());
 
       return false;
     }
@@ -307,7 +268,7 @@ class AttendanceRepository {
     return [];
   }
 
-  Future getSummaries(String? startDate, String? endDate) async {
+  Future<Summaries> getSummaries(String? startDate, String? endDate) async {
     String? token = await Auth().getToken();
 
     String params = "?";
@@ -328,11 +289,9 @@ class AttendanceRepository {
     );
 
     if (response.statusCode == 200) {
-      var summaries =jsonDecode(response.body)["data"]["summaries"];
-
-      return summaries;
+      return Summaries.fromJson(jsonDecode(response.body)["data"]["summaries"]);
     }
 
-    return null;
+    return Summaries.fromJson({});
   }
 }

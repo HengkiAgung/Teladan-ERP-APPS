@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../config.dart';
-import '../models/Attendance/UserAttendanceRequest.dart';
-import '../models/Attendance/UserLeaveRequest.dart';
-import '../models/Attendance/UserShiftRequest.dart';
 import '../utils/auth.dart';
 
 class ApprovalRepository {
@@ -33,15 +30,14 @@ class ApprovalRepository {
     if (jsonDecode(response.body)["status"] == "success") {
       Iterable it = jsonDecode(response.body)["data"][key];
       return it.map((e) {
-        var data = model.fromJson(e);
-        return data;
+        return model.fromJson(e);
       }).toList();
     }
 
     return [];
   }
 
-  Future<dynamic> getDetailAttendanceRequest({
+  Future<dynamic> getDetailRequest({
     required String id,
     required String type,
     required dynamic model,
@@ -72,7 +68,7 @@ class ApprovalRepository {
     required String status,
     String? comment,
   }) async {
-    String? token = await Auth().getToken();
+    String token = await Auth().getToken();
 
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-request/$type/update/status'),

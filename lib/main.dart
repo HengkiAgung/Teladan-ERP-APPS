@@ -6,7 +6,11 @@ import 'bloc/approval_list/approval_list_bloc.dart';
 import 'bloc/attendance_detail/attendance_detail_bloc.dart';
 import 'bloc/attendance_today/attendance_today_bloc.dart';
 import 'bloc/employee/employee_bloc.dart';
-import 'bloc/request/request_bloc.dart';
+import 'bloc/request_attendance_list/request_attendance_list_bloc.dart';
+import 'bloc/request_detail/request_detail_bloc.dart';
+import 'bloc/request_leavel_list/request_leave_list_bloc.dart';
+import 'bloc/request_shift_list/request_shift_list_bloc.dart';
+import 'bloc/summaries/summaries_bloc.dart';
 import 'bloc/user/user_bloc.dart';
 import 'bloc/attendance_log/attendance_log_bloc.dart';
 import 'page/login_page.dart';
@@ -56,14 +60,26 @@ void main() {
       BlocProvider<EmployeeBloc>(
         create: (context) => EmployeeBloc(),
       ),
-      BlocProvider<RequestBloc>(
-        create: (context) => RequestBloc(),
+      BlocProvider<RequestDetailBloc>(
+        create: (context) => RequestDetailBloc(),
+      ),
+      BlocProvider<RequestAttendanceListBloc>(
+        create: (context) => RequestAttendanceListBloc(),
+      ),
+      BlocProvider<RequestShiftListBloc>(
+        create: (context) => RequestShiftListBloc(),
+      ),
+      BlocProvider<RequestLeaveListBloc>(
+        create: (context) => RequestLeaveListBloc(),
       ),
       BlocProvider<UserBloc>(
         create: (context) => UserBloc(),
       ),
+      BlocProvider<SummariesBloc>(
+        create: (context) => SummariesBloc(),
+      ),
     ],
-    child: Container(),
+    child: const MainApp(),
   ));
 }
 
@@ -118,7 +134,7 @@ class MainApp extends StatelessWidget {
               ),
             );
           } else if (state is UserLoadSuccess) {
-              return state.user.id == 0 ? MainPage(index: 0) : const LoginPage();
+            return state.user.id != 0 ? MainPage(index: 0) : const LoginPage();
           } else {
             return MainPage(index: 0, error: true,);
           }

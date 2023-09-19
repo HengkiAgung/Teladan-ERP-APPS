@@ -28,4 +28,8 @@ class UserShiftRequest {
     notes = json['notes'] ?? "";
     comment = json['comment'] ?? "";
   }
+
+  fromJson(Map<String, dynamic> json) {
+    return UserShiftRequest.fromJson(json);
+  }
 }

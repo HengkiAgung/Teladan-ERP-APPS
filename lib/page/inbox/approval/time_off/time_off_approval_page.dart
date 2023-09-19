@@ -4,6 +4,7 @@ import 'package:teladan/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
 import 'detail_time_off_approval_page.dart';
@@ -16,7 +17,7 @@ class TimeOffApprovalPage extends StatefulWidget {
 }
 
 class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
-  List<UserLeaveRequest> _request = [];
+  List<dynamic> _request = [];
 
   late ScrollController _scrollController;
   int page = 1;
@@ -25,12 +26,13 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
+      page = page + 1;
       context.read<ApprovalListBloc>().add(
             ScrollFetch(
-              page: page++,
+              page: page,
               key: 'userTimeOffRequest',
               type: 'time-off',
-              model: UserLeaveRequest,
+              model: UserLeaveRequest(),
             ),
           );
     }
@@ -86,44 +88,75 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
       body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
         builder: (context, state) {
           if (state is ApprovalListLoading) {
-            return Text("loading...");
+            return const Padding(
+              padding: EdgeInsets.only(top: 18.0, left: 18),
+              child: Text("loading..."),
+            );
           } else if (state is ApprovalListLoadFailure) {
             return Text("Failed to load attendance log");
           } else if (state is ApprovalListLoadSuccess) {
-            setState(() {
-              _request = state.request as List<UserLeaveRequest>;
-            });
+            _request = state.request;
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            itemCount: _request.length,
-            itemBuilder: (BuildContext context, int index) {
-              var request = _request[index];
-              return RequestItemComponent(
-                fun: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailTimeOffApprovalPage(
-                        id: request.id.toString(),
-                      ),
-                    ),
-                  );
-                },
-                title: request.user!.name,
-                status: request.status,
-                children: [
-                  Text(
-                    "Tanggal ${request.start_date} - ${request.end_date}",
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<ApprovalListBloc>().add(GetRequestList(
+                    key: 'userTimeOffRequest',
+                    type: 'time-off',
+                    model: UserLeaveRequest(),
+                  ));
             },
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _request.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var request = _request[index];
+                      return RequestItemComponent(
+                        fun: () {
+                          context.read<ApprovalDetailBloc>().add(
+                              GetRequestDetail(
+                                  id: request.id.toString(),
+                                  type: "time-off",
+                                  model: UserLeaveRequest()));
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailTimeOffApprovalPage(
+                                id: request.id.toString(),
+                              ),
+                            ),
+                          );
+                        },
+                        title: request.user!.name,
+                        status: request.status,
+                        children: [
+                          Text(
+                            "Tanggal ${request.start_date} - ${request.end_date}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                (state is ApprovalListFetchNew)
+                    ? const Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: SizedBox(
+                          height: 40,
+                          child: Text("Loading..."),
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
+            ),
           );
         },
       ),

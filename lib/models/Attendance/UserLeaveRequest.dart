@@ -31,4 +31,8 @@ class UserLeaveRequest {
     comment = json['comment'] ?? "";
     file = json['file'] ?? "";
   }
+
+  fromJson(Map<String, dynamic> json) {
+    return UserLeaveRequest.fromJson(json);
+  }
 }

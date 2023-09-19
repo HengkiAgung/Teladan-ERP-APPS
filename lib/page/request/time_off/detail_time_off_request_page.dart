@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../bloc/request_detail/request_detail_bloc.dart';
+import '../../../bloc/request_leavel_list/request_leave_list_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../components/cancle_request_component.dart';
 import '../../../models/Attendance/UserLeaveRequest.dart';
@@ -22,6 +26,13 @@ class DetailTimeOffRequestPage extends StatefulWidget {
 
 class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
   final int id;
+
+  void onCancle() {
+    context.read<RequestDetailBloc>().add(GetRequestDetail(
+        id: id.toString(), type: "attendance", model: UserLeaveRequest()));
+
+    context.read<RequestLeaveListBloc>().add(const GetRequestList());
+  }
 
   DetailTimeOffRequestPageState({required this.id});
   @override
@@ -64,25 +75,15 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
           const Spacer()
         ],
       ),
-      body: FutureBuilder<UserLeaveRequest>(
-        future: RequestRepository().getDetailUserLeaveRequest(id),
-        builder:
-            (BuildContext context, AsyncSnapshot<UserLeaveRequest> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the result, you can show a loading indicator.
-            // return const CircularProgressIndicator();
-            return Text(
-              'Loading',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.white,
-              ),
+      body: BlocBuilder<RequestDetailBloc, RequestDetailState>(
+        builder: (context, state) {
+          if (state is RequestDetailLoading) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 18.0, left: 18),
+              child: Text("loading..."),
             );
-          } else if (snapshot.hasError) {
-            // Handle the error case here.
-            return Text('Error: ${snapshot.error}');
-          } else {
-            UserLeaveRequest request = snapshot.data!;
+          } else if (state is RequestDetailLoadSuccess) {
+            UserLeaveRequest request = state.request;
 
             Color colorStatus;
 
@@ -99,28 +100,27 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                 Expanded(
                   child: ListView(
                     children: [
-                      FutureBuilder<User?>(
-                        future: UserRepository().getUser(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot<User?> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                      BlocBuilder<UserBloc, UserState>(
+                        builder: (context, state) {
+                          if (state is UserLoading) {
                             // While waiting for the result, you can show a loading indicator.
                             // return const CircularProgressIndicator();
-                            return const Text('Loading');
-                          } else if (snapshot.hasError) {
+                            return const Text('Loading...');
+                          } else if (state is UserLoadSuccess) {
                             // Handle the error case here.
-                            return Text('Error: ${snapshot.error}');
-                          } else {
                             return AvatarProfileComponent(
-                              user: snapshot.data!,
+                              user: state.user,
                             );
+                          } else {
+                            return const Text('Failed to load user data');
                           }
                         },
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(
-                            horizontal: (MediaQuery.of(context).size.width / 2) - 60),
-                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                (MediaQuery.of(context).size.width / 2) - 60),
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
@@ -137,7 +137,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -174,7 +174,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -211,7 +211,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -248,7 +248,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -289,7 +289,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ? Column(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 20,
                                     horizontal: 15,
                                   ),
@@ -298,12 +298,14 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 0.5,
-                                        color: Color.fromARGB(160, 158, 158, 158),
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
                                       ),
                                     ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -321,8 +323,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                               request.approvalLine!.email,
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
-                                            color:
-                                                const Color.fromARGB(255, 51, 51, 51),
+                                            color: const Color.fromARGB(
+                                                255, 51, 51, 51),
                                           ),
                                         ),
                                       ),
@@ -330,7 +332,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 20,
                                     horizontal: 15,
                                   ),
@@ -339,12 +341,14 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 0.5,
-                                        color: Color.fromARGB(160, 158, 158, 158),
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
                                       ),
                                     ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -362,8 +366,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                               : "-",
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
-                                            color:
-                                                const Color.fromARGB(255, 51, 51, 51),
+                                            color: const Color.fromARGB(
+                                                255, 51, 51, 51),
                                           ),
                                         ),
                                       ),
@@ -372,9 +376,9 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                                 ),
                               ],
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -402,7 +406,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  launch("${Config.storageUrl}/request/timeoff/${request.file}");
+                                  launch(
+                                      "${Config.storageUrl}/request/timeoff/${request.file}");
                                 },
                                 child: Text(
                                   request.file,
@@ -423,13 +428,13 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                     ? CancleRequestComponent(
                         id: request.id,
                         type: "time-off",
-                        source: DetailTimeOffRequestPage(
-                          id: request.id,
-                        ),
+                        onCancle: onCancle,
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             );
+          } else {
+            return const Text("Failed to load detail attendance request");
           }
         },
       ),

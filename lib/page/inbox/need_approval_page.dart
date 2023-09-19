@@ -24,7 +24,7 @@ class NeedApprovalPage extends StatelessWidget {
           // Cuti
           GestureDetector(
             onTap: () {
-              context.read<ApprovalListBloc>().add(const GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest));
+              context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -73,7 +73,7 @@ class NeedApprovalPage extends StatelessWidget {
           // Absensi
           GestureDetector(
             onTap: () {
-              context.read<ApprovalListBloc>().add(const GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest));
+              context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -168,7 +168,7 @@ class NeedApprovalPage extends StatelessWidget {
           // Perubahan Shift
           GestureDetector(
             onTap: () {
-              context.read<ApprovalListBloc>().add(const GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest));
+              context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(

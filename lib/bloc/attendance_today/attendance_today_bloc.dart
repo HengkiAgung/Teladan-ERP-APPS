@@ -25,5 +25,9 @@ class AttendanceTodayBloc extends Bloc<AttendanceTodayEvent, AttendanceTodayStat
         emit(AttendanceTodayLoadFailure(error: error.toString()));
       }
     });
+
+    on<LogOut>((event, emit) async {
+      emit(AttendanceTodayInitial());
+    });
   }
 }

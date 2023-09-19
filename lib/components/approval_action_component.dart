@@ -2,13 +2,15 @@ import '../../repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'modal_bottom_sheet_component.dart';
+
 class ApprovalActionComponent extends StatelessWidget {
   final TextEditingController commentController = TextEditingController();
   String id;
   String type;
-  final dynamic source;
+  final VoidCallback function;
 
-  ApprovalActionComponent({super.key, required this.id, required this.type, required this.source});
+  ApprovalActionComponent({super.key, required this.id, required this.type, required this.function});
 
   @override
   Widget build(BuildContext context) {
@@ -55,18 +57,15 @@ class ApprovalActionComponent extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    bool updated = await ApprovalRepository().updateApproval(type: type, id: id, status: "Rejected", comment: commentController.text);
+                    ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
 
+                    bool updated = await ApprovalRepository().updateRequest(type: type, id: id, status: "Rejected", comment: commentController.text);
+
+                    Navigator.pop(context);
                     if (updated) {
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushReplacement<void, void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                            source,
-                        ),
-                      );
+                      function();
                     }
+                    ModalBottomSheetComponent().errorIndicator(context, "Gagal mengubah status request");
                   },
                   child: Container(
                     height: 50,
@@ -91,17 +90,10 @@ class ApprovalActionComponent extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    bool updated = await ApprovalRepository().updateApproval(type: type, id: id, status: "Approved", comment: commentController.text);
+                    bool updated = await ApprovalRepository().updateRequest(type: type, id: id, status: "Approved", comment: commentController.text);
 
                     if (updated) {
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushReplacement<void, void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                            source,
-                        ),
-                      );
+                      function();
                     }
                   },
                   child: Container(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../repositories/approval_repository.dart';
@@ -24,6 +25,11 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
   String id;
 
   _DetailShiftApprovalPageState({required this.id});
+
+  void refreshBloc() {
+    context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "shift",model: UserShiftRequest()));
+    context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +107,7 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
                       ? ApprovalActionComponent(
                           type: "shift",
                           id: request.id.toString(),
-                          source: DetailShiftApprovalPage(
-                            id: request.id.toString(),
-                          ),
+                          function: refreshBloc,
                         )
                       : const SizedBox(),
                 ],

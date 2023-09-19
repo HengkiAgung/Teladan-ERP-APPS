@@ -4,21 +4,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../components/error_notification_component.dart';
+
+import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
 import '../models/Attendance/LeaveRequestCategory.dart';
-import '../models/Attendance/UserAttendanceRequest.dart';
-import '../models/Attendance/UserLeaveRequest.dart';
-import '../models/Attendance/UserShiftRequest.dart';
 import '../models/Employee/WorkingShift.dart';
 import '../utils/auth.dart';
 
 class RequestRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<List<dynamic>> getAllUserRequest({String page = "1", required String type, required String key, required dynamic model}) async {
-    String? token = await Auth().getToken();
-
+  Future<List<dynamic>> getRequest({String page = "1", required String type, required String key, required dynamic model, required String token,}) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-request/personal/$type/get?page=$page'),
       headers: {
@@ -39,9 +35,7 @@ class RequestRepository {
     return [];
   }
 
-  Future<dynamic> getDetailRequest({required String id, required String type, required dynamic model}) async {
-    String? token = await Auth().getToken();
-
+  Future<dynamic> getRequestDetail({required String id, required String type, required dynamic model, required String token}) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-request/personal/$type/get/detail'),
       headers: {
@@ -73,13 +67,12 @@ class RequestRepository {
 
     if (selectedTimeIn == null && selectedTimeOut == null) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Masukkan Check In atau Check Out!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, 'Masukkan Check In atau Check Out!');
 
       return false;
     }
+
+    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
     var request = http.MultipartRequest(
       'POST',
@@ -107,14 +100,22 @@ class RequestRepository {
       if (hour.length < 2) {
         hour = "0$hour";
       }
-      request.fields['check_in'] = "$hour:${selectedTimeIn.minute}";
+      String minute = selectedTimeIn.minute.toString();
+      if (minute.length < 2) {
+        minute = "0$minute";
+      }
+      request.fields['check_in'] = "$hour:$minute";
     } 
     if (selectedTimeOut != null) {
       String hour = selectedTimeOut.hour.toString();
       if (hour.length < 2) {
         hour = "0$hour";
       }
-      request.fields['check_out'] = "$hour:${selectedTimeOut.minute}";
+      String minute = selectedTimeOut.minute.toString();
+      if (minute.length < 2) {
+        minute = "0$minute";
+      }
+      request.fields['check_out'] = "$hour:$minute";
     }
 
     try {
@@ -123,23 +124,21 @@ class RequestRepository {
       final responseString = await response.stream.bytesToString();
       final message = jsonDecode(responseString)["message"];
 
+      Navigator.pop(context);
+
       if (int.parse(response.statusCode.toString()[0]) == 2) {
         return true;
       } else {
         // ignore: use_build_context_synchronously
-        ErrorNotificationComponent().showModal(
-          context,
-          message,
-        );
+        ModalBottomSheetComponent().errorIndicator(context, message);
 
         return false;
       }
     } catch (e) {
+      Navigator.pop(context);
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Error sending request: $e',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Error sendiring request: $e");
+
 
       return false;
     }
@@ -149,7 +148,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
 
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-request/shift/get/working-shift'),
+      Uri.parse('$_baseUrl/cmt-request/get/working-shift'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -170,6 +169,22 @@ class RequestRepository {
     return [];
   }
 
+  Future<WorkingShift> getCurrentShift({required String token}) async {
+        final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/shift/get/current/shift'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return WorkingShift.fromJson(jsonDecode(response.body)["data"]);
+    }
+    return WorkingShift.fromJson({});
+  }
+
   Future<bool> makeShiftRequest(
     BuildContext context,
     DateTime date,
@@ -181,21 +196,17 @@ class RequestRepository {
 
     if (working_shift_id == null || working_shift_id == "") {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Shift baru wajib diisi!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Shift baru wajib diisi!");
       return false;
     }
 
     if (date.isBefore(now)) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Tanggal mulai tidak boleh lebih kecil dari sekarang!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
       return false;
     }
+
+    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-request/personal/shift/make'),
@@ -211,15 +222,15 @@ class RequestRepository {
       }),
     );
 
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
     if (int.parse(response.statusCode.toString()[0]) == 2) {
-
-      // ignore: use_build_context_synchronously
       return true;
       
     } else {
       final errorMessage = json.decode(response.body)['message'];
 
-      ErrorNotificationComponent().showModal(context, errorMessage);
+      ModalBottomSheetComponent().errorIndicator(context, errorMessage);
 
       return false;
     }
@@ -238,39 +249,29 @@ class RequestRepository {
 
     if (categoryId == null || categoryId == "") {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Kolom kategori wajib diisi!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Kolom kategori wajib diisi!");
       return false;
     }
 
     if (startDate.isBefore(now)) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Tanggal mulai tidak boleh lebih kecil dari sekarang!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
       return false;
     }
 
     if (endDate.isBefore(startDate)) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Tanggal selesai tidak boleh lebih kecil dari tanggal mulai!");
       return false;
     }
 
     if (_selectedFile == null) {
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'File bukti wajib diisi!',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "File bukti wajib diisi!");
       return false;
     }
+
+    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
     var request = http.MultipartRequest(
       'POST',
@@ -298,23 +299,18 @@ class RequestRepository {
     try {
       final response = await request.send();
 
+      Navigator.pop(context);
       if (int.parse(response.statusCode.toString()[0]) == 2) {
         return true;
       } else {
         // ignore: use_build_context_synchronously
-        ErrorNotificationComponent().showModal(
-          context,
-          'Error uploading file.',
-        );
-
+        ModalBottomSheetComponent().errorIndicator(context, "Error uploading file");
         return false;
       }
     } catch (e) {
+      Navigator.pop(context);
       // ignore: use_build_context_synchronously
-      ErrorNotificationComponent().showModal(
-        context,
-        'Error sending request: $e',
-      );
+      ModalBottomSheetComponent().errorIndicator(context, "Error sendiring request: $e");
 
       return false;
     }

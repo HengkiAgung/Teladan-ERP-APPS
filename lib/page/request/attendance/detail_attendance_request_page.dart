@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:teladan/components/cancle_request_component.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
+import '../../../bloc/request_detail/request_detail_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../config.dart';
 import '../../../models/Attendance/UserAttendanceRequest.dart';
-import '../../../models/Employee/User.dart';
-import '../../../repositories/request_repository.dart';
-import '../../../repositories/user_repository.dart';
 
 class DetailAttendanceRequestPage extends StatefulWidget {
   final int id;
@@ -23,6 +24,13 @@ class DetailAttendanceRequestPage extends StatefulWidget {
 class DetailAttendanceRequestPageState
     extends State<DetailAttendanceRequestPage> {
   final int id;
+
+  void onCancle() {
+    context.read<RequestDetailBloc>().add(GetRequestDetail(
+        id: id.toString(), type: "attendance", model: UserAttendanceRequest()));
+
+    context.read<RequestAttendanceListBloc>().add(const GetRequestList());
+  }
 
   DetailAttendanceRequestPageState({required this.id});
   @override
@@ -65,26 +73,15 @@ class DetailAttendanceRequestPageState
           const Spacer()
         ],
       ),
-      body: FutureBuilder<UserAttendanceRequest>(
-        future: RequestRepository().getDetailUserAttendanceRequest(id),
-        builder: (BuildContext context,
-            AsyncSnapshot<UserAttendanceRequest> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the result, you can show a loading indicator.
-            // return const CircularProgressIndicator();
-            return Text(
-              'Loading',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.white,
-              ),
+      body: BlocBuilder<RequestDetailBloc, RequestDetailState>(
+        builder: (context, state) {
+          if (state is RequestDetailLoading) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 18.0, left: 18),
+              child: Text("loading..."),
             );
-          } else if (snapshot.hasError) {
-            // Handle the error case here.
-            return Text('Error: ${snapshot.error}');
-          } else {
-            UserAttendanceRequest request = snapshot.data!;
-
+          } else if (state is RequestDetailLoadSuccess) {
+            UserAttendanceRequest request = state.request;
             Color colorStatus;
 
             if (request.status == "Waiting") {
@@ -94,28 +91,24 @@ class DetailAttendanceRequestPageState
             } else {
               colorStatus = Colors.red.shade900;
             }
-
             return Column(
               children: [
                 Expanded(
                   child: ListView(
                     children: [
-                      FutureBuilder<User?>(
-                        future: UserRepository().getUser(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<User?> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                      BlocBuilder<UserBloc, UserState>(
+                        builder: (context, state) {
+                          if (state is UserLoading) {
                             // While waiting for the result, you can show a loading indicator.
                             // return const CircularProgressIndicator();
-                            return const Text('Loading');
-                          } else if (snapshot.hasError) {
+                            return const Text('Loading...');
+                          } else if (state is UserLoadSuccess) {
                             // Handle the error case here.
-                            return Text('Error: ${snapshot.error}');
-                          } else {
                             return AvatarProfileComponent(
-                              user: snapshot.data!,
+                              user: state.user,
                             );
+                          } else {
+                            return const Text('Failed to load user data');
                           }
                         },
                       ),
@@ -417,13 +410,13 @@ class DetailAttendanceRequestPageState
                     ? CancleRequestComponent(
                         id: request.id,
                         type: "attendance",
-                        source: DetailAttendanceRequestPage(
-                          id: request.id,
-                        ),
+                        onCancle: onCancle,
                       )
                     : SizedBox()
               ],
             );
+          } else {
+            return const Text("Failed to load detail attendance request");
           }
         },
       ),

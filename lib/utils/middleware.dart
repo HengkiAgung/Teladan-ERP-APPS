@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../components/error_notification_component.dart';
+
+import '../components/modal_bottom_sheet_component.dart';
 import '../models/Employee/User.dart';
 import '../page/login_page.dart';
 import '../repositories/user_repository.dart';
@@ -13,7 +14,8 @@ class Middleware {
     if (user.email == "") {
       // ignore: use_build_context_synchronously
       redirectToLogin(context);
-      ErrorNotificationComponent().showModal(context, "Sesi telah berakhir, silahkan Log-In ulang 😉");
+      // ignore: use_build_context_synchronously
+      ModalBottomSheetComponent().errorIndicator(context, "Sesi telah berakhir, silahkan Log-In ulang.");
     }
   }
 

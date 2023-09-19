@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
@@ -24,6 +25,11 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
   String id;
 
   _DetailTimeOffApprovalPageState({required this.id});
+
+  void refreshBloc() {
+    context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "time-off",model: UserLeaveRequest()));
+    context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +109,7 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
                     ? ApprovalActionComponent(
                         type: "time-off",
                         id: request.id.toString(),
-                        source: DetailTimeOffApprovalPage(
-                          id: request.id.toString(),
-                        ),
+                        function: refreshBloc,
                       )
                     : const SizedBox(),
               ],

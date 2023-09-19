@@ -13,9 +13,9 @@ class AttendanceDetailBloc extends Bloc<AttendanceDetailEvent, AttendanceDetailS
     on<GetAttendanceDetail>((event, emit) async {
       emit(AttendanceDetailLoading());
       try {
-        String? token = await Auth().getToken();
+        String token = await Auth().getToken();
 
-        final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: event.date, token: token!,);
+        final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: event.date, token: token,);
 
         emit(AttendanceDetailLoadSuccess(attendance));
 

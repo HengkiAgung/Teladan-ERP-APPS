@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../bloc/attendance_log/attendance_log_bloc.dart';
 import '../../models/Attendance.dart';
-import '../../repositories/attendance_repository.dart';
 import 'detail_attendance_page.dart';
 
 class LogAttendance extends StatefulWidget {
@@ -25,8 +24,8 @@ class _LogAttendanceState extends State<LogAttendance> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-
-      context.read<AttendanceLogBloc>().add(ScrollFetch(page: page++));
+      page = page + 1;
+      context.read<AttendanceLogBloc>().add(ScrollFetch(page: page));
     }
   }
 
@@ -80,105 +79,120 @@ class _LogAttendanceState extends State<LogAttendance> {
       body: BlocBuilder<AttendanceLogBloc, AttendanceLogState>(
         builder: (context, state) {
           if (state is AttendanceLogLoading) {
-            return Text("loading...");
+            return const Padding(
+              padding: EdgeInsets.only(top: 18.0, left: 18),
+              child: Text("loading..."),
+            );
           } else if (state is AttendanceLogLoadFailure) {
             return Text("Failed to load attendance log");
           } else if (state is AttendanceLogLoadSuccess) {
-            setState(() {
-              _logAtendance = state.attendance;
-            });
+            _logAtendance = state.attendance;
           }
-          
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _logAtendance.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var attendance = _logAtendance[index];
-                    var check_in = attendance.check_in != ""
-                        ? attendance.check_in.split(' ')[1].substring(0, 5)
-                        : "-";
-                    var check_out = attendance.check_out != ""
-                        ? attendance.check_out.split(' ')[1].substring(0, 5)
-                        : "-";
-
-                    return Container(
-                      padding: const EdgeInsets.only(
-                        right: 10,
-                        left: 10,
-                        top: 20,
-                        bottom: 20,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 0.5,
-                            color: Color.fromARGB(160, 158, 158, 158),
-                          ),
-                        ),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          context.read<AttendanceDetailBloc>().add(GetAttendanceDetail(date: attendance.date));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailAttendance(),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    attendance.date,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    width: 50,
-                                    child: Text(
-                                      check_in,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    width: 50,
-                                    child: Text(
-                                      check_out,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<AttendanceLogBloc>().add(GetAttendanceLog());
                   },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _logAtendance.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var attendance = _logAtendance[index];
+                      var check_in = attendance.check_in != ""
+                          ? attendance.check_in.split(' ')[1].substring(0, 5)
+                          : "-";
+                      var check_out = attendance.check_out != ""
+                          ? attendance.check_out.split(' ')[1].substring(0, 5)
+                          : "-";
+
+                      return Container(
+                        padding: const EdgeInsets.only(
+                          right: 10,
+                          left: 10,
+                          top: 20,
+                          bottom: 20,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<AttendanceDetailBloc>().add(
+                                GetAttendanceDetail(date: attendance.date));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailAttendance(),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      attendance.date,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      width: 50,
+                                      child: Text(
+                                        check_in,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      width: 50,
+                                      child: Text(
+                                        check_out,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-              (state is AttendanceLogFetchNew) ? const Text("Loading...") : const SizedBox(),
+              (state is AttendanceLogFetchNew)
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        height: 40,
+                        child: Text("Loading..."),
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           );
         },

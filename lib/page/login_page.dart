@@ -1,6 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/page/main_page.dart';
 import 'package:flutter/material.dart';
 
+import '../bloc/summaries/summaries_bloc.dart';
+import '../bloc/user/user_bloc.dart';
 import '../utils/auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,6 +64,8 @@ class _LoginPageState extends State<LoginPage> {
 
                   // ignore: use_build_context_synchronously
                   if (await Auth().login(context, _emailController.text, _passwordController.text) ) {
+                    context.read<UserBloc>().add(GetUser());
+
                     // ignore: use_build_context_synchronously
                     Navigator.pushReplacement<void, void>(
                       context,

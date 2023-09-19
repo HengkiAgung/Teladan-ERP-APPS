@@ -8,3 +8,5 @@ class EmployeeEvent extends Equatable {
 }
 
 class GetEmployee extends EmployeeEvent {}
+
+class LogOut extends EmployeeEvent {}

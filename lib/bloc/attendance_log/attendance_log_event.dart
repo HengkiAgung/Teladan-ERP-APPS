@@ -14,3 +14,5 @@ class ScrollFetch extends AttendanceLogEvent {
 
   const ScrollFetch({required this.page});
 }
+
+class LogOut extends AttendanceLogEvent {}

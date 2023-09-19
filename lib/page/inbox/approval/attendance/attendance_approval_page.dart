@@ -26,12 +26,13 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
+      page = page + 1;
       context.read<ApprovalListBloc>().add(
             ScrollFetch(
-              page: page++,
+              page: page,
               key: 'userAttendanceRequest',
               type: 'attendance',
-              model: UserAttendanceRequest,
+              model: UserAttendanceRequest(),
             ),
           );
     }
@@ -87,64 +88,94 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
       body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
         builder: (context, state) {
           if (state is ApprovalListLoading) {
-            return Text("loading...");
+            return const Padding(
+              padding: EdgeInsets.only(top: 18.0, left: 18),
+              child: Text("loading..."),
+            );
           } else if (state is ApprovalListLoadFailure) {
-            return Text("Failed to load attendance log");
+            return const Text("Failed to load attendance log");
           } else if (state is ApprovalListLoadSuccess) {
-            setState(() {
-              _userAttendanceRequest =
-                  state.request as List<UserAttendanceRequest>;
-            });
+            _userAttendanceRequest =
+                state.request.cast<UserAttendanceRequest>();
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            itemCount: _userAttendanceRequest.length,
-            itemBuilder: (BuildContext context, int index) {
-              var request = _userAttendanceRequest[index];
-              return RequestItemComponent(
-                fun: () {
-                  context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: request.id.toString(), type: "attendance", model: UserAttendanceRequest));
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DetailAttendanceApprovalPage(
-                              id: request.id.toString(),
-                            )),
-                  );
-                },
-                title: request.user!.name,
-                status: request.status,
-                children: [
-                  Text(
-                    "Tanggal ${request.date}",
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  request.check_in != ""
-                      ? Text(
-                          "Check In pada ${request.check_in}",
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : SizedBox(),
-                  request.check_out != ""
-                      ? Text(
-                          "Check Out pada ${request.check_out}",
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : SizedBox(),
-                ],
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<ApprovalListBloc>().add(GetRequestList(
+                    key: 'userAttendanceRequest',
+                    type: 'attendance',
+                    model: UserAttendanceRequest(),
+                  ));
             },
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _userAttendanceRequest.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var request = _userAttendanceRequest[index];
+                      return RequestItemComponent(
+                        fun: () {
+                          context.read<ApprovalDetailBloc>().add(
+                              GetRequestDetail(
+                                  id: request.id.toString(),
+                                  type: "attendance",
+                                  model: UserAttendanceRequest()));
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailAttendanceApprovalPage(
+                                      id: request.id.toString(),
+                                    )),
+                          );
+                        },
+                        title: request.user!.name,
+                        status: request.status,
+                        children: [
+                          Text(
+                            "Tanggal ${request.date}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          request.check_in != ""
+                              ? Text(
+                                  "Check In pada ${request.check_in}",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              : const SizedBox(),
+                          request.check_out != ""
+                              ? Text(
+                                  "Check Out pada ${request.check_out}",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                (state is ApprovalListFetchNew)
+                    ? const Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: SizedBox(
+                          height: 40,
+                          child: Text("Loading..."),
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
+            ),
           );
         },
       ),

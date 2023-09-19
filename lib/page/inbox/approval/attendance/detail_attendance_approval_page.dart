@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
+import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
+import '../../../../models/Attendance/UserAttendanceRequest.dart';
 
 // ignore: must_be_immutable
 class DetailAttendanceApprovalPage extends StatefulWidget {
@@ -23,6 +25,11 @@ class _DetailAttendanceApprovalPageState
   String id;
 
   _DetailAttendanceApprovalPageState({required this.id});
+
+  void refreshBloc() {
+    context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "attendance",model: UserAttendanceRequest()));
+    context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,27 +82,25 @@ class _DetailAttendanceApprovalPageState
 
             List<List<String>> stringChildren = [];
 
-            if (request.isNotEmpty) {
-              stringChildren.addAll([
-                ["Tanggal absensi", request.date],
-                [
-                  "Shift",
-                  "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
-                ],
-                ["Reason", request.notes],
-              ]);
+            stringChildren.addAll([
+              ["Tanggal absensi", request.date],
+              [
+                "Shift",
+                "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
+              ],
+              ["Reason", request.notes],
+            ]);
 
-              if (request.check_in != "") {
-                stringChildren.add(["Check In", request.check_in]);
-              }
+            if (request.check_in != "") {
+              stringChildren.add(["Check In", request.check_in]);
+            }
 
-              if (request.check_out != "") {
-                stringChildren.add(["Check Out", request.check_out]);
-              }
+            if (request.check_out != "") {
+              stringChildren.add(["Check Out", request.check_out]);
+            }
 
-              if (request.comment != "") {
-                stringChildren.add(["Comment", request.comment]);
-              }
+            if (request.comment != "") {
+              stringChildren.add(["Comment", request.comment]);
             }
 
             return Column(
@@ -113,9 +118,7 @@ class _DetailAttendanceApprovalPageState
                     ? ApprovalActionComponent(
                         type: "attendance",
                         id: request.id.toString(),
-                        source: DetailAttendanceApprovalPage(
-                          id: request.id.toString(),
-                        ),
+                        function: refreshBloc,
                       )
                     : const SizedBox(),
               ],

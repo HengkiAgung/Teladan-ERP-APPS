@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../repositories/request_repository.dart';
+import 'modal_bottom_sheet_component.dart';
 
 class CancleRequestComponent extends StatelessWidget {
   int id;
   String type;
-  final dynamic source;
+  final VoidCallback onCancle;
 
-  CancleRequestComponent({super.key, required this.id, required this.type, required this.source});
+  CancleRequestComponent({super.key, required this.id, required this.type, required this.onCancle});
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +29,12 @@ class CancleRequestComponent extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () async {
+          ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+
           bool updated = await RequestRepository().cancelRequest(id: id, type: type);
+          Navigator.pop(context);
           if (updated) {
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacement<void, void>(
-              context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) =>
-                  source,
-              ),
-            );
+            onCancle();
           }
         },
         child: Container(

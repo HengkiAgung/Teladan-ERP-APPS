@@ -1,8 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/repositories/request_repository.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
+import '../../../models/Attendance/UserAttendanceRequest.dart';
 import '../../main_page.dart';
 
 class FormAttendanceRequestPage extends StatefulWidget {
@@ -90,12 +93,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
                 // ignore: use_build_context_synchronously
-                Navigator.pushReplacement<void, void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => MainPage(index: 2),
-                  ),
-                );
+                context.read<RequestAttendanceListBloc>().add(const GetRequestList());
                 // ignore: use_build_context_synchronously
                 showModalBottomSheet<void>(
                   context: context,

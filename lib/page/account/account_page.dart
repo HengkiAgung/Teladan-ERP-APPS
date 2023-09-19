@@ -4,14 +4,18 @@ import 'package:teladan/page/account/payroll/payroll_page.dart';
 import 'package:teladan/utils/auth.dart';
 import 'package:teladan/utils/middleware.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../bloc/attendance_log/attendance_log_bloc.dart' as attendance_log_bloc;
+import '../../bloc/attendance_today/attendance_today_bloc.dart' as attendance_today_bloc;
+import '../../bloc/employee/employee_bloc.dart' as employee_bloc;
+import '../../bloc/request_attendance_list/request_attendance_list_bloc.dart' as request_attendance_list_bloc;
+import '../../bloc/request_leavel_list/request_leave_list_bloc.dart' as request_leave_list_bloc;
+import '../../bloc/request_shift_list/request_shift_list_bloc.dart' as request_shift_list_bloc;
+import '../../bloc/summaries/summaries_bloc.dart' as summaries_bloc;
 import '../../bloc/user/user_bloc.dart';
 import '../../components/avatar_profile_component.dart';
-import '../../models/Employee/User.dart';
-import '../../repositories/user_repository.dart';
 import 'personal_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -151,105 +155,6 @@ class _AccountPageState extends State<AccountPage> {
                 height: 20,
               ),
 
-              // Info Kontak Darurat
-              // Row(
-              //   children: [
-              //     Icon(Icons.emergency),
-              //     const SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           'Info Kontak Darurat',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 13,
-              //             fontWeight: FontWeight.bold,
-              //             color: Color.fromARGB(255, 51, 51, 51),
-              //           ),
-              //         ),
-              //         Text(
-              //           'Kontak darurat yang dapat dihubungi',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 11,
-              //             color: Colors.grey,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-
-              // Info Keluarga
-              // Row(
-              //   children: [
-              //     Icon(Icons.group),
-              //     const SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           'Info Keluarga',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 13,
-              //             fontWeight: FontWeight.bold,
-              //             color: Color.fromARGB(255, 51, 51, 51),
-              //           ),
-              //         ),
-              //         Text(
-              //           'Dafter anggota keluarga karyawan',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 11,
-              //             color: Colors.grey,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-
-              // Pendikan dan Pengalaman
-              // Row(
-              //   children: [
-              //     Icon(Icons.cases_outlined),
-              //     const SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           'Pendikan dan Pengalaman',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 13,
-              //             fontWeight: FontWeight.bold,
-              //             color: Color.fromARGB(255, 51, 51, 51),
-              //           ),
-              //         ),
-              //         Text(
-              //           'Dafter anggota keluarga karyawan',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 11,
-              //             color: Colors.grey,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-
               // Info payroll
               GestureDetector(
                 onTap: () {
@@ -292,39 +197,6 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 20,
               ),
-
-              // File Saya
-              // Row(
-              //   children: [
-              //     Icon(Icons.folder),
-              //     const SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           'File Saya',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 13,
-              //             fontWeight: FontWeight.bold,
-              //             color: Color.fromARGB(255, 51, 51, 51),
-              //           ),
-              //         ),
-              //         Text(
-              //           'Dafter anggota keluarga karyawan',
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 11,
-              //             color: Colors.grey,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
 
               const SizedBox(
                 height: 20,
@@ -386,6 +258,14 @@ class _AccountPageState extends State<AccountPage> {
               GestureDetector(
                 onTap: () {
                   Auth().deleteToken();
+                  context.read<attendance_log_bloc.AttendanceLogBloc>().add(attendance_log_bloc.LogOut());
+                  context.read<attendance_today_bloc.AttendanceTodayBloc>().add(attendance_today_bloc.LogOut());
+                  context.read<employee_bloc.EmployeeBloc>().add(employee_bloc.LogOut());
+                  context.read<request_attendance_list_bloc.RequestAttendanceListBloc>().add(request_attendance_list_bloc.LogOut());
+                  context.read<request_leave_list_bloc.RequestLeaveListBloc>().add(request_leave_list_bloc.LogOut());
+                  context.read<request_shift_list_bloc.RequestShiftListBloc>().add(request_shift_list_bloc.LogOut());
+                  context.read<summaries_bloc.SummariesBloc>().add(summaries_bloc.LogOut());
+
                   Middleware().redirectToLogin(context);
                 },
                 child: Row(

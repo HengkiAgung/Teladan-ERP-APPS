@@ -1,7 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../bloc/request_detail/request_detail_bloc.dart';
+import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../components/cancle_request_component.dart';
 import '../../../models/Employee/User.dart';
@@ -21,6 +25,13 @@ class DetailShiftRequestPage extends StatefulWidget {
 class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
   final int id;
 
+  void onCancle() {
+    context.read<RequestDetailBloc>().add(GetRequestDetail(
+        id: id.toString(), type: "attendance", model: UserShiftRequest()));
+
+    context.read<RequestShiftListBloc>().add(GetRequestList());
+  }
+  
   DetailShiftRequestPageState({required this.id});
   @override
   Widget build(BuildContext context) {
@@ -62,25 +73,15 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
           const Spacer()
         ],
       ),
-      body: FutureBuilder<UserShiftRequest>(
-        future: RequestRepository().getDetailUserShiftRequest(id),
-        builder:
-            (BuildContext context, AsyncSnapshot<UserShiftRequest> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the result, you can show a loading indicator.
-            // return const CircularProgressIndicator();
-            return Text(
-              'Loading',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.white,
-              ),
+      body: BlocBuilder<RequestDetailBloc, RequestDetailState>(
+        builder: (context, state) {
+          if (state is RequestDetailLoading) {
+            return const Padding(
+              padding: EdgeInsets.only(top:18.0, left: 18),
+              child: Text("loading..."),
             );
-          } else if (snapshot.hasError) {
-            // Handle the error case here.
-            return Text('Error: ${snapshot.error}');
-          } else {
-            UserShiftRequest request = snapshot.data!;
+          } else if (state is RequestDetailLoadSuccess) {
+            UserShiftRequest request = state.request;
 
             Color colorStatus;
 
@@ -97,28 +98,25 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                 Expanded(
                   child: ListView(
                     children: [
-                      FutureBuilder<User?>(
-                        future: UserRepository().getUser(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot<User?> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            // While waiting for the result, you can show a loading indicator.
-                            // return const CircularProgressIndicator();
-                            return const Text('Loading');
-                          } else if (snapshot.hasError) {
+                      BlocBuilder<UserBloc, UserState>(
+                        builder: (context, state) {
+                          if (state is UserLoading) {
+                            return const Text('Loading...');
+                          } else if (state is UserLoadSuccess) {
                             // Handle the error case here.
-                            return Text('Error: ${snapshot.error}');
-                          } else {
                             return AvatarProfileComponent(
-                              user: snapshot.data!,
+                              user: state.user,
                             );
+                          } else {
+                            return const Text('Failed to load user data');
                           }
                         },
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(
-                            horizontal: (MediaQuery.of(context).size.width / 2) - 60),
-                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                (MediaQuery.of(context).size.width / 2) - 60),
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
@@ -135,7 +133,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -172,7 +170,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -209,7 +207,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -250,7 +248,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                           ? Column(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 20,
                                     horizontal: 15,
                                   ),
@@ -259,12 +257,14 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 0.5,
-                                        color: Color.fromARGB(160, 158, 158, 158),
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
                                       ),
                                     ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -282,8 +282,8 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                               request.approvalLine!.email,
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
-                                            color:
-                                                const Color.fromARGB(255, 51, 51, 51),
+                                            color: const Color.fromARGB(
+                                                255, 51, 51, 51),
                                           ),
                                         ),
                                       ),
@@ -291,7 +291,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 20,
                                     horizontal: 15,
                                   ),
@@ -300,12 +300,14 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 0.5,
-                                        color: Color.fromARGB(160, 158, 158, 158),
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
                                       ),
                                     ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -323,8 +325,8 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                               : "-",
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
-                                            color:
-                                                const Color.fromARGB(255, 51, 51, 51),
+                                            color: const Color.fromARGB(
+                                                255, 51, 51, 51),
                                           ),
                                         ),
                                       ),
@@ -333,7 +335,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                 ),
                               ],
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -341,13 +343,13 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                     ? CancleRequestComponent(
                         id: request.id,
                         type: "shift",
-                        source: DetailShiftRequestPage(
-                          id: request.id,
-                        ),
+                        onCancle: onCancle,
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             );
+          } else {
+            return const Text("Failed to load detail attendance request");
           }
         },
       ),

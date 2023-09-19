@@ -112,7 +112,7 @@ class _DetailRequestComponentState extends State<DetailRequestComponent> {
         Container(
           margin: EdgeInsets.symmetric(
               horizontal: (MediaQuery.of(context).size.width / 2) - 60),
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: 10,
           ),
           decoration: BoxDecoration(
@@ -131,7 +131,7 @@ class _DetailRequestComponentState extends State<DetailRequestComponent> {
         ...children,
         file != null
             ? Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: 20,
                   horizontal: 15,
                 ),

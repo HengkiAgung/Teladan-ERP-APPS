@@ -38,7 +38,7 @@ class AttendanceLogBloc extends Bloc<AttendanceLogEvent, AttendanceLogState> {
       try {
         String? token = await Auth().getToken();
 
-        final List<Attendance> newAttendanceList = await AttendanceRepository().getHistoryAttendance(token: token!, page: event.page.toString());
+        final List<Attendance> newAttendanceList = await AttendanceRepository().getHistoryAttendance(token: token, page: event.page.toString());
         attendanceList.addAll(newAttendanceList);
 
         emit(AttendanceLogLoadSuccess(attendanceList));
@@ -47,6 +47,9 @@ class AttendanceLogBloc extends Bloc<AttendanceLogEvent, AttendanceLogState> {
         emit(AttendanceLogLoadFailure(error: error.toString()));
       }
     });
-
+    
+    on<LogOut>((event, emit) async {
+      emit(AttendanceLogInitial());
+    });
   }
 }

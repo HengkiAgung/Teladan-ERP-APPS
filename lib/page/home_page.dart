@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:teladan/models/Summaries.dart';
 
 import '../bloc/attendance_log/attendance_log_bloc.dart';
 import '../bloc/attendance_today/attendance_today_bloc.dart';
+import '../bloc/summaries/summaries_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 import '../models/Attendance.dart';
 import '../repositories/attendance_repository.dart';
@@ -24,7 +26,7 @@ class _HomePageState extends State<HomePage> {
 
     if (attendanceLog.state is! AttendanceTodayLoadSuccess) {
       context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
-    } 
+    }
 
     DateTime now = DateTime.now();
     var formatter = DateFormat('hh');
@@ -104,7 +106,13 @@ class _HomePageState extends State<HomePage> {
                   BlocBuilder<AttendanceTodayBloc, AttendanceTodayState>(
                     builder: (context, state) {
                       if (state is AttendanceTodayLoading) {
-                        return const Text("Loading ...");
+                        return Text(
+                          "Loading ...",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        );
                       }
                       if (state is AttendanceTodayLoadSuccess) {
                         Attendance attendance = state.attendance;
@@ -131,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                                                     .checkIn(context);
 
                                             if (attend) {
-                                              setState(() {});
+                                              context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
                                             }
                                           }
                                         },
@@ -178,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                                                     .checkOut(context);
 
                                             if (attend) {
-                                              setState(() {});
+                                              context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
                                             }
                                           }
                                         },
@@ -247,18 +255,21 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               color: Colors.white,
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // daftar absensi
                   GestureDetector(
                     onTap: () {
-                      final attendanceLog = BlocProvider.of<AttendanceLogBloc>(context);
+                      final attendanceLog =
+                          BlocProvider.of<AttendanceLogBloc>(context);
 
                       if (attendanceLog.state is! AttendanceLogLoadSuccess) {
-                        context.read<AttendanceLogBloc>().add(GetAttendanceLog());
-                      } 
+                        context
+                            .read<AttendanceLogBloc>()
+                            .add(GetAttendanceLog());
+                      }
 
                       Navigator.push(
                         context,
@@ -269,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.library_books_outlined),
+                        const Icon(Icons.library_books_outlined),
                         const SizedBox(
                           width: 12,
                         ),
@@ -281,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 51, 51, 51),
+                                color: const Color.fromARGB(255, 51, 51, 51),
                               ),
                             ),
                             Text(
@@ -293,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         const Icon(Icons.keyboard_arrow_right_rounded),
                       ],
                     ),
@@ -343,18 +354,19 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Color.fromARGB(0, 158, 158, 158).withOpacity(0.5),
+                    color:
+                        const Color.fromARGB(0, 158, 158, 158).withOpacity(0.5),
                     spreadRadius: 0.5,
                     blurRadius: 2,
-                    offset: Offset(2, 2), // changes position of shadow
+                    offset: const Offset(2, 2), // changes position of shadow
                   ),
                 ],
               ),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 30,
                 vertical: 15,
               ),
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               child: Column(
                 children: [
                   Text(
@@ -362,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 51, 51, 51),
+                      color: const Color.fromARGB(255, 51, 51, 51),
                     ),
                   ),
                   Text(
@@ -372,21 +384,17 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
-                  FutureBuilder<dynamic>(
-                    future: AttendanceRepository().getSummaries(null, null),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                  BlocBuilder<SummariesBloc, SummariesState>(
+                    builder: (context, state) {
+                      if (state is SummariesLoading) {
                         // While waiting for the result, you can show a loading indicator.
                         // return const CircularProgressIndicator();
-                        return const Text('Loading');
-                      } else if (snapshot.hasError) {
-                        // Handle the error case here.
-                        return Text('Error: ${snapshot.error}');
-                      } else {
+                        return const Text('Loading...');
+                      } else if (state is SummariesLoadSuccess) {
+                        Summaries summaries = state.summaries;
                         return Column(
                           children: [
                             Row(
@@ -397,13 +405,14 @@ class _HomePageState extends State<HomePage> {
                                     'On time',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13,
-                                      color: Color.fromARGB(255, 51, 51, 51),
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    snapshot.data!['onTimeCount'].toString(),
+                                    summaries.onTimeCount.toString(),
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
@@ -413,7 +422,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -424,14 +433,14 @@ class _HomePageState extends State<HomePage> {
                                     'Late check in',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13,
-                                      color: Color.fromARGB(255, 51, 51, 51),
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    snapshot.data!['lateCheckInCount']
-                                        .toString(),
+                                    summaries.lateCheckInCount.toString(),
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
@@ -441,7 +450,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -452,14 +461,14 @@ class _HomePageState extends State<HomePage> {
                                     'Early check out',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13,
-                                      color: Color.fromARGB(255, 51, 51, 51),
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    snapshot.data!['earlyCheckOutCount']
-                                        .toString(),
+                                    summaries.earlyCheckOutCount.toString(),
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
@@ -469,7 +478,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -480,13 +489,14 @@ class _HomePageState extends State<HomePage> {
                                     'Absent',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13,
-                                      color: Color.fromARGB(255, 51, 51, 51),
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    snapshot.data!['absent'].toString(),
+                                    summaries.absent.toString(),
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
@@ -496,7 +506,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -507,13 +517,14 @@ class _HomePageState extends State<HomePage> {
                                     'Time off',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13,
-                                      color: Color.fromARGB(255, 51, 51, 51),
+                                      color:
+                                          const Color.fromARGB(255, 51, 51, 51),
                                     ),
                                   ),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    snapshot.data!['timeOffCount'].toString(),
+                                    summaries.timeOffCount.toString(),
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
@@ -525,6 +536,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         );
+                      } else {
+                        return const Text('Failed to load summaries ');
                       }
                     },
                   ),

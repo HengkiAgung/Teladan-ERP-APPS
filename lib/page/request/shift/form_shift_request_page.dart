@@ -1,8 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/components/text_field_component.dart';
 import 'package:teladan/models/Employee/WorkingShift.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../repositories/request_repository.dart';
 import '../../main_page.dart';
 
@@ -94,12 +97,8 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
                 // ignore: use_build_context_synchronously
-                Navigator.pushReplacement<void, void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => MainPage(index: 2),
-                  ),
-                );
+                context.read<RequestShiftListBloc>().add(GetRequestList());
+
                 // ignore: use_build_context_synchronously
                 showModalBottomSheet<void>(
                   context: context,
@@ -109,7 +108,6 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                     ),
                   ),
                   builder: (BuildContext context) {
-
                     return Container(
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -122,12 +120,14 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 14, left: 14, bottom: 30),
+                              padding: const EdgeInsets.only(
+                                  right: 14, left: 14, bottom: 30),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 20, bottom: 20),
                                     child: Row(
                                       children: [
                                         GestureDetector(
@@ -150,7 +150,6 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                                       ],
                                     ),
                                   ),
-                                  
                                   Text(
                                     "Shift berhasil diajukan",
                                     style: GoogleFonts.poppins(
@@ -167,7 +166,6 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                     );
                   },
                 );
-
               }
             }
           },
@@ -208,6 +206,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
+            
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView(
@@ -298,8 +297,30 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                         width: 15,
                       ),
                       Expanded(
-                        child: TextFieldComponent(
-                            label: "Current Shift", content: currentShift.name,),
+                        child: BlocBuilder<UserBloc, UserState>(
+                          builder: (context, state) {
+                            String token = "";
+                            if (state is UserLoadSuccess) {
+                              token = state.token;
+                            }
+                            return FutureBuilder<WorkingShift>(
+                              future: RequestRepository().getCurrentShift(token: token),
+                              builder: (BuildContext context, AsyncSnapshot<WorkingShift> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Text('Loading');
+                                } else if (snapshot.hasError) {
+                                  // Handle the error case here.
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  return TextFieldComponent(
+                                    label: "Current Shift",
+                                    content: snapshot.data!.name,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

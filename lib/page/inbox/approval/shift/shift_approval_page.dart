@@ -4,6 +4,7 @@ import 'package:teladan/repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../models/Attendance/UserShiftRequest.dart';
 import 'detail_shift_approval_page.dart';
@@ -16,7 +17,7 @@ class ShiftApprovalPage extends StatefulWidget {
 }
 
 class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
-  List<UserShiftRequest> _request = [];
+  List<dynamic> _request = [];
 
   late ScrollController _scrollController;
   int page = 1;
@@ -25,12 +26,13 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
+      page = page + 1;
       context.read<ApprovalListBloc>().add(
             ScrollFetch(
-              page: page++,
+              page: page,
               key: 'userAttendanceRequest',
               type: 'attendance',
-              model: UserShiftRequest,
+              model: UserShiftRequest(),
             ),
           );
     }
@@ -86,43 +88,75 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
       body: BlocBuilder<ApprovalListBloc, ApprovalListState>(
           builder: (context, state) {
         if (state is ApprovalListLoading) {
-          return Text("loading...");
+          return const Padding(
+            padding: EdgeInsets.only(top: 18.0, left: 18),
+            child: Text("loading..."),
+          );
         } else if (state is ApprovalListLoadFailure) {
           return Text("Failed to load attendance log");
         } else if (state is ApprovalListLoadSuccess) {
-          setState(() {
-            _request = state.request as List<UserShiftRequest>;
-          });
+          _request = state.request;
         }
-        return ListView.builder(
-          controller: _scrollController,
-          itemCount: _request.length,
-          itemBuilder: (BuildContext context, int index) {
-            var request = _request[index];
-            return RequestItemComponent(
-              fun: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailShiftApprovalPage(
-                      id: request.id.toString(),
-                    ),
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<ApprovalListBloc>().add(
+                  GetRequestList(
+                    key: 'userAttendanceRequest',
+                    type: 'attendance',
+                    model: UserShiftRequest(),
                   ),
                 );
-              },
-              title: request.user!.name,
-              status: request.status,
-              children: [
-                Text(
-                  "Tanggal ${request.date}",
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            );
           },
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _request.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var request = _request[index];
+                    return RequestItemComponent(
+                      fun: () {
+                        context.read<ApprovalDetailBloc>().add(GetRequestDetail(
+                            id: request.id.toString(),
+                            type: "shift",
+                            model: UserShiftRequest()));
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailShiftApprovalPage(
+                              id: request.id.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                      title: request.user!.name,
+                      status: request.status,
+                      children: [
+                        Text(
+                          "Tanggal ${request.date}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              (state is ApprovalListFetchNew)
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        height: 40,
+                        child: Text("Loading..."),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
         );
       }),
     );

@@ -23,5 +23,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         emit(EmployeeLoadFailure(error: error.toString()));
       }
     });
+
+    on<LogOut>((event, emit) async {
+      emit(EmployeeInitial());
+    });
   }
 }

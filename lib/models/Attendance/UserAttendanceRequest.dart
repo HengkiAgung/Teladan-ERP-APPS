@@ -17,7 +17,6 @@ class UserAttendanceRequest {
   UserAttendanceRequest();
 
   UserAttendanceRequest.fromJson(Map<String, dynamic> json) {
-    // print(json['user']);
     id = json['id'] ?? 0;
     user = User.fromJson(json['user'] ?? {});
     workingShift = WorkingShift.fromJson(json['shift'] ?? {});
@@ -29,5 +28,9 @@ class UserAttendanceRequest {
     check_out = json['check_out'] ?? "";
     comment = json['comment'] ?? "";
     file = json['file'];
+  }
+
+  fromJson(Map<String, dynamic> json) {
+    return UserAttendanceRequest.fromJson(json);
   }
 }
