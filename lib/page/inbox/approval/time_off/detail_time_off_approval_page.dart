@@ -7,7 +7,6 @@ import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
-import '../../../../repositories/approval_repository.dart';
 
 // ignore: must_be_immutable
 class DetailTimeOffApprovalPage extends StatefulWidget {
@@ -77,8 +76,6 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
           if (state is ApprovalDetailLoading) {
             return const Text("Loading...");
           } else if (state is ApprovalDetailLoadSuccess) {
-            var shift = state.request.user!.userEmployment!.workingScheduleShift
-                .workingShift;
             var request = state.request;
 
             List<List<String>> stringChildren = [];

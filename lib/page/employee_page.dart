@@ -1,12 +1,9 @@
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/employee/employee_bloc.dart';
-import '../models/Employee/User.dart';
-import '../repositories/employee_repository.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});

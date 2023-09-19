@@ -194,7 +194,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
     DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
 
-    if (working_shift_id == null || working_shift_id == "") {
+    if (working_shift_id == "") {
       // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Shift baru wajib diisi!");
       return false;
@@ -278,15 +278,13 @@ class RequestRepository {
       Uri.parse('$_baseUrl/cmt-request/personal/time-off/make'),
     ); 
     
-    if (_selectedFile != null) {
-      var imageFile = await http.MultipartFile.fromPath(
-        'file',
-        _selectedFile.path!,
-        filename: _selectedFile.name,
-      );
+    var imageFile = await http.MultipartFile.fromPath(
+      'file',
+      _selectedFile.path!,
+      filename: _selectedFile.name,
+    );
 
-      request.files.add(imageFile);
-    }
+    request.files.add(imageFile);
 
     request.headers['Accept'] = 'application/json';
     request.headers['Content-Type'] = 'multipart/form-data';

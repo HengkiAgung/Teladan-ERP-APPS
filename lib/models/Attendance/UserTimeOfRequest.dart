@@ -1,5 +1,3 @@
-import '../Employee/User.dart';
-
 class UserTimeOfRequest {
   late int id;
 

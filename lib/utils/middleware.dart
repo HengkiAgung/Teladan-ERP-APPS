@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 import '../components/modal_bottom_sheet_component.dart';
-import '../models/Employee/User.dart';
 import '../page/login_page.dart';
 import '../repositories/user_repository.dart';
-import 'auth.dart';
 
 class Middleware {
   Future<void> authenticated(BuildContext context, String token) async {    

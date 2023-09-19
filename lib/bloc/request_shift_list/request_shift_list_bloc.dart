@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../models/Attendance/UserShiftRequest.dart';
-import '../../models/Employee/WorkingShift.dart';
 import '../../repositories/request_repository.dart';
 import '../../utils/auth.dart';
 

@@ -1,10 +1,10 @@
-import '../../repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../repositories/request_repository.dart';
 import 'modal_bottom_sheet_component.dart';
 
+// ignore: must_be_immutable
 class CancleRequestComponent extends StatelessWidget {
   int id;
   String type;

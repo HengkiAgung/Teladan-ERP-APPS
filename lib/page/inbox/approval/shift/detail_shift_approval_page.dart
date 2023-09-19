@@ -7,7 +7,6 @@ import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
-import '../../../../repositories/approval_repository.dart';
 
 // ignore: must_be_immutable
 class DetailShiftApprovalPage extends StatefulWidget {
@@ -85,7 +84,7 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
               ["Tanggal absensi", request.date],
               [
                 "Shift",
-                "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
+                "${shift.name}, ${shift.working_start} - ${shift.working_end}"
               ],
               ["Reason", request.notes],
             ]);

@@ -1,5 +1,3 @@
-import '../Employee/User.dart';
-
 class LeaveRequestCategory {
   late int id;
   late String name;

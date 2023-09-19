@@ -7,6 +7,7 @@ class RequestDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// ignore: must_be_immutable
 class GetRequestDetail extends RequestDetailEvent{
   late String id;
   late String type;

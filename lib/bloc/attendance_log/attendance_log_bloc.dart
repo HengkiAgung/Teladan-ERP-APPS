@@ -16,7 +16,7 @@ class AttendanceLogBloc extends Bloc<AttendanceLogEvent, AttendanceLogState> {
       try {
         String? token = await Auth().getToken();
 
-        final List<Attendance> attendanceList = await AttendanceRepository().getHistoryAttendance(token: token!,);
+        final List<Attendance> attendanceList = await AttendanceRepository().getHistoryAttendance(token: token,);
 
         emit(AttendanceLogLoadSuccess(attendanceList));
 

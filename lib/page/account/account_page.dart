@@ -34,7 +34,6 @@ class _AccountPageState extends State<AccountPage> {
       context.read<UserBloc>().add(GetUser());
     }
 
-    final attendanceLog = BlocProvider.of<UserBloc>(context);
     return ListView(
       children: [
         BlocBuilder<UserBloc, UserState>(

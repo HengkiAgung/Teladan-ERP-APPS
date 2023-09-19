@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/page/main_page.dart';
 import 'package:flutter/material.dart';
 
-import '../bloc/summaries/summaries_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 import '../utils/auth.dart';
 

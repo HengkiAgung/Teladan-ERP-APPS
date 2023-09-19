@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
@@ -268,9 +267,7 @@ class AttendanceRepository {
     return [];
   }
 
-  Future<Summaries> getSummaries(String? startDate, String? endDate) async {
-    String? token = await Auth().getToken();
-
+  Future<Summaries> getSummaries(String? startDate, String? endDate, token) async {
     String params = "?";
     if (startDate != null) {
       params += "startDate=$startDate";

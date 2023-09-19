@@ -8,9 +8,6 @@ import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
 import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../components/cancle_request_component.dart';
-import '../../../models/Employee/User.dart';
-import '../../../repositories/request_repository.dart';
-import '../../../repositories/user_repository.dart';
 
 class DetailShiftRequestPage extends StatefulWidget {
   final int id;

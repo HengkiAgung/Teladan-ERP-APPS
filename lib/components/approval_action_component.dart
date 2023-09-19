@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'modal_bottom_sheet_component.dart';
 
+// ignore: must_be_immutable
 class ApprovalActionComponent extends StatelessWidget {
   final TextEditingController commentController = TextEditingController();
   String id;

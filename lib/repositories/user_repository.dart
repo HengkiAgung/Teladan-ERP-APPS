@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
@@ -13,11 +12,8 @@ import '../models/Employee/UserTax.dart';
 import '../utils/auth.dart';
 
 class UserRepository {
-  static final String _baseUrl = Config.apiUrl;
-
   Future<User> getUser(String token) async {
-    print(token);
-    if (token == "" || token == null) {
+    if (token == "") {
       return User.fromJson({});
     }
     final response = await http.get(

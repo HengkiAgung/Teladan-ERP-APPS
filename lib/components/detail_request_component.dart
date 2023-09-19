@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
 import 'avatar_profile_component.dart';
 
+// ignore: must_be_immutable
 class DetailRequestComponent extends StatefulWidget {
   User user;
   List<List<String>> stringChildren;

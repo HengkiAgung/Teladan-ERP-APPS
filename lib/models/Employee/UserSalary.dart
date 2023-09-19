@@ -1,10 +1,5 @@
-import 'Department.dart';
-import 'Division.dart';
 import 'PaymentSchedule.dart';
 import 'ProrateSetting.dart';
-import 'Role.dart';
-import 'Team.dart';
-import 'UserPersonalData.dart';
 
 class UserSalary {
   late int id;

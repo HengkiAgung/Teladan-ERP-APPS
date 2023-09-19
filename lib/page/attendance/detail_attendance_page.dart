@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../models/Attendance.dart';
-import '../../repositories/attendance_repository.dart';
 
 class DetailAttendance extends StatelessWidget {
   const DetailAttendance({super.key});

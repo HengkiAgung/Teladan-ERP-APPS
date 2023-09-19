@@ -18,7 +18,7 @@ class AttendanceTodayBloc extends Bloc<AttendanceTodayEvent, AttendanceTodayStat
 
         String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-        final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: formattedDate, token: token!);
+        final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: formattedDate, token: token);
         emit(AttendanceTodayLoadSuccess(attendance));
 
       } catch (error) {
