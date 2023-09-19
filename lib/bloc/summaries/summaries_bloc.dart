@@ -15,7 +15,7 @@ class SummariesBloc extends Bloc<SummariesEvent, SummariesState> {
       try {
         String token = await Auth().getToken();
 
-        Summaries summaries = await AttendanceRepository().getSummaries(null, null);
+        Summaries summaries = await AttendanceRepository().getSummaries(null, null, token);
 
         emit(SummariesLoadSuccess(summaries));
       } catch (error) {
