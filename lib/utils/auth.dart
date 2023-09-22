@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
+import '../repositories/user_repository.dart';
 
 class Auth {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -84,8 +85,11 @@ class Auth {
 
   Future<String> getToken() async {
     var value = await storage.read(key: 'token');
-    print(value ?? "tidak ada");
-    return value ?? "";
+
+    var user = await UserRepository().getUser(value!);
+    if (user.email == "") return "";
+    
+    return value;
   }
 
   Future<void> persistToken(String token) async {

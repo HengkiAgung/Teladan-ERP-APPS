@@ -31,3 +31,4 @@ class SummariesLoadFailure extends SummariesState {
   }
 }
 
+class Unauthenticated extends SummariesState {}

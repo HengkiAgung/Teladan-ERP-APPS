@@ -14,11 +14,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoading());
       try {
         String token = await Auth().getToken();
-        final User user = await UserRepository().getUser(token);
+        
+        if (token == "") {
+          emit(UserUnauthenticated());
+        } else {
+          final User user = await UserRepository().getUser(token);
 
-        emit(UserLoadSuccess(user, token));
-
-
+          emit(UserLoadSuccess(user, token));
+        }
       } catch (error) {
         emit(UserLoadFailure(error: error.toString()));
       }

@@ -14,12 +14,15 @@ class RequestLeaveListBloc extends Bloc<RequestLeaveListEvent, RequestLeaveListS
       emit(RequestLeaveListLoading());
       try {
         String token = await Auth().getToken();
-
-        final List<dynamic> rawData = await RequestRepository().getRequest(key: "userLeaveRequest", type: "time-off", model: UserLeaveRequest(), token: token);
-        final List<UserLeaveRequest> castedData = rawData.cast<UserLeaveRequest>();
         
-        emit(RequestLeaveListLoadSuccess(castedData));
-
+        if (token == "") {
+          emit(Unauthenticated());
+        } else {
+          final List<dynamic> rawData = await RequestRepository().getRequest(key: "userLeaveRequest", type: "time-off", model: UserLeaveRequest(), token: token);
+          final List<UserLeaveRequest> castedData = rawData.cast<UserLeaveRequest>();
+          
+          emit(RequestLeaveListLoadSuccess(castedData));
+        }
       } catch (error) {
         emit(RequestLeaveListLoadFailure(error: error.toString()));
       }
@@ -38,11 +41,14 @@ class RequestLeaveListBloc extends Bloc<RequestLeaveListEvent, RequestLeaveListS
       try {
         String token = await Auth().getToken();
 
-        final List<dynamic> request = await RequestRepository().getRequest(page: event.page.toString(), key: "userLeaveRequest", type: "time-off", model: UserLeaveRequest(), token: token);
-        requestList.addAll(request.cast<UserLeaveRequest>());
+        if (token == "") {
+          emit(Unauthenticated());
+        } else {
+          final List<dynamic> request = await RequestRepository().getRequest(page: event.page.toString(), key: "userLeaveRequest", type: "time-off", model: UserLeaveRequest(), token: token);
+          requestList.addAll(request.cast<UserLeaveRequest>());
 
-        emit(RequestLeaveListLoadSuccess(requestList));
-
+          emit(RequestLeaveListLoadSuccess(requestList));
+        }
       } catch (error) {
         emit(RequestLeaveListLoadFailure(error: error.toString()));
       }

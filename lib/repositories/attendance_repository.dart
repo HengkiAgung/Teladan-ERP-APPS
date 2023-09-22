@@ -70,9 +70,7 @@ class AttendanceRepository {
     return await location.getLocation();
   }
 
-  Future<bool> validateLocation(BuildContext context, String latitude, String longitude) async {
-    String? token = await Auth().getToken();
-
+  Future<bool> validateLocation(BuildContext context, String token, String latitude, String longitude) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/attend/location/validate'),
       headers: {
@@ -99,9 +97,8 @@ class AttendanceRepository {
     return false;
   }
 
-  Future<bool> checkIn(BuildContext context) async {
+  Future<bool> checkIn(BuildContext context, String token) async {
     try {
-      String? token = await Auth().getToken();
       String latitude = "0";
       String longitude = "0";
 
@@ -113,7 +110,7 @@ class AttendanceRepository {
         longitude = '${value.longitude}';
       });
       
-      bool validate = await validateLocation(context, latitude, longitude);
+      bool validate = await validateLocation(context, token, latitude, longitude);
       // ignore: use_build_context_synchronously
 
       if (validate) {
@@ -171,9 +168,8 @@ class AttendanceRepository {
     }
   }
 
-  Future<bool> checkOut(BuildContext context) async {
+  Future<bool> checkOut(BuildContext context, String token) async {
     try {
-      String? token = await Auth().getToken();
       String latitude = "0";
       String longitude = "0";
 
@@ -185,7 +181,7 @@ class AttendanceRepository {
         longitude = '${value.longitude}';
       });
       
-      bool validate = await validateLocation(context, latitude, longitude);
+      bool validate = await validateLocation(context, token, latitude, longitude);
 
       if (validate) {
         // ignore: use_build_context_synchronously

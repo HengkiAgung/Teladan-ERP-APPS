@@ -33,3 +33,4 @@ class RequestAttendanceListLoadFailure extends RequestAttendanceListState {
   }
 }
 
+class Unauthenticated extends RequestAttendanceListState {}

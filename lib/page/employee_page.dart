@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/employee/employee_bloc.dart';
+import '../utils/middleware.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});
@@ -42,6 +43,9 @@ class _EmployeePageState extends State<EmployeePage> {
               builder: (context, state) {
                 if (state is EmployeeLoading) {
                   return const Text('Loading');
+                } else if (state is Unauthenticated) {
+                  Middleware().redirectToLogin(context);
+                  return const SizedBox();
                 } else if (state is EmployeeLoadSuccess) {
                   return ListView.builder(
                     itemCount: state.employee.length,

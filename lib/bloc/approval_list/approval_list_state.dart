@@ -33,3 +33,4 @@ class ApprovalListLoadFailure extends ApprovalListState {
   }
 }
 
+class Unauthenticated extends ApprovalListState {}

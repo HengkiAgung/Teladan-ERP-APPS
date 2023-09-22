@@ -30,3 +30,5 @@ class AttendanceTodayLoadFailure extends AttendanceTodayState {
     return 'Failed to load attendance {error: $error}';
   }
 }
+
+class UserUnauthenticated extends AttendanceTodayState {}

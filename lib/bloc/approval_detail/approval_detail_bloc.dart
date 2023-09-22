@@ -12,11 +12,15 @@ class ApprovalDetailBloc extends Bloc<ApprovalDetailEvent, ApprovalDetailState> 
     on<GetRequestDetail>((event, emit) async {
       emit(ApprovalDetailLoading());
       try {
-        String? token = await Auth().getToken();
+        String token = await Auth().getToken();
 
-        final request = await ApprovalRepository().getDetailRequest(id: event.id, type: event.type, model: event.model, token: token);
+        if (token == "") {
+          emit(Unauthenticated());
+        } else {
+          final request = await ApprovalRepository().getDetailRequest(id: event.id, type: event.type, model: event.model, token: token);
 
-        emit(ApprovalDetailLoadSuccess(request));
+          emit(ApprovalDetailLoadSuccess(request));
+        }
 
       } catch (error) {
         emit(ApprovalDetailLoadFailure(error: error.toString()));

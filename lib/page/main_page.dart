@@ -67,8 +67,6 @@ class _MainPageState extends State<MainPage> {
   void _onBottomNavBarTapped(int index) {
     setState(() {
       bottomNavIndex = index;
-
-      Middleware().authenticated(context, token);
     });
   }
 

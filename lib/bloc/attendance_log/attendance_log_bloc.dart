@@ -14,11 +14,15 @@ class AttendanceLogBloc extends Bloc<AttendanceLogEvent, AttendanceLogState> {
       emit(AttendanceLogLoading());
 
       try {
-        String? token = await Auth().getToken();
+        String token = await Auth().getToken();
 
-        final List<Attendance> attendanceList = await AttendanceRepository().getHistoryAttendance(token: token,);
+        if (token == "") {
+          emit(Unauthenticated());
+        } else {
+          final List<Attendance> attendanceList = await AttendanceRepository().getHistoryAttendance(token: token,);
 
-        emit(AttendanceLogLoadSuccess(attendanceList));
+          emit(AttendanceLogLoadSuccess(attendanceList));
+        }
 
       } catch (error) {
         emit(AttendanceLogLoadFailure(error: error.toString()));
@@ -36,12 +40,16 @@ class AttendanceLogBloc extends Bloc<AttendanceLogEvent, AttendanceLogState> {
       emit(AttendanceLogFetchNew());
 
       try {
-        String? token = await Auth().getToken();
+        String token = await Auth().getToken();
 
-        final List<Attendance> newAttendanceList = await AttendanceRepository().getHistoryAttendance(token: token, page: event.page.toString());
-        attendanceList.addAll(newAttendanceList);
+        if (token == "") {
+          emit(Unauthenticated());
+        } else {
+          final List<Attendance> newAttendanceList = await AttendanceRepository().getHistoryAttendance(token: token, page: event.page.toString());
+          attendanceList.addAll(newAttendanceList);
 
-        emit(AttendanceLogLoadSuccess(attendanceList));
+          emit(AttendanceLogLoadSuccess(attendanceList));
+        }
 
       } catch (error) {
         emit(AttendanceLogLoadFailure(error: error.toString()));

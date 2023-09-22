@@ -31,3 +31,5 @@ class UserLoadFailure extends UserState {
     return 'Failed to load account {error: $error}';
   }
 }
+
+class UserUnauthenticated extends UserState {}

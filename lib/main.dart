@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:teladan/utils/middleware.dart';
 
 import 'bloc/approval_detail/approval_detail_bloc.dart';
 import 'bloc/approval_list/approval_list_bloc.dart';
@@ -133,6 +134,9 @@ class MainApp extends StatelessWidget {
                 ),
               ),
             );
+          } else if (state is UserUnauthenticated) {
+            Middleware().redirectToLogin(context);
+            return const SizedBox();
           } else if (state is UserLoadSuccess) {
             return state.user.id != 0 ? MainPage(index: 0) : const LoginPage();
           } else {
