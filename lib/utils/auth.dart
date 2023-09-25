@@ -1,12 +1,20 @@
 import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-
+import '../../bloc/attendance_log/attendance_log_bloc.dart' as attendance_log_bloc;
+import '../../bloc/attendance_today/attendance_today_bloc.dart' as attendance_today_bloc;
+import '../../bloc/employee/employee_bloc.dart' as employee_bloc;
+import '../../bloc/request_attendance_list/request_attendance_list_bloc.dart' as request_attendance_list_bloc;
+import '../../bloc/request_leavel_list/request_leave_list_bloc.dart' as request_leave_list_bloc;
+import '../../bloc/request_shift_list/request_shift_list_bloc.dart' as request_shift_list_bloc;
+import '../../bloc/summaries/summaries_bloc.dart' as summaries_bloc;
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
 import '../repositories/user_repository.dart';
+import 'middleware.dart';
 
 class Auth {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -14,6 +22,7 @@ class Auth {
   Future<bool> login(BuildContext context, String email, String password) async {
 
     try {
+      ModalBottomSheetComponent().loadingIndicator(context, "Loglogging in");
       final response = await http.post(
         Uri.parse("${Config.apiUrl}/login"),
         headers: {
@@ -25,6 +34,7 @@ class Auth {
           'password': password,
         }),
       );
+      Navigator.pop(context);
 
       if (response.statusCode == 200) {
         final token = jsonDecode(response.body)['data']['token'];
@@ -85,17 +95,26 @@ class Auth {
 
   Future<String> getToken() async {
     var value = await storage.read(key: 'token');
-
-    var user = await UserRepository().getUser(value!);
-    if (user.email == "") return "";
     
-    return value;
+    return value ?? "";
   }
 
   Future<void> persistToken(String token) async {
     await storage.write(key: 'token', value: token);
   }
 
+  void logOut(BuildContext context) {
+    context.read<attendance_log_bloc.AttendanceLogBloc>().add(attendance_log_bloc.LogOut());
+    context.read<attendance_today_bloc.AttendanceTodayBloc>().add(attendance_today_bloc.LogOut());
+    context.read<employee_bloc.EmployeeBloc>().add(employee_bloc.LogOut());
+    context.read<request_attendance_list_bloc.RequestAttendanceListBloc>().add(request_attendance_list_bloc.LogOut());
+    context.read<request_leave_list_bloc.RequestLeaveListBloc>().add(request_leave_list_bloc.LogOut());
+    context.read<request_shift_list_bloc.RequestShiftListBloc>().add(request_shift_list_bloc.LogOut());
+    context.read<summaries_bloc.SummariesBloc>().add(summaries_bloc.LogOut());
+
+    Middleware().redirectToLogin(context);
+    deleteToken();
+  }
   Future<void> deleteToken() async {
     await storage.delete(key: 'token');
     await storage.deleteAll();

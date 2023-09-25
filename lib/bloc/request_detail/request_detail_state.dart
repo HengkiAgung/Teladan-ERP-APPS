@@ -31,5 +31,3 @@ class RequestDetailLoadFailure extends RequestDetailState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends RequestDetailState {}

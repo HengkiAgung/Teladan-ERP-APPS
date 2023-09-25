@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/user/user_bloc.dart';
 import '../models/Employee/User.dart';
+import '../utils/auth.dart';
 import 'home_page.dart';
 import 'request/request_page.dart';
 
@@ -72,11 +73,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final summaries = BlocProvider.of<SummariesBloc>(context);
+    // context.read<UserBloc>().add(CheckAuth());
+    // final user = BlocProvider.of<UserBloc>(context);
 
-    if (summaries.state is! SummariesLoadSuccess) {
-      context.read<SummariesBloc>().add(GetAttendanceSummaries());
-    } 
+    // if (user.state is UserUnauthenticated) Auth().logOut(context);
 
     this.context = context;
     return Scaffold(
@@ -116,15 +116,17 @@ class _MainPageState extends State<MainPage> {
                     GestureDetector(
                       onTap: () async {
                         User user = await UserRepository().getUser(token);
-                        if (user.name != "") setState(() {
-                          error = false;
-                          context.read<UserBloc>().add(GetUser());
-                        });
-                        
+                        if (user.name != "") {
+                          setState(() {
+                            error = false;
+                            // ignore: use_build_context_synchronously
+                            context.read<UserBloc>().add(GetUser());
+                          });
+                        }
                       },
                       child: Container(
                         height: 50,
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           bottom: 20,
                           left: 20,
                           right: 20,
@@ -151,7 +153,7 @@ class _MainPageState extends State<MainPage> {
             )
           : _listWidget[bottomNavIndex],
       bottomNavigationBar: error
-          ? SizedBox()
+          ? const SizedBox()
           : BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoading) {

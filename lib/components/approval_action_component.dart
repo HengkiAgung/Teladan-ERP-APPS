@@ -1,7 +1,10 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../repositories/approval_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../bloc/user/user_bloc.dart';
 import 'modal_bottom_sheet_component.dart';
 
 // ignore: must_be_immutable
@@ -11,7 +14,11 @@ class ApprovalActionComponent extends StatelessWidget {
   String type;
   final VoidCallback function;
 
-  ApprovalActionComponent({super.key, required this.id, required this.type, required this.function});
+  ApprovalActionComponent(
+      {super.key,
+      required this.id,
+      required this.type,
+      required this.function});
 
   @override
   Widget build(BuildContext context) {
@@ -55,65 +62,93 @@ class ApprovalActionComponent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  String token = "";
+                  if (state is UserLoadSuccess) {
+                    token = state.token;
+                  }
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        ModalBottomSheetComponent().loadingIndicator(
+                            context, "Sedang memeriksa lokasimu...");
 
-                    bool updated = await ApprovalRepository().updateRequest(type: type, id: id, status: "Rejected", comment: commentController.text);
+                        bool updated = await ApprovalRepository().updateRequest(
+                            token: token,
+                            type: type,
+                            id: id,
+                            status: "Rejected",
+                            comment: commentController.text);
 
-                    Navigator.pop(context);
-                    if (updated) {
-                      function();
-                    }
-                    ModalBottomSheetComponent().errorIndicator(context, "Gagal mengubah status request");
-                  },
-                  child: Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Text(
-                      "Reject",
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        Navigator.pop(context);
+                        if (updated) {
+                          function();
+                        }
+                        ModalBottomSheetComponent().errorIndicator(
+                            context, "Gagal mengubah status request");
+                      },
+                      child: Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: Text(
+                          "Reject",
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               const SizedBox(width: 20),
               Expanded(
-                child: GestureDetector(
-                  onTap: () async {
-                    bool updated = await ApprovalRepository().updateRequest(type: type, id: id, status: "Approved", comment: commentController.text);
-
-                    if (updated) {
-                      function();
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    String token = "";
+                    if (state is UserLoadSuccess) {
+                      token = state.token;
                     }
-                  },
-                  child: Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue,
-                    ),
-                    child: Text(
-                      "Approve",
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    return GestureDetector(
+                      onTap: () async {
+                        bool updated = await ApprovalRepository().updateRequest(
+                            token: token,
+                            type: type,
+                            id: id,
+                            status: "Approved",
+                            comment: commentController.text);
+
+                        if (updated) {
+                          function();
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue,
+                        ),
+                        child: Text(
+                          "Approve",
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ],

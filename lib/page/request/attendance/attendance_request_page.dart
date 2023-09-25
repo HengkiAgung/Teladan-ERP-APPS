@@ -7,6 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
 import '../../../bloc/request_detail/request_detail_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
+import '../../../utils/auth.dart';
+import '../../../utils/middleware.dart';
 
 class AttendanceRequestPage extends StatefulWidget {
   const AttendanceRequestPage({super.key});
@@ -47,6 +50,12 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
     final attendanceRequest =
         BlocProvider.of<RequestAttendanceListBloc>(context);
     if (attendanceRequest.state is! RequestAttendanceListLoadSuccess) {
+      // context.read<UserBloc>().add(CheckAuth());
+      // final user = BlocProvider.of<UserBloc>(context);
+
+      // if (user.state is UserUnauthenticated) Auth().logOut(context);
+      Middleware().authenticated(context);
+
       context.read<RequestAttendanceListBloc>().add(const GetRequestList());
     }
 
@@ -111,6 +120,12 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
                             ),
                             child: GestureDetector(
                               onTap: () {
+                                // context.read<UserBloc>().add(CheckAuth());
+                                // final user = BlocProvider.of<UserBloc>(context);
+
+                                // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                                Middleware().authenticated(context);
+
                                 context.read<RequestDetailBloc>().add(
                                     GetRequestDetail(
                                         id: attendanceRequest.id.toString(),

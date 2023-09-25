@@ -32,5 +32,3 @@ class ApprovalListLoadFailure extends ApprovalListState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends ApprovalListState {}

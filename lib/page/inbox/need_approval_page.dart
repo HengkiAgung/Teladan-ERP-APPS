@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../bloc/approval_list/approval_list_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../models/Attendance/UserAttendanceRequest.dart';
 import '../../models/Attendance/UserLeaveRequest.dart';
 import '../../models/Attendance/UserShiftRequest.dart';
+import '../../utils/auth.dart';
+import '../../utils/middleware.dart';
 import 'approval/shift/shift_approval_page.dart';
 
 class NeedApprovalPage extends StatelessWidget {
@@ -23,6 +26,12 @@ class NeedApprovalPage extends StatelessWidget {
           // Cuti
           GestureDetector(
             onTap: () {
+              // context.read<UserBloc>().add(CheckAuth());
+              // final user = BlocProvider.of<UserBloc>(context);
+
+              // if (user.state is UserUnauthenticated) Auth().logOut(context);
+              Middleware().authenticated(context);
+
               context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));
               Navigator.push(
                 context,
@@ -72,6 +81,12 @@ class NeedApprovalPage extends StatelessWidget {
           // Absensi
           GestureDetector(
             onTap: () {
+              // context.read<UserBloc>().add(CheckAuth());
+              // final user = BlocProvider.of<UserBloc>(context);
+
+              // if (user.state is UserUnauthenticated) Auth().logOut(context);
+              Middleware().authenticated(context);
+
               context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
               Navigator.push(
                 context,
@@ -167,6 +182,12 @@ class NeedApprovalPage extends StatelessWidget {
           // Perubahan Shift
           GestureDetector(
             onTap: () {
+              // context.read<UserBloc>().add(CheckAuth());
+              // final user = BlocProvider.of<UserBloc>(context);
+
+              // if (user.state is UserUnauthenticated) Auth().logOut(context);
+              Middleware().authenticated(context);
+
               context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
               Navigator.push(
                 context,

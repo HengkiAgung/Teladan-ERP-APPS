@@ -16,14 +16,10 @@ class AttendanceTodayBloc extends Bloc<AttendanceTodayEvent, AttendanceTodayStat
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-          final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: formattedDate, token: token);
-          emit(AttendanceTodayLoadSuccess(attendance));
-        }
+        final Attendance attendance = await AttendanceRepository().getAttendanceDetail(date: formattedDate, token: token);
+        emit(AttendanceTodayLoadSuccess(attendance));
 
       } catch (error) {
         emit(AttendanceTodayLoadFailure(error: error.toString()));

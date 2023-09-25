@@ -32,5 +32,3 @@ class RequestAttendanceListLoadFailure extends RequestAttendanceListState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends RequestAttendanceListState {}

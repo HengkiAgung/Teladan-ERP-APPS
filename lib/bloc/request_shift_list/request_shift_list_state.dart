@@ -32,5 +32,3 @@ class RequestShiftListLoadFailure extends RequestShiftListState {
     return 'Failed to load shift request {error: $error}';
   }
 }
-
-class Unauthenticated extends RequestShiftListState {}

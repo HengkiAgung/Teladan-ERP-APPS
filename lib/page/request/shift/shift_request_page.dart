@@ -5,10 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../models/Attendance/UserShiftRequest.dart';
 import '../../../models/Employee/WorkingShift.dart';
 import '../../../repositories/request_repository.dart';
 import '../../../utils/auth.dart';
+import '../../../utils/middleware.dart';
 import 'detail_shift_request_page.dart';
 
 class ShiftRequestPage extends StatefulWidget {
@@ -49,6 +51,13 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
   Widget build(BuildContext context) {
     final shiftRequest = BlocProvider.of<RequestShiftListBloc>(context);
     if (shiftRequest.state is! RequestShiftListLoadSuccess) {
+      // context.read<UserBloc>().add(CheckAuth());
+      // final user = BlocProvider.of<UserBloc>(context);
+
+      // if (user.state is UserUnauthenticated) Auth().logOut(context);
+
+      Middleware().authenticated(context);
+
       context.read<RequestShiftListBloc>().add(GetRequestList());
     }
 
@@ -71,6 +80,12 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
 
               return RefreshIndicator(
                 onRefresh: () async {
+                  // context.read<UserBloc>().add(CheckAuth());
+                  // final user = BlocProvider.of<UserBloc>(context);
+
+                  // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                  Middleware().authenticated(context);
+
                   context.read<RequestShiftListBloc>().add(GetRequestList());
                 },
                 child: Column(
@@ -109,6 +124,13 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                             ),
                             child: GestureDetector(
                               onTap: () {
+                                // context.read<UserBloc>().add(CheckAuth());
+                                // final user = BlocProvider.of<UserBloc>(context);
+
+                                // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                                Middleware().authenticated(context);
+
+
                                 context.read<RequestDetailBloc>().add(
                                     GetRequestDetail(
                                         id: shift.id.toString(),

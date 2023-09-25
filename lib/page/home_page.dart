@@ -10,6 +10,8 @@ import '../bloc/summaries/summaries_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 import '../models/Attendance.dart';
 import '../repositories/attendance_repository.dart';
+import '../utils/auth.dart';
+import '../utils/middleware.dart';
 import 'attendance/log_attendance_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,9 +25,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final attendanceLog = BlocProvider.of<AttendanceTodayBloc>(context);
+    
+    if (attendanceLog.state is! AttendanceTodayLoadSuccess) context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
 
-    if (attendanceLog.state is! AttendanceTodayLoadSuccess) {
-      context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
+    final summaries = BlocProvider.of<SummariesBloc>(context);
+    if (summaries.state is! SummariesLoadSuccess) {
+      context.read<SummariesBloc>().add(GetAttendanceSummaries());
     }
 
     DateTime now = DateTime.now();
@@ -113,8 +118,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.white,
                           ),
                         );
-                      }
-                      if (state is AttendanceTodayLoadSuccess) {
+                      } else if (state is AttendanceTodayLoadSuccess) {
                         Attendance attendance = state.attendance;
 
                         return Column(
@@ -131,27 +135,36 @@ class _HomePageState extends State<HomePage> {
                                   const Spacer(),
                                   Column(
                                     children: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          if (attendance.check_in == "") {
-                                            bool attend =
-                                                await AttendanceRepository()
-                                                    .checkIn(context);
-
-                                            if (attend) {
-                                              context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
-                                            }
+                                      BlocBuilder<UserBloc, UserState>(
+                                        builder: (context, state) {
+                                          String token = "";
+                                          if (state is UserLoadSuccess) {
+                                            token = state.token;
                                           }
+                                          return TextButton(
+                                            onPressed: () async {
+                                              if (attendance.check_in == "") {
+                                                bool attend =
+                                                    await AttendanceRepository()
+                                                        .checkIn(
+                                                            context, token);
+
+                                                if (attend) {
+                                                  context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
+                                                }
+                                              }
+                                            },
+                                            child: const Text(
+                                              "Clock In",
+                                              style: TextStyle(
+                                                color: Colors.amber,
+                                                letterSpacing: 0.5,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          );
                                         },
-                                        child: const Text(
-                                          "Clock In",
-                                          style: TextStyle(
-                                            color: Colors.amber,
-                                            letterSpacing: 0.5,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
                                       ),
                                       attendance.check_in != ""
                                           ? Text(
@@ -178,27 +191,40 @@ class _HomePageState extends State<HomePage> {
                                   const Spacer(),
                                   Column(
                                     children: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          if (attendance.check_out == "") {
-                                            bool attend =
-                                                await AttendanceRepository()
-                                                    .checkOut(context);
-
-                                            if (attend) {
-                                              context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
-                                            }
+                                      BlocBuilder<UserBloc, UserState>(
+                                        builder: (context, state) {
+                                          String token = "";
+                                          if (state is UserLoadSuccess) {
+                                            token = state.token;
                                           }
+                                          return TextButton(
+                                            onPressed: () async {
+                                              if (attendance.check_out == "") {
+                                                bool attend =
+                                                    await AttendanceRepository()
+                                                        .checkOut(
+                                                            context, token);
+
+                                                if (attend) {
+                                                  context
+                                                      .read<
+                                                          AttendanceTodayBloc>()
+                                                      .add(
+                                                          GetAttendanceToday());
+                                                }
+                                              }
+                                            },
+                                            child: const Text(
+                                              "Clock Out",
+                                              style: TextStyle(
+                                                color: Colors.amber,
+                                                letterSpacing: 0.5,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          );
                                         },
-                                        child: const Text(
-                                          "Clock Out",
-                                          style: TextStyle(
-                                            color: Colors.amber,
-                                            letterSpacing: 0.5,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
                                       ),
                                       attendance.check_out != ""
                                           ? Text(
@@ -266,6 +292,11 @@ class _HomePageState extends State<HomePage> {
                           BlocProvider.of<AttendanceLogBloc>(context);
 
                       if (attendanceLog.state is! AttendanceLogLoadSuccess) {
+                        // context.read<UserBloc>().add(CheckAuth());
+                        // final user = BlocProvider.of<UserBloc>(context);
+                        // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                        Middleware().authenticated(context);
+
                         context
                             .read<AttendanceLogBloc>()
                             .add(GetAttendanceLog());

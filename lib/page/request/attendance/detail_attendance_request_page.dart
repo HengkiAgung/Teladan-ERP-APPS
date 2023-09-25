@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:teladan/components/cancle_request_component.dart';
+import 'package:teladan/components/cancel_request_component.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
@@ -10,6 +10,8 @@ import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../config.dart';
 import '../../../models/Attendance/UserAttendanceRequest.dart';
+import '../../../utils/auth.dart';
+import '../../../utils/middleware.dart';
 
 class DetailAttendanceRequestPage extends StatefulWidget {
   final int id;
@@ -26,6 +28,12 @@ class DetailAttendanceRequestPageState
   final int id;
 
   void onCancle() {
+    // context.read<UserBloc>().add(CheckAuth());
+    // final user = BlocProvider.of<UserBloc>(context);
+
+    // if (user.state is UserUnauthenticated) Auth().logOut(context);
+    Middleware().authenticated(context);
+
     context.read<RequestDetailBloc>().add(GetRequestDetail(
         id: id.toString(), type: "attendance", model: UserAttendanceRequest()));
 
@@ -407,7 +415,7 @@ class DetailAttendanceRequestPageState
                   ),
                 ),
                 request.status == "Waiting"
-                    ? CancleRequestComponent(
+                    ? CancelRequestComponent(
                         id: request.id,
                         type: "attendance",
                         onCancle: onCancle,

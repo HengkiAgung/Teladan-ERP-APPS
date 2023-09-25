@@ -5,12 +5,12 @@ import '../repositories/request_repository.dart';
 import 'modal_bottom_sheet_component.dart';
 
 // ignore: must_be_immutable
-class CancleRequestComponent extends StatelessWidget {
+class CancelRequestComponent extends StatelessWidget {
   int id;
   String type;
   final VoidCallback onCancle;
 
-  CancleRequestComponent({super.key, required this.id, required this.type, required this.onCancle});
+  CancelRequestComponent({super.key, required this.id, required this.type, required this.onCancle});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class CancleRequestComponent extends StatelessWidget {
             color: Colors.amber
           ),
           child: Text(
-            "Cancle",
+            "Cancel",
             textAlign: TextAlign.left,
             style: GoogleFonts.poppins(
               fontSize: 11,

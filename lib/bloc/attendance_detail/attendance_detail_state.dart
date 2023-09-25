@@ -30,5 +30,3 @@ class AttendanceDetailLoadFailure extends AttendanceDetailState {
     return 'Failed to load attendance {error: $error}';
   }
 }
-
-class Unauthenticated extends AttendanceDetailState {}

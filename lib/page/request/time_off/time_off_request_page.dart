@@ -5,7 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_leavel_list/request_leave_list_bloc.dart';
+import '../../../bloc/user/user_bloc.dart';
 import '../../../models/Attendance/UserLeaveRequest.dart';
+import '../../../utils/auth.dart';
+import '../../../utils/middleware.dart';
 import 'form_time_off_request_page.dart';
 
 class TimeOffRequestPage extends StatefulWidget {
@@ -46,6 +49,12 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
   Widget build(BuildContext context) {
     final attendanceRequest = BlocProvider.of<RequestLeaveListBloc>(context);
     if (attendanceRequest.state is! RequestLeaveListLoadSuccess) {
+      // context.read<UserBloc>().add(CheckAuth());
+      // final user = BlocProvider.of<UserBloc>(context);
+
+      // if (user.state is UserUnauthenticated) Auth().logOut(context);
+      Middleware().authenticated(context);
+
       context.read<RequestLeaveListBloc>().add(const GetRequestList());
     }
 
@@ -68,6 +77,12 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
 
               return RefreshIndicator(
                 onRefresh: () async {
+                  // context.read<UserBloc>().add(CheckAuth());
+                  // final user = BlocProvider.of<UserBloc>(context);
+
+                  // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                  Middleware().authenticated(context);
+
                   context.read<RequestLeaveListBloc>().add(const GetRequestList());
                 },
                 child: Column(
@@ -106,6 +121,12 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                             ),
                             child: GestureDetector(
                               onTap: () {
+                                // context.read<UserBloc>().add(CheckAuth());
+                                // final user = BlocProvider.of<UserBloc>(context);
+
+                                // if (user.state is UserUnauthenticated) Auth().logOut(context);
+                                Middleware().authenticated(context);
+
                                 context.read<RequestDetailBloc>().add(GetRequestDetail(
                                     id: leaveRequest.id.toString(),
                                     type: "shift",

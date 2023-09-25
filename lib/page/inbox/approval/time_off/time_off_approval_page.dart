@@ -5,7 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
+import '../../../../bloc/user/user_bloc.dart';
 import '../../../../models/Attendance/UserLeaveRequest.dart';
+import '../../../../utils/auth.dart';
+import '../../../../utils/middleware.dart';
 import 'detail_time_off_approval_page.dart';
 
 class TimeOffApprovalPage extends StatefulWidget {
@@ -99,6 +102,8 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
 
           return RefreshIndicator(
             onRefresh: () async {
+              Middleware().authenticated(context);
+
               context.read<ApprovalListBloc>().add(GetRequestList(
                     key: 'userTimeOffRequest',
                     type: 'time-off',
@@ -115,6 +120,8 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
                       var request = _request[index];
                       return RequestItemComponent(
                         fun: () {
+                          Middleware().authenticated(context);
+
                           context.read<ApprovalDetailBloc>().add(
                               GetRequestDetail(
                                   id: request.id.toString(),

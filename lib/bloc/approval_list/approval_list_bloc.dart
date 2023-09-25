@@ -14,13 +14,9 @@ class ApprovalListBloc extends Bloc<ApprovalListEvent, ApprovalListState> {
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> request = await ApprovalRepository().getRequest(key: event.key, type: event.type, model: event.model, token: token);
+        final List<dynamic> request = await ApprovalRepository().getRequest(key: event.key, type: event.type, model: event.model, token: token);
 
-          emit(ApprovalListLoadSuccess(request));
-        }
+        emit(ApprovalListLoadSuccess(request));
 
       } catch (error) {
         emit(ApprovalListLoadFailure(error: error.toString()));
@@ -40,16 +36,10 @@ class ApprovalListBloc extends Bloc<ApprovalListEvent, ApprovalListState> {
       try {
         String token = await Auth().getToken();
 
-        
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> request = await ApprovalRepository().getRequest(page: event.page.toString(), key: event.key, type: event.type, model: event.model, token: token);
-          requestList.addAll(request);
+        final List<dynamic> request = await ApprovalRepository().getRequest(page: event.page.toString(), key: event.key, type: event.type, model: event.model, token: token);
+        requestList.addAll(request);
 
-          emit(ApprovalListLoadSuccess(requestList));
-        }
-
+        emit(ApprovalListLoadSuccess(requestList));
 
       } catch (error) {
         emit(ApprovalListLoadFailure(error: error.toString()));

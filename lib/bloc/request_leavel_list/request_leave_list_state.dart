@@ -32,5 +32,3 @@ class RequestLeaveListLoadFailure extends RequestLeaveListState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends RequestLeaveListState {}

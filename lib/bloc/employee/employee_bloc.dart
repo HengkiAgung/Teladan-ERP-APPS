@@ -15,13 +15,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<User> employee = await EmployeeRepository().getAllUser(token: token,);
+        final List<User> employee = await EmployeeRepository().getAllUser(token: token,);
 
-          emit(EmployeeLoadSuccess(employee));
-        }
+        emit(EmployeeLoadSuccess(employee));
 
       } catch (error) {
         emit(EmployeeLoadFailure(error: error.toString()));

@@ -14,14 +14,9 @@ class RequestDetailBloc extends Bloc<RequestDetailEvent, RequestDetailState> {
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final attendance = await RequestRepository().getRequestDetail(id: event.id, type: event.type, model: event.model, token: token);
+        final attendance = await RequestRepository().getRequestDetail(id: event.id, type: event.type, model: event.model, token: token);
 
-          emit(RequestDetailLoadSuccess(attendance));
-        }
-
+        emit(RequestDetailLoadSuccess(attendance));
       } catch (error) {
         emit(RequestDetailLoadFailure(error: error.toString()));
       }

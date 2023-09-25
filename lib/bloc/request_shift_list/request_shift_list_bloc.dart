@@ -16,19 +16,15 @@ class RequestShiftListBloc
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> rawData = await RequestRepository().getRequest(
-              key: "userShiftRequest",
-              type: "shift",
-              model: UserShiftRequest(),
-              token: token);
-          final List<UserShiftRequest> castedData =
-              rawData.cast<UserShiftRequest>();
+        final List<dynamic> rawData = await RequestRepository().getRequest(
+            key: "userShiftRequest",
+            type: "shift",
+            model: UserShiftRequest(),
+            token: token);
+        final List<UserShiftRequest> castedData =
+            rawData.cast<UserShiftRequest>();
 
-          emit(RequestShiftListLoadSuccess(request: castedData));
-        }
+        emit(RequestShiftListLoadSuccess(request: castedData));
       } catch (error) {
         emit(RequestShiftListLoadFailure(error: error.toString()));
       }
@@ -47,20 +43,16 @@ class RequestShiftListBloc
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> request = await RequestRepository().getRequest(
-              page: event.page.toString(),
-              key: "userShiftRequest",
-              type: "shift",
-              model: UserShiftRequest(),
-              token: token);
+        final List<dynamic> request = await RequestRepository().getRequest(
+            page: event.page.toString(),
+            key: "userShiftRequest",
+            type: "shift",
+            model: UserShiftRequest(),
+            token: token);
 
-          requestList.addAll(request.cast<UserShiftRequest>());
+        requestList.addAll(request.cast<UserShiftRequest>());
 
-          emit(RequestShiftListLoadSuccess(request: requestList));
-        }
+        emit(RequestShiftListLoadSuccess(request: requestList));
       } catch (error) {
         emit(RequestShiftListLoadFailure(error: error.toString()));
       }

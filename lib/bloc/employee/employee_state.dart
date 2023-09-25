@@ -31,5 +31,3 @@ class EmployeeLoadFailure extends EmployeeState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends EmployeeState {}

@@ -30,5 +30,3 @@ class ApprovalDetailLoadFailure extends ApprovalDetailState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends ApprovalDetailState {}

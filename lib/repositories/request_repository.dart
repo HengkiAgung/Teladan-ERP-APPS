@@ -344,7 +344,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
 
     final response = await http.post(
-      Uri.parse('$_baseUrl/cmt-request/personal/$type/cancle'),
+      Uri.parse('$_baseUrl/cmt-request/personal/$type/cancel'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -354,6 +354,8 @@ class RequestRepository {
         'id': id,
       }),
     );
+
+    print(response.body);
 
     if (response.statusCode == 200) {
       return true;

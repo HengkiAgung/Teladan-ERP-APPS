@@ -7,7 +7,9 @@ import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
 import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
-import '../../../components/cancle_request_component.dart';
+import '../../../components/cancel_request_component.dart';
+import '../../../utils/auth.dart';
+import '../../../utils/middleware.dart';
 
 class DetailShiftRequestPage extends StatefulWidget {
   final int id;
@@ -23,6 +25,13 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
   final int id;
 
   void onCancle() {
+    // context.read<UserBloc>().add(CheckAuth());
+    // final user = BlocProvider.of<UserBloc>(context);
+
+    // if (user.state is UserUnauthenticated) Auth().logOut(context);
+    Middleware().authenticated(context);
+
+
     context.read<RequestDetailBloc>().add(GetRequestDetail(
         id: id.toString(), type: "attendance", model: UserShiftRequest()));
 
@@ -337,7 +346,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                   ),
                 ),
                 request.status == "Waiting"
-                    ? CancleRequestComponent(
+                    ? CancelRequestComponent(
                         id: request.id,
                         type: "shift",
                         onCancle: onCancle,

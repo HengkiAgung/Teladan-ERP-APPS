@@ -134,9 +134,6 @@ class MainApp extends StatelessWidget {
                 ),
               ),
             );
-          } else if (state is UserUnauthenticated) {
-            Middleware().redirectToLogin(context);
-            return const SizedBox();
           } else if (state is UserLoadSuccess) {
             return state.user.id != 0 ? MainPage(index: 0) : const LoginPage();
           } else {

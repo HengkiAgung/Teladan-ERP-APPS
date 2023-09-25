@@ -10,7 +10,6 @@ import 'package:teladan/components/modal_bottom_sheet_component.dart';
 import '../models/Attendance.dart';
 import '../config.dart';
 import '../models/Summaries.dart';
-import '../utils/auth.dart';
 
 class AttendanceRepository {
   static final String _baseUrl = Config.apiUrl;
@@ -120,6 +119,10 @@ class AttendanceRepository {
           Uri.parse('$_baseUrl/cmt-attendance/attend/check-in'),
         );
         var data = await getImage();
+        if (data == null) {
+          throw 'Silahkan ambil ulang foto untuk melakukan check in';
+        }
+
         var imageFile = await http.MultipartFile.fromPath(
           'file',
           data.path,
@@ -192,6 +195,10 @@ class AttendanceRepository {
           Uri.parse('$_baseUrl/cmt-attendance/attend/check-out'),
         );
         var data = await getImage();
+        if (data == null) {
+          throw 'Silahkan ambil ulang foto untuk melakukan check out';
+        }
+
         var imageFile = await http.MultipartFile.fromPath(
           'file',
           data.path,

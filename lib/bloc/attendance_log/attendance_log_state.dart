@@ -32,5 +32,3 @@ class AttendanceLogLoadFailure extends AttendanceLogState {
     return 'Failed to load attendance {error: $error}';
   }
 }
-
-class Unauthenticated extends AttendanceLogState {}

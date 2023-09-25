@@ -5,8 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
+import '../../../../bloc/user/user_bloc.dart';
 import '../../../../components/approval_action_component.dart';
 import '../../../../components/detail_request_component.dart';
+import '../../../../utils/auth.dart';
+import '../../../../utils/middleware.dart';
 
 // ignore: must_be_immutable
 class DetailShiftApprovalPage extends StatefulWidget {
@@ -26,6 +29,8 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
   _DetailShiftApprovalPageState({required this.id});
 
   void refreshBloc() {
+    Middleware().authenticated(context);
+
     context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "shift",model: UserShiftRequest()));
     context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
   }

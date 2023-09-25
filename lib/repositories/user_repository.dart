@@ -16,6 +16,9 @@ class UserRepository {
     if (token == "") {
       return User.fromJson({});
     }
+
+    print(token);
+    
     final response = await http.get(
       Uri.parse("${Config.apiUrl}/user/me"),
       headers: {

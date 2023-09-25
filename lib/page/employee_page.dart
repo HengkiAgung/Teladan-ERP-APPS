@@ -4,7 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/employee/employee_bloc.dart';
+import '../bloc/user/user_bloc.dart';
+import '../utils/auth.dart';
 import '../utils/middleware.dart';
+import '../components/modal_bottom_sheet_component.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});
@@ -19,8 +22,19 @@ class _EmployeePageState extends State<EmployeePage> {
     final employee = BlocProvider.of<EmployeeBloc>(context);
 
     if (employee.state is! EmployeeLoadSuccess) {
-      context.read<EmployeeBloc>().add(GetEmployee());
-    } 
+      // print("checkAuth");
+      // context.read<UserBloc>().add(CheckAuth());
+      // print("read user");
+      // final user = BlocProvider.of<UserBloc>(context);
+      // if (user.state is UserUnauthenticated) {
+      //   print("unauth");
+      //   ModalBottomSheetComponent().errorIndicator(context, "Sesi telah berakhir, silahkan Log-In ulang.");
+      //   // Auth().logOut(context);
+      // }
+      Middleware().authenticated(context);
+
+      context.read<EmployeeBloc>().add(GetEmployee()); 
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,9 +57,6 @@ class _EmployeePageState extends State<EmployeePage> {
               builder: (context, state) {
                 if (state is EmployeeLoading) {
                   return const Text('Loading');
-                } else if (state is Unauthenticated) {
-                  Middleware().redirectToLogin(context);
-                  return const SizedBox();
                 } else if (state is EmployeeLoadSuccess) {
                   return ListView.builder(
                     itemCount: state.employee.length,

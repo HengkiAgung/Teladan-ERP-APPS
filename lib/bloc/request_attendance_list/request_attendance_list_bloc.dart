@@ -16,19 +16,15 @@ class RequestAttendanceListBloc
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> rawData = await RequestRepository().getRequest(
-              key: "userAttendanceRequest",
-              type: "attendance",
-              model: UserAttendanceRequest(),
-              token: token);
-          final List<UserAttendanceRequest> castedData =
-              rawData.cast<UserAttendanceRequest>();
+        final List<dynamic> rawData = await RequestRepository().getRequest(
+            key: "userAttendanceRequest",
+            type: "attendance",
+            model: UserAttendanceRequest(),
+            token: token);
+        final List<UserAttendanceRequest> castedData =
+            rawData.cast<UserAttendanceRequest>();
 
-          emit(RequestAttendanceListLoadSuccess(castedData));
-        }
+        emit(RequestAttendanceListLoadSuccess(castedData));
       } catch (error) {
         emit(RequestAttendanceListLoadFailure(error: error.toString()));
       }
@@ -47,19 +43,16 @@ class RequestAttendanceListBloc
       try {
         String token = await Auth().getToken();
 
-        if (token == "") {
-          emit(Unauthenticated());
-        } else {
-          final List<dynamic> request = await RequestRepository().getRequest(
-              page: event.page.toString(),
-              key: "userAttendanceRequest",
-              type: "attendance",
-              model: UserAttendanceRequest(),
-              token: token);
-          requestList.addAll(request.cast<UserAttendanceRequest>());
+        final List<dynamic> request = await RequestRepository().getRequest(
+            page: event.page.toString(),
+            key: "userAttendanceRequest",
+            type: "attendance",
+            model: UserAttendanceRequest(),
+            token: token);
+        requestList.addAll(request.cast<UserAttendanceRequest>());
 
-          emit(RequestAttendanceListLoadSuccess(requestList));
-        }
+        emit(RequestAttendanceListLoadSuccess(requestList));
+        
       } catch (error) {
         emit(RequestAttendanceListLoadFailure(error: error.toString()));
       }

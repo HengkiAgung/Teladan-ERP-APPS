@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                         builder: (BuildContext context) => MainPage(index: 0),
                       ),
                     );
-                  };
+                  }
 
                 },
                 style: TextButton.styleFrom(

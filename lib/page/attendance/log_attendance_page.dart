@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../bloc/attendance_log/attendance_log_bloc.dart';
+import '../../bloc/user/user_bloc.dart';
 import '../../models/Attendance.dart';
+import '../../utils/auth.dart';
+import '../../utils/middleware.dart';
 import 'detail_attendance_page.dart';
 
 class LogAttendance extends StatefulWidget {
@@ -95,6 +98,8 @@ class _LogAttendanceState extends State<LogAttendance> {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
+                    Middleware().authenticated(context);
+                    
                     context.read<AttendanceLogBloc>().add(GetAttendanceLog());
                   },
                   child: ListView.builder(
@@ -127,6 +132,7 @@ class _LogAttendanceState extends State<LogAttendance> {
                         ),
                         child: GestureDetector(
                           onTap: () {
+                            Middleware().authenticated(context);
                             context.read<AttendanceDetailBloc>().add(
                                 GetAttendanceDetail(date: attendance.date));
                             Navigator.push(

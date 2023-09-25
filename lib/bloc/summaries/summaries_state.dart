@@ -30,5 +30,3 @@ class SummariesLoadFailure extends SummariesState {
     return 'Failed to load employee {error: $error}';
   }
 }
-
-class Unauthenticated extends SummariesState {}

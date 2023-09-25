@@ -14,8 +14,6 @@ class ApprovalRepository {
     required dynamic model,
     required String token,
   }) async {
-    String? token = await Auth().getToken();
-
     final response =
         await http.post(Uri.parse('$_baseUrl/cmt-request/$type/get'),
             headers: {
@@ -67,9 +65,8 @@ class ApprovalRepository {
     required String id,
     required String status,
     String? comment,
+    required String token,
   }) async {
-    String token = await Auth().getToken();
-
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-request/$type/update/status'),
       headers: {
