@@ -7,8 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
 import '../../../bloc/request_detail/request_detail_bloc.dart';
-import '../../../bloc/user/user_bloc.dart';
-import '../../../utils/auth.dart';
 import '../../../utils/middleware.dart';
 
 class AttendanceRequestPage extends StatefulWidget {

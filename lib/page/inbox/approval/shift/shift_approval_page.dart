@@ -5,9 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
-import '../../../../bloc/user/user_bloc.dart';
 import '../../../../models/Attendance/UserShiftRequest.dart';
-import '../../../../utils/auth.dart';
 import '../../../../utils/middleware.dart';
 import 'detail_shift_approval_page.dart';
 

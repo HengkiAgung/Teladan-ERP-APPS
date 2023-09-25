@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../config.dart';
-import '../utils/auth.dart';
 
 class ApprovalRepository {
   static final String _baseUrl = Config.apiUrl;

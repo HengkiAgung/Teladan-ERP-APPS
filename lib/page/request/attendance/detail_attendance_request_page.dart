@@ -10,7 +10,6 @@ import '../../../bloc/user/user_bloc.dart';
 import '../../../components/avatar_profile_component.dart';
 import '../../../config.dart';
 import '../../../models/Attendance/UserAttendanceRequest.dart';
-import '../../../utils/auth.dart';
 import '../../../utils/middleware.dart';
 
 class DetailAttendanceRequestPage extends StatefulWidget {

@@ -13,7 +13,6 @@ import '../../bloc/request_shift_list/request_shift_list_bloc.dart' as request_s
 import '../../bloc/summaries/summaries_bloc.dart' as summaries_bloc;
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
-import '../repositories/user_repository.dart';
 import 'middleware.dart';
 
 class Auth {

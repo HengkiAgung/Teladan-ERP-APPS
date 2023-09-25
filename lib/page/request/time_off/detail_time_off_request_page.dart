@@ -10,7 +10,6 @@ import '../../../components/avatar_profile_component.dart';
 import '../../../components/cancel_request_component.dart';
 import '../../../models/Attendance/UserLeaveRequest.dart';
 import '../../../config.dart';
-import '../../../utils/auth.dart';
 import '../../../utils/middleware.dart';
 
 class DetailTimeOffRequestPage extends StatefulWidget {

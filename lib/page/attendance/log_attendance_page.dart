@@ -4,9 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../bloc/attendance_log/attendance_log_bloc.dart';
-import '../../bloc/user/user_bloc.dart';
 import '../../models/Attendance.dart';
-import '../../utils/auth.dart';
 import '../../utils/middleware.dart';
 import 'detail_attendance_page.dart';
 

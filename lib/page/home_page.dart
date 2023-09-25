@@ -10,7 +10,6 @@ import '../bloc/summaries/summaries_bloc.dart';
 import '../bloc/user/user_bloc.dart';
 import '../models/Attendance.dart';
 import '../repositories/attendance_repository.dart';
-import '../utils/auth.dart';
 import '../utils/middleware.dart';
 import 'attendance/log_attendance_page.dart';
 

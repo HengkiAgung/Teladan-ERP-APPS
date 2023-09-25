@@ -4,10 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/employee/employee_bloc.dart';
-import '../bloc/user/user_bloc.dart';
-import '../utils/auth.dart';
 import '../utils/middleware.dart';
-import '../components/modal_bottom_sheet_component.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});

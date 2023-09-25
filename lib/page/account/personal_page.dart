@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../components/text_field_component.dart';
 import '../../models/Employee/User.dart';
 import '../../repositories/user_repository.dart';
 
 class PersonalPage extends StatelessWidget {
-  PersonalPage({super.key});
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _placeOfBirthController = TextEditingController();
-  final TextEditingController _birthdateController = TextEditingController();
-  final TextEditingController _maritalStatusController =
-      TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _religionController = TextEditingController();
-  final TextEditingController _bloodTypeController = TextEditingController();
+  const PersonalPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,19 +59,7 @@ class PersonalPage extends StatelessWidget {
             // Handle the error case here.
             return Text('Error: ${snapshot.error}');
           } else {
-            _nameController.text = snapshot.data!.name;
-            _emailController.text = snapshot.data!.email;
-            _phoneController.text = snapshot.data!.kontak;
-            _placeOfBirthController.text =
-                snapshot.data!.userPersonalData!.place_of_birth;
-            _birthdateController.text =
-                snapshot.data!.userPersonalData!.birthdate;
-            _maritalStatusController.text =
-                snapshot.data!.userPersonalData!.marital_status;
-            _genderController.text = snapshot.data!.userPersonalData!.gender;
-            _religionController.text = snapshot.data!.userPersonalData!.religion;
-            _bloodTypeController.text =
-                snapshot.data!.userPersonalData!.blood_type;
+            User employData = snapshot.data!;
 
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -100,120 +78,57 @@ class PersonalPage extends StatelessWidget {
                   ),
 
                   // name
-                  TextField(
-                    readOnly: true,
-                    controller: _nameController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Name', content: employData.name,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // email
-                  TextField(
-                    readOnly: true,
-                    controller: _emailController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Email', content: employData.email,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // phone
-                  TextField(
-                    readOnly: true,
-                    controller: _phoneController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Phone Number', content: employData.kontak,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // placeOfBirth
-                  TextField(
-                    readOnly: true,
-                    controller: _placeOfBirthController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Place Of Birth',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Place of Birth', content: employData.userPersonalData!.place_of_birth,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // birthdate
-                  TextField(
-                    readOnly: true,
-                    controller: _birthdateController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Birthdate',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Birthdate', content: employData.userPersonalData!.birthdate,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // maritalStatus
-                  TextField(
-                    readOnly: true,
-                    controller: _maritalStatusController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Marital Status',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Marital Status', content: employData.userPersonalData!.marital_status,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // gender
-                  TextField(
-                    readOnly: true,
-                    controller: _genderController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Gender',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Gender', content: employData.userPersonalData!.gender,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // religion
-                  TextField(
-                    readOnly: true,
-                    controller: _religionController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Religion',
-                    ),
-                  ),
-                  SizedBox(
+                  TextFieldComponent(label: 'Religion', content: employData.userPersonalData!.religion,),
+                  const SizedBox(
                     height: 20,
                   ),
 
                   // bloodType
-                  TextField(
-                    readOnly: true,
-                    controller: _bloodTypeController,
-                    obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Blood Type',
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
+                  TextFieldComponent(label: 'Blood Type', content: employData.userPersonalData!.blood_type,),
+                  const SizedBox(
+                    height: 20,
                   ),
                 ],
               ),

@@ -1,16 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teladan/bloc/summaries/summaries_bloc.dart';
 import 'package:teladan/page/account/account_page.dart';
 import 'package:teladan/page/employee_page.dart';
 import 'package:teladan/page/inbox/inbox_page.dart';
 import 'package:teladan/repositories/user_repository.dart';
-import 'package:teladan/utils/middleware.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/user/user_bloc.dart';
 import '../models/Employee/User.dart';
-import '../utils/auth.dart';
 import 'home_page.dart';
 import 'request/request_page.dart';
 
