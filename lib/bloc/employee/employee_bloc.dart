@@ -24,6 +24,29 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       }
     });
 
+    on<ScrollFetch>((event, emit) async {
+      List<User> employeeList = [];
+      final currentState = state;
+
+      if (currentState is EmployeeLoadSuccess) {
+        employeeList.addAll(currentState.employee);
+      } 
+
+      emit(EmployeeFetchNew());
+
+      try {
+        String token = await Auth().getToken();
+
+        final List<User> newEmployeeList = await EmployeeRepository().getAllUser(token: token, page: event.page.toString());
+        employeeList.addAll(newEmployeeList);
+
+        emit(EmployeeLoadSuccess(employeeList));
+
+      } catch (error) {
+        emit(EmployeeLoadFailure(error: error.toString()));
+      }
+    });
+
     on<LogOut>((event, emit) async {
       emit(EmployeeInitial());
     });

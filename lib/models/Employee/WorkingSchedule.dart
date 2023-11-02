@@ -5,7 +5,6 @@ class WorkingSchedule {
   late int override_national_holiday;
   late int override_company_holiday;
   late int override_special_holiday;
-  late int flexible;
 
   WorkingSchedule({
     required this.id,
@@ -14,7 +13,6 @@ class WorkingSchedule {
     required this.override_national_holiday,
     required this.override_company_holiday,
     required this.override_special_holiday,
-    required this.flexible,
   });
 
   WorkingSchedule.fromJson(Map<String, dynamic> json) {
@@ -24,6 +22,5 @@ class WorkingSchedule {
     override_national_holiday = json['override_national_holiday'] ?? 0;
     override_company_holiday = json['override_company_holiday'] ?? 0;
     override_special_holiday = json['override_special_holiday'] ?? 0;
-    flexible = json['flexible'] ?? 0;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:teladan/page/auth/reset_password_page.dart';
 
 import 'bloc/approval_detail/approval_detail_bloc.dart';
 import 'bloc/approval_list/approval_list_bloc.dart';
@@ -13,7 +14,7 @@ import 'bloc/request_shift_list/request_shift_list_bloc.dart';
 import 'bloc/summaries/summaries_bloc.dart';
 import 'bloc/user/user_bloc.dart';
 import 'bloc/attendance_log/attendance_log_bloc.dart';
-import 'page/login_page.dart';
+import 'page/auth/login_page.dart';
 import 'page/main_page.dart';
 
 class SimpleBlocObserver extends BlocObserver {
@@ -134,7 +135,7 @@ class MainApp extends StatelessWidget {
               ),
             );
           } else if (state is UserLoadSuccess) {
-            return state.user.id != 0 ? MainPage(index: 0) : const LoginPage();
+            return state.user.id != 0 ? state.user.is_new ? ResetPasswordPage() : MainPage(index: 0) : const LoginPage();
           } else {
             return MainPage(index: 0, error: true,);
           }

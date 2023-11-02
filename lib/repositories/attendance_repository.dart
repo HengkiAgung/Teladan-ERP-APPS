@@ -105,6 +105,8 @@ class AttendanceRepository {
       ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
 
       await getLocation().then((value) {
+        // latitude = '-1.249637';
+        // longitude = '116.877503';
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
       });
@@ -147,8 +149,11 @@ class AttendanceRepository {
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
+            var result = await response.stream.bytesToString();
+            String message = result.split('"message":"')[1].split('"}')[0];
+
             // ignore: use_build_context_synchronously
-            ModalBottomSheetComponent().errorIndicator(context, "Error uploading file.");
+            ModalBottomSheetComponent().errorIndicator(context, message);
 
 
             return false;

@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/page/auth/reset_password_page.dart';
 import 'package:teladan/page/main_page.dart';
 import 'package:flutter/material.dart';
 
-import '../bloc/user/user_bloc.dart';
-import '../utils/auth.dart';
+import '../../bloc/user/user_bloc.dart';
+import '../../utils/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -60,12 +63,19 @@ class _LoginPageState extends State<LoginPage> {
                   const EdgeInsets.symmetric(vertical: 15.0, horizontal: 100),
               child: TextButton(
                 onPressed: () async {
+                  final dataLogin =  await Auth().login(context, _emailController.text, _passwordController.text);
 
-                  // ignore: use_build_context_synchronously
-                  if (await Auth().login(context, _emailController.text, _passwordController.text) ) {
+                  if (dataLogin[0]) {
                     context.read<UserBloc>().add(GetUser());
 
-                    // ignore: use_build_context_synchronously
+                    if (dataLogin[1] == 1) {
+                      Navigator.pushReplacement<void, void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) => ResetPasswordPage(),
+                        ),
+                      );  
+                    }
                     Navigator.pushReplacement<void, void>(
                       context,
                       MaterialPageRoute<void>(

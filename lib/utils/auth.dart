@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +19,44 @@ import 'middleware.dart';
 
 class Auth {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  
-  Future<bool> login(BuildContext context, String email, String password) async {
+
+  Future<bool> resetPassword(BuildContext context, String password) async {
+    try {
+      ModalBottomSheetComponent().loadingIndicator(context, "Changging password, please wait");
+      String token = await Auth().getToken();
+      final response = await http.post(
+        Uri.parse("${Config.apiUrl}/user/change-pass"),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'password': password,
+        }),
+      );
+      Navigator.pop(context);
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final errorMessage = json.decode(response.body)['message'];
+        ModalBottomSheetComponent().errorIndicator(context, errorMessage);
+      }
+
+      print(json.decode(response.body));
+
+    } catch (error) {
+      print(error.toString());
+    }
+    
+    return false;
+  }
+
+  Future<List<dynamic>> login(BuildContext context, String email, String password) async {
 
     try {
-      ModalBottomSheetComponent().loadingIndicator(context, "Loglogging in");
+      ModalBottomSheetComponent().loadingIndicator(context, "Loging in");
       final response = await http.post(
         Uri.parse("${Config.apiUrl}/login"),
         headers: {
@@ -40,12 +75,10 @@ class Auth {
 
         persistToken(token);
 
-        // ignore: use_build_context_synchronously
-        return true;
+        return [true, jsonDecode(response.body)['data']['is_new']];
         
       } else {
         final errorMessage = json.decode(response.body)['message'];
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, errorMessage);
       }
 
@@ -53,7 +86,7 @@ class Auth {
       print(error.toString());
     }
     
-    return false;
+    return [false];
   
   }
 
@@ -77,13 +110,11 @@ class Auth {
 
         persistToken(token);
 
-        // ignore: use_build_context_synchronously
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
         final errorMessage = json.decode(response.body)['message'];
 
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, errorMessage);
       }
     } catch (error) {
@@ -114,6 +145,7 @@ class Auth {
     Middleware().redirectToLogin(context);
     deleteToken();
   }
+
   Future<void> deleteToken() async {
     await storage.delete(key: 'token');
     await storage.deleteAll();

@@ -10,6 +10,7 @@ class User {
   late String name;
   late String email;
   late String signFile;
+  late bool is_new;
   late String kontak;
   late int status;
   late String foto_file;
@@ -24,6 +25,7 @@ class User {
     required this.id,
     required this.name,
     required this.email,
+    required this.is_new,
     required this.signFile,
     required this.kontak,
     required this.status,
@@ -39,6 +41,7 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     name = json['name'] ?? "";
+    is_new = json['is_new'] == 0 ? false : true;;
     email = json['email'] ?? "";
     signFile = json['signFile'] ?? "";
     kontak = json['kontak'] ?? "";

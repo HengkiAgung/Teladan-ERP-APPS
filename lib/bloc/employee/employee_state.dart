@@ -12,6 +12,8 @@ class EmployeeInitial extends EmployeeState {}
 
 class EmployeeLoading extends EmployeeState {}
 
+class EmployeeFetchNew extends EmployeeState {}
+
 class EmployeeLoadSuccess extends EmployeeState {
   final List<User> employee;
 

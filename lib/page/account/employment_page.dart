@@ -122,7 +122,7 @@ class EmploymentPage extends StatelessWidget {
                     height: 20,
                   ),
 
-                  TextFieldComponent(label: 'Schedule', content: "${employData.workingScheduleShift.workingSchedule.name}, ${employData.workingScheduleShift.workingShift.name}",),
+                  TextFieldComponent(label: 'Schedule', content: employData.workingSchedule.name),
                   SizedBox(
                     height: 20,
                   ),

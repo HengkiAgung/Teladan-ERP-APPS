@@ -29,6 +29,7 @@ class UserRepository {
     );
 
     if (response.statusCode == 200) {
+      print(jsonDecode(response.body)["data"]);
 
       User user = User.fromJson(jsonDecode(response.body)["data"]);
 

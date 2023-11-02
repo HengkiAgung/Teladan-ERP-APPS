@@ -1,7 +1,7 @@
 import 'EmploymentStatus.dart';
 import 'SubBranch.dart';
 import 'User.dart';
-import 'WorkingScheduleShift.dart';
+import 'WorkingSchedule.dart';
 
 class UserEmployment {
   late int id;
@@ -11,7 +11,7 @@ class UserEmployment {
   late String resign_date;
   late String barcode;
   late SubBranch subBranch;
-  late WorkingScheduleShift workingScheduleShift;
+  late WorkingSchedule workingSchedule;
   late EmploymentStatus employmentStatus;
   late User approvalLine;
   late User? user;
@@ -24,7 +24,7 @@ class UserEmployment {
     required this.resign_date,
     required this.barcode,
     required this.subBranch,
-    required this.workingScheduleShift,
+    required this.workingSchedule,
     required this.employmentStatus,
     required this.approvalLine,
     required this.user,
@@ -38,7 +38,7 @@ class UserEmployment {
     resign_date = json['resign_date'] ?? "";
     barcode = json['barcode'] ?? "";
     subBranch = SubBranch.fromJson(json['working_schedule'] ?? {});
-    workingScheduleShift = WorkingScheduleShift.fromJson(json['working_schedule_shift'] ?? {});
+    workingSchedule = WorkingSchedule.fromJson(json['working_schedule'] ?? {});
     approvalLine = User.fromJson(json['approval_line'] is !int ? json['approval_line'] : {});
     user = User.fromJson(json['user'] ?? {});
     employmentStatus = EmploymentStatus.fromJson(json['employment_status'] ?? {});

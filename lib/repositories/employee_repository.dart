@@ -7,9 +7,9 @@ import '../models/Employee/User.dart';
 class EmployeeRepository {
   static final String _baseUrl = Config.apiUrl;
 
-  Future<List<User>> getAllUser({required String token}) async {
+  Future<List<User>> getAllUser({required String token, String page = "1"}) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-employee/all'),
+      Uri.parse('$_baseUrl/cmt-employee/all?page=$page'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

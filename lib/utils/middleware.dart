@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../components/modal_bottom_sheet_component.dart';
-import '../page/login_page.dart';
+import '../page/auth/login_page.dart';
 import '../repositories/user_repository.dart';
 import 'auth.dart';
 
