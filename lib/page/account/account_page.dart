@@ -147,47 +147,47 @@ class _AccountPageState extends State<AccountPage> {
               ),
 
               // Info payroll
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PayrollPage(),
-                    ),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.payments_rounded),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Info payroll',
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 51, 51, 51),
-                          ),
-                        ),
-                        Text(
-                          'Dafter anggota keluarga karyawan',
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const PayrollPage(),
+              //       ),
+              //     );
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.payments_rounded),
+              //       const SizedBox(
+              //         width: 12,
+              //       ),
+              //       Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             'Info payroll',
+              //             style: GoogleFonts.poppins(
+              //               fontSize: 13,
+              //               fontWeight: FontWeight.bold,
+              //               color: Color.fromARGB(255, 51, 51, 51),
+              //             ),
+              //           ),
+              //           Text(
+              //             'Dafter anggota keluarga karyawan',
+              //             style: GoogleFonts.poppins(
+              //               fontSize: 11,
+              //               color: Colors.grey,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 
               const SizedBox(
                 height: 20,
@@ -218,6 +218,44 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                     Text(
                       'Kunjungi website',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 51, 51, 51),
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios_rounded),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+
+        // Privacy Policy
+        GestureDetector(
+          onTap: () => launch("https://erp.comtelindo.com/privacy"),
+          child: Container(
+            color: Colors.white,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.privacy_tip_outlined),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      'Privacy Policy',
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,

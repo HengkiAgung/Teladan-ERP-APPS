@@ -43,15 +43,6 @@ class _EmployeePageState extends State<EmployeePage> {
     final employee = BlocProvider.of<EmployeeBloc>(context);
 
     if (employee.state is! EmployeeLoadSuccess) {
-      // print("checkAuth");
-      // context.read<UserBloc>().add(CheckAuth());
-      // print("read user");
-      // final user = BlocProvider.of<UserBloc>(context);
-      // if (user.state is UserUnauthenticated) {
-      //   print("unauth");
-      //   ModalBottomSheetComponent().errorIndicator(context, "Sesi telah berakhir, silahkan Log-In ulang.");
-      //   // Auth().logOut(context);
-      // }
       Middleware().authenticated(context);
 
       context.read<EmployeeBloc>().add(GetEmployee()); 

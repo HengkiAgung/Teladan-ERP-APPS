@@ -161,6 +161,8 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                   },
                 );
               }
+            } else {
+              onSubmit = true;
             }
           },
           child: Container(

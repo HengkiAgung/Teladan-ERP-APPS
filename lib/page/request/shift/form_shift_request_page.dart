@@ -166,6 +166,8 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                   },
                 );
               }
+            } else {
+              onSubmit = true;
             }
           },
           child: Container(

@@ -29,8 +29,6 @@ class UserRepository {
     );
 
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body)["data"]);
-
       User user = User.fromJson(jsonDecode(response.body)["data"]);
 
       return user;
@@ -73,6 +71,8 @@ class UserRepository {
         'Authorization': 'Bearer $token',
       },
     );
+
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       UserEmployment user = UserEmployment.fromJson(jsonDecode(response.body)["data"]);

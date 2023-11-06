@@ -68,31 +68,27 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                   child: Text("loading..."),
                 );
               } else if (state is RequestLeaveListLoadFailure) {
-                return Text("Failed to load attendance log");
+                return Text("Failed to load time off log");
               } else if (state is RequestLeaveListLoadSuccess) {
                 _userLeaveRequest = state.request.cast<UserLeaveRequest>();
               }
 
-              return RefreshIndicator(
-                onRefresh: () async {
-                  // context.read<UserBloc>().add(CheckAuth());
-                  // final user = BlocProvider.of<UserBloc>(context);
-
-                  // if (user.state is UserUnauthenticated) Auth().logOut(context);
-                  Middleware().authenticated(context);
-
-                  context.read<RequestLeaveListBloc>().add(const GetRequestList());
-                },
-                child: Column(
-                  children: [
-                    Expanded(
+              return Column(
+                children: [
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        Middleware().authenticated(context);
+                        
+                        context.read<RequestLeaveListBloc>().add(const GetRequestList());
+                      },
                       child: ListView.builder(
                         controller: _scrollController,
                         itemCount: _userLeaveRequest.length,
                         itemBuilder: (BuildContext context, int index) {
                           var leaveRequest = _userLeaveRequest[index];
                           Color colorStatus;
-                
+                                    
                           if (leaveRequest.status == "Waiting") {
                             colorStatus = Colors.amber;
                           } else if (leaveRequest.status == "Approved") {
@@ -100,7 +96,7 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                           } else {
                             colorStatus = Colors.red.shade900;
                           }
-                
+                                    
                           return Container(
                             padding: const EdgeInsets.only(
                               right: 10,
@@ -119,17 +115,13 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                // context.read<UserBloc>().add(CheckAuth());
-                                // final user = BlocProvider.of<UserBloc>(context);
-
-                                // if (user.state is UserUnauthenticated) Auth().logOut(context);
                                 Middleware().authenticated(context);
-
+                    
                                 context.read<RequestDetailBloc>().add(GetRequestDetail(
                                     id: leaveRequest.id.toString(),
-                                    type: "shift",
+                                    type: "time-off",
                                     model: UserLeaveRequest()));
-                
+                                    
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -194,19 +186,19 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                           );
                         },
                       ),
-                        
                     ),
-                    (state is RequestLeaveListFetchNew)
-                    ? const Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: SizedBox(
-                          height: 40,
-                          child: Text("Loading..."),
-                        ),
-                      )
-                    : const SizedBox(),
-                  ],
-                ),
+                      
+                  ),
+                  (state is RequestLeaveListFetchNew)
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        height: 40,
+                        child: Text("Loading..."),
+                      ),
+                    )
+                  : const SizedBox(),
+                ],
               );
             },
           ),

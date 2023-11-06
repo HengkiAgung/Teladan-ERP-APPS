@@ -155,7 +155,6 @@ class AttendanceRepository {
             // ignore: use_build_context_synchronously
             ModalBottomSheetComponent().errorIndicator(context, message);
 
-
             return false;
           }
         } catch (e) {
@@ -229,9 +228,11 @@ class AttendanceRepository {
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
-            // ignore: use_build_context_synchronously
-            ModalBottomSheetComponent().errorIndicator(context, "Error uploading file.");
+            var result = await response.stream.bytesToString();
+            String message = result.split('"message":"')[1].split('"}')[0];
 
+            // ignore: use_build_context_synchronously
+            ModalBottomSheetComponent().errorIndicator(context, message);
 
             return false;
           }

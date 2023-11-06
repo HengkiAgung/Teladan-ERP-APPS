@@ -33,7 +33,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
     Middleware().authenticated(context);
 
     context.read<RequestDetailBloc>().add(GetRequestDetail(
-        id: id.toString(), type: "attendance", model: UserLeaveRequest()));
+        id: id.toString(), type: "time-off", model: UserLeaveRequest()));
 
     context.read<RequestLeaveListBloc>().add(const GetRequestList());
   }
@@ -438,7 +438,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
               ],
             );
           } else {
-            return const Text("Failed to load detail attendance request");
+            return const Text("Failed to load detail time off request");
           }
         },
       ),

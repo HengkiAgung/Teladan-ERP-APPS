@@ -44,8 +44,6 @@ class Auth {
         ModalBottomSheetComponent().errorIndicator(context, errorMessage);
       }
 
-      print(json.decode(response.body));
-
     } catch (error) {
       print(error.toString());
     }

@@ -41,7 +41,7 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     name = json['name'] ?? "";
-    is_new = json['is_new'] == 0 ? false : true;;
+    is_new = json['is_new'] == 0 || json['is_new'] == "0" ? false : true;
     email = json['email'] ?? "";
     signFile = json['signFile'] ?? "";
     kontak = json['kontak'] ?? "";

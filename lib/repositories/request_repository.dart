@@ -47,6 +47,9 @@ class RequestRepository {
         'id': id,
       }),
     );
+    print("$_baseUrl/cmt-request/personal/$type/get/detail");
+    print('https://erp.comtelindo.com/api/cmt-request/personal/time-off/get/detail');
+    print(jsonDecode(response.body)["data"]);
 
     if (response.statusCode == 200) {
       return model.fromJson(jsonDecode(response.body)["data"]);
@@ -61,7 +64,7 @@ class RequestRepository {
     TimeOfDay? selectedTimeIn,
     TimeOfDay? selectedTimeOut,
     TextEditingController? descriptionController,
-    PlatformFile? _selectedFile,
+    PlatformFile? selectedFile,
   ) async {
     String? token = await Auth().getToken();
 
@@ -79,11 +82,11 @@ class RequestRepository {
       Uri.parse('$_baseUrl/cmt-request/personal/attendance/make'),
     ); 
     
-    if (_selectedFile != null) {
+    if (selectedFile != null) {
       var imageFile = await http.MultipartFile.fromPath(
         'file',
-        _selectedFile.path!,
-        filename: _selectedFile.name,
+        selectedFile.path!,
+        filename: selectedFile.name,
       );
 
       request.files.add(imageFile);
@@ -236,63 +239,104 @@ class RequestRepository {
     }
   }
 
-  Future<bool> makeLeaveRequest(
-    BuildContext context,
-    DateTime startDate,
-    DateTime endDate,
-    String? categoryId,
-    String? reason,
-    PlatformFile? _selectedFile,
-  ) async {
+  Future<bool> makeLeaveRequest({
+    required BuildContext context,
+    required DateTime startDate,
+    required DateTime endDate,
+    required TimeOfDay? working_start,
+    required TimeOfDay? working_end,
+    required LeaveRequestCategory? category,
+    required String? reason,
+    required PlatformFile? selectedFile,
+  }) async {
     String? token = await Auth().getToken();
     DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
 
-    if (categoryId == null || categoryId == "") {
+    if (category!.id == null || category!.id == "") {
       // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Kolom kategori wajib diisi!");
       return false;
     }
-
-    if (startDate.isBefore(now)) {
-      // ignore: use_build_context_synchronously
-      ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
-      return false;
-    }
-
-    if (endDate.isBefore(startDate)) {
-      // ignore: use_build_context_synchronously
-      ModalBottomSheetComponent().errorIndicator(context, "Tanggal selesai tidak boleh lebih kecil dari tanggal mulai!");
-      return false;
-    }
-
-    if (_selectedFile == null) {
-      // ignore: use_build_context_synchronously
-      ModalBottomSheetComponent().errorIndicator(context, "File bukti wajib diisi!");
-      return false;
-    }
-
-    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('$_baseUrl/cmt-request/personal/time-off/make'),
     ); 
     
-    var imageFile = await http.MultipartFile.fromPath(
-      'file',
-      _selectedFile.path!,
-      filename: _selectedFile.name,
-    );
+    if (category.attachment == 1) {
+      if (selectedFile == null) {
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().errorIndicator(context, "File bukti wajib diisi!");
+        return false;
+      }
 
-    request.files.add(imageFile);
+      var imageFile = await http.MultipartFile.fromPath(
+        'file',
+        selectedFile.path!,
+        filename: selectedFile.name,
+      );
+
+      request.files.add(imageFile);
+    }
+
 
     request.headers['Accept'] = 'application/json';
     request.headers['Content-Type'] = 'multipart/form-data';
-    request.headers['Authorization'] = 'Bearer $token';    
-    request.fields['start_date'] = "${startDate.year}-${startDate.month}-${startDate.day}";
-    request.fields['end_date'] = "${endDate.year}-${endDate.month}-${endDate.day}";
-    request.fields['notes'] = reason ?? "";
-    request.fields['leave_request_category_id'] = categoryId;
+    request.headers['Authorization'] = 'Bearer $token';  
+    request.fields['leave_request_category_id'] = category.id.toString();
+
+    if (category.half_day != 1) {
+      if (startDate.isBefore(now)) {
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
+        return false;
+      }
+
+      if (endDate.isBefore(startDate)) {
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().errorIndicator(context, "Tanggal selesai tidak boleh lebih kecil dari tanggal mulai!");
+        return false;
+      }
+
+      request.fields['start_date'] = "${startDate.year}-${startDate.month}-${startDate.day}";
+      request.fields['end_date'] = "${endDate.year}-${endDate.month}-${endDate.day}";
+      request.fields['notes'] = reason ?? "";
+    } else {
+      if (working_start == null && working_end == null) {
+        // ignore: use_build_context_synchronously
+        ModalBottomSheetComponent().errorIndicator(context, 'Masukkan Check In atau Check Out!');
+
+        return false;
+      }
+
+      if (working_start != null) {
+        String hour = working_start.hour.toString();
+        if (hour.length < 2) {
+          hour = "0$hour";
+        }
+        String minute = working_start.minute.toString();
+        if (minute.length < 2) {
+          minute = "0$minute";
+        }
+        request.fields['working_start'] = "$hour:$minute";
+      } 
+
+      if (working_end != null) {
+        String hour = working_end.hour.toString();
+        if (hour.length < 2) {
+          hour = "0$hour";
+        }
+        String minute = working_end.minute.toString();
+        if (minute.length < 2) {
+          minute = "0$minute";
+        }
+        request.fields['working_end'] = "$hour:$minute";
+      } 
+
+      request.fields['date'] = "${startDate.year}-${startDate.month}-${startDate.day}";
+    }
+
+    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
     try {
       final response = await request.send();
@@ -301,8 +345,11 @@ class RequestRepository {
       if (int.parse(response.statusCode.toString()[0]) == 2) {
         return true;
       } else {
+        var result = await response.stream.bytesToString();
+        String message = result.split('"message":"')[1].split('"}')[0];
+
         // ignore: use_build_context_synchronously
-        ModalBottomSheetComponent().errorIndicator(context, "Error uploading file");
+        ModalBottomSheetComponent().errorIndicator(context, message);
         return false;
       }
     } catch (e) {
@@ -354,8 +401,6 @@ class RequestRepository {
         'id': id,
       }),
     );
-
-    print(response.body);
 
     if (response.statusCode == 200) {
       return true;
