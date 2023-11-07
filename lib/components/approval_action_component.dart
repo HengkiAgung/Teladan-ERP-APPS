@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../repositories/approval_repository.dart';
@@ -71,8 +73,7 @@ class ApprovalActionComponent extends StatelessWidget {
                   return Expanded(
                     child: GestureDetector(
                       onTap: () async {
-                        ModalBottomSheetComponent().loadingIndicator(
-                            context, "Sedang memeriksa lokasimu...");
+                        ModalBottomSheetComponent().loadingIndicator(context, "Mengirim data...");
 
                         bool updated = await ApprovalRepository().updateRequest(
                             token: token,
@@ -84,9 +85,9 @@ class ApprovalActionComponent extends StatelessWidget {
                         Navigator.pop(context);
                         if (updated) {
                           function();
+                        } else {
+                          ModalBottomSheetComponent().errorIndicator(context, "Gagal mengubah status request");
                         }
-                        ModalBottomSheetComponent().errorIndicator(
-                            context, "Gagal mengubah status request");
                       },
                       child: Container(
                         height: 50,
@@ -119,15 +120,20 @@ class ApprovalActionComponent extends StatelessWidget {
                     }
                     return GestureDetector(
                       onTap: () async {
+                        ModalBottomSheetComponent().loadingIndicator(context, "Mengirim data...");
+
                         bool updated = await ApprovalRepository().updateRequest(
                             token: token,
                             type: type,
                             id: id,
                             status: "Approved",
                             comment: commentController.text);
-
+                        
+                        Navigator.pop(context);
                         if (updated) {
                           function();
+                        } else {
+                          ModalBottomSheetComponent().errorIndicator(context, "Gagal mengubah status request");
                         }
                       },
                       child: Container(

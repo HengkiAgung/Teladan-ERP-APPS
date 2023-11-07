@@ -88,7 +88,7 @@ class _EmployeePageState extends State<EmployeePage> {
                         context.read<EmployeeBloc>().add(GetEmployee());
                       },
                       child: ListView.builder(
-                          controller: _scrollController,
+                          controller: _userEmployment.length > 9 ? _scrollController : null,
                           itemCount: _userEmployment.length,
                           itemBuilder: (BuildContext context, int index) {
                             var user = _userEmployment[index];

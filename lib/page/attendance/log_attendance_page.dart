@@ -101,7 +101,7 @@ class _LogAttendanceState extends State<LogAttendance> {
                     context.read<AttendanceLogBloc>().add(GetAttendanceLog());
                   },
                   child: ListView.builder(
-                    controller: _scrollController,
+                    controller: _logAtendance.length > 9 ? _scrollController : null,
                     itemCount: _logAtendance.length,
                     itemBuilder: (BuildContext context, int index) {
                       var attendance = _logAtendance[index];

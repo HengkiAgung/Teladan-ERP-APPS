@@ -83,7 +83,7 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                         context.read<RequestLeaveListBloc>().add(const GetRequestList());
                       },
                       child: ListView.builder(
-                        controller: _scrollController,
+                        controller: _userLeaveRequest.length > 9 ? _scrollController : null,
                         itemCount: _userLeaveRequest.length,
                         itemBuilder: (BuildContext context, int index) {
                           var leaveRequest = _userLeaveRequest[index];

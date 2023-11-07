@@ -47,8 +47,6 @@ class RequestRepository {
         'id': id,
       }),
     );
-    print("$_baseUrl/cmt-request/personal/$type/get/detail");
-    print('https://erp.comtelindo.com/api/cmt-request/personal/time-off/get/detail');
     print(jsonDecode(response.body)["data"]);
 
     if (response.statusCode == 200) {

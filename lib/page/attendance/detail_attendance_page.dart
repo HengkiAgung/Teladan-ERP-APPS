@@ -65,477 +65,513 @@ class DetailAttendance extends StatelessWidget {
             );
           } else if (state is AttendanceDetailLoadSuccess) {
             Attendance attendance = state.attendance;
+            print("attendance.check_in");
+            print(attendance.check_in);
 
-            return ListView(
-              children: [
-                attendance.check_in != ""
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20, top: 25),
-                            child: Center(
-                              child: Text(
-                                "Check-In",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.max,
+            return attendance.check_in != "" || attendance.check_out != ""
+                ? ListView(
+                    children: [
+                      attendance.check_in != ""
+                          ? Column(
                               children: [
-                                Container(
-                                  width: 200,
-                                  child: FlutterMap(
-                                    options: MapOptions(
-                                      center: LatLng(
-                                        attendance.check_in_latitude,
-                                        attendance.check_in_longitude,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, top: 25),
+                                  child: Center(
+                                    child: Text(
+                                      "Check-In",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
                                       ),
-                                      zoom: 14,
                                     ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 200,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      TileLayer(
-                                        urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName:
-                                            'com.comtelindo.app',
+                                      Container(
+                                        width: 200,
+                                        child: FlutterMap(
+                                          options: MapOptions(
+                                            center: LatLng(
+                                              attendance.check_in_latitude,
+                                              attendance.check_in_longitude,
+                                            ),
+                                            zoom: 14,
+                                          ),
+                                          children: [
+                                            TileLayer(
+                                              urlTemplate:
+                                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                              userAgentPackageName:
+                                                  'com.comtelindo.app',
+                                            ),
+                                            attendance.check_in_latitude != 0
+                                                ? MarkerLayer(
+                                                    markers: [
+                                                      Marker(
+                                                        point: LatLng(
+                                                            attendance
+                                                                .check_in_latitude,
+                                                            attendance
+                                                                .check_in_longitude),
+                                                        width: 20,
+                                                        height: 20,
+                                                        builder: (context) =>
+                                                            const Icon(Icons
+                                                                .location_on_outlined),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : const SizedBox(),
+                                          ],
+                                        ),
                                       ),
-                                      attendance.check_in_latitude != 0
-                                          ? MarkerLayer(
-                                              markers: [
-                                                Marker(
-                                                  point: LatLng(
-                                                      attendance
-                                                          .check_in_latitude,
-                                                      attendance
-                                                          .check_in_longitude),
-                                                  width: 20,
-                                                  height: 20,
-                                                  builder: (context) =>
-                                                      const Icon(Icons
-                                                          .location_on_outlined),
-                                                ),
-                                              ],
-                                            )
-                                          : const SizedBox(),
+                                      Container(
+                                        child: FadeInImage(
+                                          placeholder: const AssetImage(
+                                              "images/loading.gif"),
+                                          image: NetworkImage(attendance
+                                                      .check_in_file !=
+                                                  ""
+                                              ? attendance.check_in_file
+                                              : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  child: FadeInImage(
-                                    placeholder:
-                                        const AssetImage("images/loading.gif"),
-                                    image: NetworkImage(attendance.check_in_file !=
-                                            ""
-                                        ? attendance.check_in_file
-                                        : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Waktu Clock In",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.check_in != ""
+                                              ? attendance.check_in
+                                                  .split(' ')[1]
+                                                  .substring(0, 5)
+                                              : "-",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Shift",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.shift_name,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Jadwal Shift",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.date,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Lokasi",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            launch(
+                                                "https://www.google.com/maps/search/?api=1&query=${attendance.check_in_latitude},${attendance.check_in_longitude}");
+                                          },
+                                          child: Text(
+                                            "Lihat Lokasi",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 15,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, top: 25),
+                              child: Center(
+                                child: Text(
+                                  "Belum Check-In nih.. 💼",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Waktu Clock In",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.check_in != ""
-                                        ? attendance.check_in
-                                            .split(' ')[1]
-                                            .substring(0, 5)
-                                        : "-",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Shift",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.shift_name,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    "Jadwal Shift",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.date,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Lokasi",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      launch(
-                                          "https://www.google.com/maps/search/?api=1&query=${attendance.check_in_latitude},${attendance.check_in_longitude}");
-                                    },
+                      attendance.check_out != ""
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, top: 25),
+                                  child: Center(
                                     child: Text(
-                                      "Lihat Lokasi",
+                                      "Check-Out",
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
-                                        color: Colors.amber,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(bottom: 20, top: 25),
-                        child: Center(
-                          child: Text(
-                            "Belum Check-In nih.. 💼",
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                attendance.check_out != ""
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20, top: 25),
-                            child: Center(
-                              child: Text(
-                                "Check-Out",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
                                 ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
                                 Container(
-                                  width: 200,
-                                  child: FlutterMap(
-                                    options: MapOptions(
-                                      center: LatLng(
-                                        attendance.check_out_latitude,
-                                        attendance.check_out_longitude,
-                                      ),
-                                      zoom: 14,
-                                    ),
+                                  height: 200,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      TileLayer(
-                                        urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName:
-                                            'com.comtelindo.app',
+                                      Container(
+                                        width: 200,
+                                        child: FlutterMap(
+                                          options: MapOptions(
+                                            center: LatLng(
+                                              attendance.check_out_latitude,
+                                              attendance.check_out_longitude,
+                                            ),
+                                            zoom: 14,
+                                          ),
+                                          children: [
+                                            TileLayer(
+                                              urlTemplate:
+                                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                              userAgentPackageName:
+                                                  'com.comtelindo.app',
+                                            ),
+                                            attendance.check_out_latitude != 0
+                                                ? MarkerLayer(
+                                                    markers: [
+                                                      Marker(
+                                                        point: LatLng(
+                                                            attendance
+                                                                .check_out_latitude,
+                                                            attendance
+                                                                .check_out_longitude),
+                                                        width: 20,
+                                                        height: 20,
+                                                        builder: (context) =>
+                                                            const Icon(Icons
+                                                                .location_on_outlined),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : const SizedBox(),
+                                          ],
+                                        ),
                                       ),
-                                      attendance.check_out_latitude != 0
-                                          ? MarkerLayer(
-                                              markers: [
-                                                Marker(
-                                                  point: LatLng(
-                                                      attendance
-                                                          .check_out_latitude,
-                                                      attendance
-                                                          .check_out_longitude),
-                                                  width: 20,
-                                                  height: 20,
-                                                  builder: (context) =>
-                                                      const Icon(Icons
-                                                          .location_on_outlined),
-                                                ),
-                                              ],
-                                            )
-                                          : const SizedBox(),
+                                      Container(
+                                        child: FadeInImage(
+                                          placeholder: const AssetImage(
+                                              "images/loading.gif"),
+                                          image: NetworkImage(attendance
+                                                      .check_out_file !=
+                                                  ""
+                                              ? attendance.check_out_file
+                                              : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  child: FadeInImage(
-                                    placeholder:
-                                        const AssetImage("images/loading.gif"),
-                                    image: NetworkImage(attendance.check_out_file !=
-                                            ""
-                                        ? attendance.check_out_file
-                                        : "https://erp.comtelindo.com/sense/media/avatars/blank.png"),
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Waktu Clock Out",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.check_out,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Shift",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.shift_name,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    "Jadwal Shift",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    attendance.date,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              right: 10,
-                              left: 10,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            width: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              border: Border(
-                                bottom: BorderSide(
-                                  width: 0.5,
-                                  color: Color.fromARGB(160, 158, 158, 158),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Lokasi",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      launch(
-                                          "https://www.google.com/maps/search/?api=1&query=${attendance.check_out_latitude},${attendance.check_out_longitude}");
-                                    },
-                                    child: Text(
-                                      "Lihat Lokasi",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Colors.amber,
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
                                       ),
                                     ),
                                   ),
-                                ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Waktu Clock Out",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.check_out,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Shift",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.shift_name,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Jadwal Shift",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          attendance.date,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 10,
+                                    top: 8,
+                                    bottom: 8,
+                                  ),
+                                  width: double.maxFinite,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 0.5,
+                                        color:
+                                            Color.fromARGB(160, 158, 158, 158),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Lokasi",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            launch(
+                                                "https://www.google.com/maps/search/?api=1&query=${attendance.check_out_latitude},${attendance.check_out_longitude}");
+                                          },
+                                          child: Text(
+                                            "Lihat Lokasi",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 15,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, top: 25),
+                              child: Center(
+                                child: Text(
+                                  "Belum Check-Out nih.. 💼",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(bottom: 20, top: 25),
-                        child: Center(
-                          child: Text(
-                            "Belum Check-Out nih.. 💼",
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
+                    ],
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 20, top: 25),
+                    child: Center(
+                      child: Text(
+                        "Tidak ada catatan kehadiran",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
-              ],
-            );
+                    ),
+                  );
           } else {
             return Text('Error to load attendance');
           }

@@ -80,14 +80,46 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
             return const Text("Loading...");
           } else if (state is ApprovalDetailLoadSuccess) {
             var request = state.request;
-
             List<List<String>> stringChildren = [];
 
-            if (request.isNotEmpty) {
-              stringChildren.addAll([
-                ["Tanggal absensi", request.start_date],
-                ["Reason", request.notes],
-              ]);
+            if (request.id != 0) {
+              if (request.notes != "") {
+                stringChildren.addAll([
+                  ["Reason", request.notes],
+                ]);
+              }
+
+              if (request.start_date != "") {
+                stringChildren.addAll([
+                  ["Start Date", request.start_date],
+                ]);
+              }
+
+              if (request.end_date != "") {
+                stringChildren.addAll([
+                  ["End Date", request.end_date],
+                ]);
+              }
+
+              if (request.date != null) {
+                stringChildren.addAll([
+                  ["Date", request.date],
+                ]);
+                if (request.working_start != null) {
+                  stringChildren.addAll([ 
+                    ["Working Start", request.working_start],
+                  ]); 
+                }
+                if (request.working_end != null) {
+                  stringChildren.addAll([
+                    ["Working End", request.working_end],
+                  ]);
+                }
+              } else {
+                stringChildren.addAll([
+                  ["Taken", request.taken.toString()],
+                ]);
+              }
 
               if (request.comment != "") {
                 stringChildren.add(["Comment", request.comment]);

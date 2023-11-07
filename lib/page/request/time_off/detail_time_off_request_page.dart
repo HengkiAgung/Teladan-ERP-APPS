@@ -140,6 +140,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ),
                         ),
                       ),
+
+                      // tanggal mulai
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,
@@ -177,6 +179,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ],
                         ),
                       ),
+
+                      // tanggal selesai
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,
@@ -214,6 +218,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ],
                         ),
                       ),
+                      
+                      // Total hari
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,
@@ -251,6 +257,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ],
                         ),
                       ),
+                      
+                      // alasan
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,
@@ -289,6 +297,7 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                           ],
                         ),
                       ),
+                      
                       request.approvalLine!.email != ""
                           ? Column(
                               children: [
@@ -381,6 +390,8 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                               ],
                             )
                           : const SizedBox(),
+                      
+                      // file
                       Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20,

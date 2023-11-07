@@ -113,7 +113,7 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  controller: _scrollController,
+                  controller: _request.length > 9 ? _scrollController : null,
                   itemCount: _request.length,
                   itemBuilder: (BuildContext context, int index) {
                     var request = _request[index];

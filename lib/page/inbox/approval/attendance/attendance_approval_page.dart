@@ -113,7 +113,7 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    controller: _scrollController,
+                    controller: _userAttendanceRequest.length > 9 ? _scrollController : null,
                     itemCount: _userAttendanceRequest.length,
                     itemBuilder: (BuildContext context, int index) {
                       var request = _userAttendanceRequest[index];

@@ -91,7 +91,7 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        controller: _scrollController,
+                        controller: _userShiftRequest.length > 9 ? _scrollController : null,
                         itemCount: _userShiftRequest.length,
                         itemBuilder: (BuildContext context, int index) {
                           var shift = _userShiftRequest[index];

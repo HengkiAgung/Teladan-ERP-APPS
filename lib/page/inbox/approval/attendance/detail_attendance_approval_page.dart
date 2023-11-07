@@ -79,18 +79,12 @@ class _DetailAttendanceApprovalPageState
           if (state is ApprovalDetailLoading) {
             return const Text("Loading...");
           } else if (state is ApprovalDetailLoadSuccess) {
-            var shift = state.request.user!.userEmployment!.workingScheduleShift
-                .workingShift;
             var request = state.request;
 
             List<List<String>> stringChildren = [];
 
             stringChildren.addAll([
               ["Tanggal absensi", request.date],
-              [
-                "Shift",
-                "${shift!.name}, ${shift.working_start} - ${shift.working_end}"
-              ],
               ["Reason", request.notes],
             ]);
 

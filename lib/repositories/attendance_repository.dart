@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -15,6 +17,8 @@ class AttendanceRepository {
   static final String _baseUrl = Config.apiUrl;
   
   Future<Attendance> getAttendanceDetail({required String date, required String token}) async {
+    print('$_baseUrl/cmt-attendance/history/detail');
+    print(date);
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/history/detail'),
       headers: {
@@ -28,8 +32,7 @@ class AttendanceRepository {
     );
 
     if (response.statusCode == 200) {
-      Attendance attendance =
-          Attendance.fromJson(jsonDecode(response.body)["data"] ?? {});
+      Attendance attendance = Attendance.fromJson(jsonDecode(response.body)["data"] ?? {});
 
       return attendance;
     }
@@ -57,11 +60,11 @@ class AttendanceRepository {
       }
     }
 
-    PermissionStatus _permissionGranted = await location.hasPermission();
+    PermissionStatus permissionGranted = await location.hasPermission();
 
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return Future.error("Location permissions are denied");
       }
     }
@@ -101,7 +104,6 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
 
       await getLocation().then((value) {
@@ -112,7 +114,6 @@ class AttendanceRepository {
       });
       
       bool validate = await validateLocation(context, token, latitude, longitude);
-      // ignore: use_build_context_synchronously
 
       if (validate) {
         Navigator.pop(context);
@@ -130,8 +131,7 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
-        // ignore: use_build_context_synchronously
-        ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+          ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
         request.files.add(imageFile);
 
@@ -144,22 +144,19 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+              Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             var result = await response.stream.bytesToString();
             String message = result.split('"message":"')[1].split('"}')[0];
 
-            // ignore: use_build_context_synchronously
-            ModalBottomSheetComponent().errorIndicator(context, message);
+                  ModalBottomSheetComponent().errorIndicator(context, message);
 
             return false;
           }
         } catch (e) {
-          // ignore: use_build_context_synchronously
-          ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
+              ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
 
 
           return false;
@@ -168,7 +165,6 @@ class AttendanceRepository {
 
       return false;
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, e.toString());
 
       return false;
@@ -180,7 +176,6 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
       
       await getLocation().then((value) {
@@ -191,8 +186,7 @@ class AttendanceRepository {
       bool validate = await validateLocation(context, token, latitude, longitude);
 
       if (validate) {
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context);
+          Navigator.pop(context);
 
         var request = http.MultipartRequest(
           'POST',
@@ -209,8 +203,7 @@ class AttendanceRepository {
           filename: "absen.jpg",
         );
         
-        // ignore: use_build_context_synchronously
-        ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+          ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
 
         request.files.add(imageFile);
 
@@ -223,22 +216,19 @@ class AttendanceRepository {
         try {
           final response = await request.send();
           
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+              Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             var result = await response.stream.bytesToString();
             String message = result.split('"message":"')[1].split('"}')[0];
 
-            // ignore: use_build_context_synchronously
-            ModalBottomSheetComponent().errorIndicator(context, message);
+                  ModalBottomSheetComponent().errorIndicator(context, message);
 
             return false;
           }
         } catch (e) {
-          // ignore: use_build_context_synchronously
-          ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
+              ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
 
           return false;
         }
@@ -246,7 +236,6 @@ class AttendanceRepository {
 
       return false;
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, e.toString());
 
       return false;
