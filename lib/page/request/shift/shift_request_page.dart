@@ -86,6 +86,9 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                   Middleware().authenticated(context);
 
                   context.read<RequestShiftListBloc>().add(GetRequestList());
+                  setState(() {
+                    page = 1;
+                  });
                 },
                 child: Column(
                   children: [

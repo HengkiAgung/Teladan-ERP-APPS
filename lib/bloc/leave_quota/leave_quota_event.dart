@@ -6,3 +6,7 @@ class LeaveQuotaEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class GetLeaveQuota extends LeaveQuotaEvent {}
+
+class LogOut extends LeaveQuotaEvent {}

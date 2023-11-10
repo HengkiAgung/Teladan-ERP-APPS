@@ -108,6 +108,9 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
                     type: 'attendance',
                     model: UserAttendanceRequest(),
                   ));
+              setState(() {
+                page = 1;
+              });
             },
             child: Column(
               children: [

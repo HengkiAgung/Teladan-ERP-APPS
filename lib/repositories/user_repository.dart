@@ -16,7 +16,6 @@ class UserRepository {
     if (token == "") {
       return User.fromJson({});
     }
-
     print(token);
     
     final response = await http.get(
@@ -71,8 +70,6 @@ class UserRepository {
         'Authorization': 'Bearer $token',
       },
     );
-
-    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       UserEmployment user = UserEmployment.fromJson(jsonDecode(response.body)["data"]);

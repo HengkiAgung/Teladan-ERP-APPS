@@ -1,7 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/leave_quota/leave_quota_bloc.dart';
+import 'package:teladan/bloc/user/user_bloc.dart';
 import 'package:teladan/page/request/time_off/detail_time_off_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/page/request/time_off/leave/leave_history_page.dart';
 
 import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_leavel_list/request_leave_list_bloc.dart';
@@ -47,12 +50,9 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
   Widget build(BuildContext context) {
     final attendanceRequest = BlocProvider.of<RequestLeaveListBloc>(context);
     if (attendanceRequest.state is! RequestLeaveListLoadSuccess) {
-      // context.read<UserBloc>().add(CheckAuth());
-      // final user = BlocProvider.of<UserBloc>(context);
-
-      // if (user.state is UserUnauthenticated) Auth().logOut(context);
       Middleware().authenticated(context);
 
+      context.read<LeaveQuotaBloc>().add(GetLeaveQuota());
       context.read<RequestLeaveListBloc>().add(const GetRequestList());
     }
 
@@ -68,27 +68,114 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                   child: Text("loading..."),
                 );
               } else if (state is RequestLeaveListLoadFailure) {
-                return Text("Failed to load time off log");
+                return const Text("Failed to load time off log");
               } else if (state is RequestLeaveListLoadSuccess) {
                 _userLeaveRequest = state.request.cast<UserLeaveRequest>();
               }
 
               return Column(
                 children: [
+                  // Show quota time off left
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LeaveHistoryPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                        right: 20,
+                      ),
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        border: Border.all(
+                          color: const Color.fromARGB(160, 158, 158, 158),
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Sisa Quota Time Off",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color.fromARGB(255, 51, 51, 51),
+                                ),
+                              ),
+                              BlocBuilder<LeaveQuotaBloc, LeaveQuotaState>(
+                                builder: (context, state) {
+                                  if (state is LeaveQuotaLoadSuccess) {
+                                    return Text(
+                                      "${state.quota.toString()} days",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  } else if(state is LeaveQuotaLoadFailure) {
+                                    return Text(
+                                      state.error,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  } else {
+                                    return const SizedBox();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          const Icon(Icons.arrow_right_rounded),
+                          const SizedBox(
+                            width: 12,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
                         Middleware().authenticated(context);
-                        
-                        context.read<RequestLeaveListBloc>().add(const GetRequestList());
+
+                        context
+                            .read<RequestLeaveListBloc>()
+                            .add(const GetRequestList());
+                        setState(() {
+                          page = 1;
+                        });
                       },
                       child: ListView.builder(
-                        controller: _userLeaveRequest.length > 9 ? _scrollController : null,
+                        controller: _userLeaveRequest.length > 9
+                            ? _scrollController
+                            : null,
                         itemCount: _userLeaveRequest.length,
                         itemBuilder: (BuildContext context, int index) {
                           var leaveRequest = _userLeaveRequest[index];
                           Color colorStatus;
-                                    
+
                           if (leaveRequest.status == "Waiting") {
                             colorStatus = Colors.amber;
                           } else if (leaveRequest.status == "Approved") {
@@ -96,7 +183,7 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                           } else {
                             colorStatus = Colors.red.shade900;
                           }
-                                    
+
                           return Container(
                             padding: const EdgeInsets.only(
                               right: 10,
@@ -116,17 +203,19 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                             child: GestureDetector(
                               onTap: () {
                                 Middleware().authenticated(context);
-                    
-                                context.read<RequestDetailBloc>().add(GetRequestDetail(
-                                    id: leaveRequest.id.toString(),
-                                    type: "time-off",
-                                    model: UserLeaveRequest()));
-                                    
+
+                                context.read<RequestDetailBloc>().add(
+                                    GetRequestDetail(
+                                        id: leaveRequest.id.toString(),
+                                        type: "time-off",
+                                        model: UserLeaveRequest()));
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        DetailTimeOffRequestPage(id: leaveRequest.id),
+                                        DetailTimeOffRequestPage(
+                                            id: leaveRequest.id),
                                   ),
                                 );
                               },
@@ -138,15 +227,16 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                                       width: 12,
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "${leaveRequest.leaveRequestCategory!.name}",
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold,
-                                            color:
-                                                const Color.fromARGB(255, 51, 51, 51),
+                                            color: const Color.fromARGB(
+                                                255, 51, 51, 51),
                                           ),
                                         ),
                                         leaveRequest.approvalLine!.name != ""
@@ -187,17 +277,16 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                         },
                       ),
                     ),
-                      
                   ),
                   (state is RequestLeaveListFetchNew)
-                  ? const Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: SizedBox(
-                        height: 40,
-                        child: Text("Loading..."),
-                      ),
-                    )
-                  : const SizedBox(),
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: SizedBox(
+                            height: 40,
+                            child: Text("Loading..."),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               );
             },
@@ -208,7 +297,7 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FormTimeOffRequestPage(),
+                builder: (context) => const FormTimeOffRequestPage(),
               ),
             );
           },

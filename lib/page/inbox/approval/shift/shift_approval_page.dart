@@ -108,6 +108,10 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
                     model: UserShiftRequest(),
                   ),
                 );
+
+            setState(() {
+                page = 1;
+              });
           },
           child: Column(
             children: [

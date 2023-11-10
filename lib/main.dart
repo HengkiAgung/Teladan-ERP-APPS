@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:teladan/bloc/leave_history/leave_history_bloc.dart';
+import 'package:teladan/bloc/leave_quota/leave_quota_bloc.dart';
 import 'package:teladan/page/auth/reset_password_page.dart';
 
 import 'bloc/approval_detail/approval_detail_bloc.dart';
@@ -77,6 +79,12 @@ void main() {
       ),
       BlocProvider<SummariesBloc>(
         create: (context) => SummariesBloc(),
+      ),
+      BlocProvider<LeaveQuotaBloc>(
+        create: (context) => LeaveQuotaBloc(),
+      ),
+      BlocProvider<LeaveHistoryBloc>(
+        create: (context) => LeaveHistoryBloc(),
       ),
     ],
     child: const MainApp(),

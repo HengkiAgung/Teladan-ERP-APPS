@@ -99,6 +99,9 @@ class _LogAttendanceState extends State<LogAttendance> {
                     Middleware().authenticated(context);
                     
                     context.read<AttendanceLogBloc>().add(GetAttendanceLog());
+                    setState(() {
+                      page = 1;
+                    });
                   },
                   child: ListView.builder(
                     controller: _logAtendance.length > 9 ? _scrollController : null,

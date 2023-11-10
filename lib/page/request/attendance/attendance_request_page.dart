@@ -81,6 +81,9 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
                   context
                       .read<RequestAttendanceListBloc>()
                       .add(const GetRequestList());
+                  setState(() {
+                    page = 1;
+                  });
                 },
                 child: Column(
                   children: [

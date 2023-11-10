@@ -17,8 +17,6 @@ class AttendanceRepository {
   static final String _baseUrl = Config.apiUrl;
   
   Future<Attendance> getAttendanceDetail({required String date, required String token}) async {
-    print('$_baseUrl/cmt-attendance/history/detail');
-    print(date);
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/history/detail'),
       headers: {
@@ -107,10 +105,10 @@ class AttendanceRepository {
       ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
 
       await getLocation().then((value) {
-        // latitude = '-1.249637';
-        // longitude = '116.877503';
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
+        // latitude = '-1.249637';
+        // longitude = '116.877503';
       });
       
       bool validate = await validateLocation(context, token, latitude, longitude);

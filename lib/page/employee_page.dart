@@ -86,6 +86,9 @@ class _EmployeePageState extends State<EmployeePage> {
                         Middleware().authenticated(context);
                         
                         context.read<EmployeeBloc>().add(GetEmployee());
+                        setState(() {
+                          page = 1;
+                        });
                       },
                       child: ListView.builder(
                           controller: _userEmployment.length > 9 ? _scrollController : null,

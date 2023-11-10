@@ -67,10 +67,6 @@ class _LoginPageState extends State<LoginPage> {
 
                   if (dataLogin[0]) {
                     context.read<UserBloc>().add(GetUser());
-                    print(dataLogin);
-                    print(dataLogin);
-                    print(dataLogin);
-                    print(dataLogin);
 
                     if (dataLogin[1] == 1 || dataLogin[1] == "1") {
                       Navigator.push(

@@ -107,6 +107,10 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
                     type: 'time-off',
                     model: UserLeaveRequest(),
                   ));
+              
+              setState(() {
+                page = 1;
+              });
             },
             child: Column(
               children: [

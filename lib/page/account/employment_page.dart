@@ -97,7 +97,7 @@ class EmploymentPage extends StatelessWidget {
                     height: 20,
                   ),
 
-                  TextFieldComponent(label: 'Team', content: employData.user!.team!.team_name,),
+                  TextFieldComponent(label: 'Team', content: employData.user!.team != null ? employData.user!.team!.team_name: "",),
                   SizedBox(
                     height: 20,
                   ),
