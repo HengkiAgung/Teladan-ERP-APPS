@@ -14,8 +14,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       emit(EmployeeLoading());
       try {
         String token = await Auth().getToken();
+        print("name ${event.name}");
 
-        final List<User> employee = await EmployeeRepository().getAllUser(token: token,);
+        final List<User> employee = await EmployeeRepository().getAllUser(token: token, name: event.name);
 
         emit(EmployeeLoadSuccess(employee));
 
@@ -36,8 +37,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
 
       try {
         String token = await Auth().getToken();
-
-        final List<User> newEmployeeList = await EmployeeRepository().getAllUser(token: token, page: event.page.toString());
+        print("name ${event.name}");
+        final List<User> newEmployeeList = await EmployeeRepository().getAllUser(token: token, page: event.page.toString(), name: event.name);
         employeeList.addAll(newEmployeeList);
 
         emit(EmployeeLoadSuccess(employeeList));

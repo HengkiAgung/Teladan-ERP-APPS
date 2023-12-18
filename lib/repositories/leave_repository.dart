@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:teladan/models/Leave/UserLeaveHistory.dart';
 import '../config.dart';
@@ -9,7 +8,7 @@ class LeaveRepository {
   static final String _baseUrl = Config.apiUrl;
 
   Future<int> getLeaveQuota({ required String token }) async {
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse('$_baseUrl/user/leave/quota/available'),
       headers: {
         'Accept': 'application/json',
@@ -17,6 +16,9 @@ class LeaveRepository {
         'Authorization': 'Bearer $token',
       },
     );
+
+    print('$_baseUrl/user/leave/quota/available');
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)["data"];
@@ -35,9 +37,6 @@ class LeaveRepository {
         'Authorization': 'Bearer $token',
       },
     );
-
-    print('$_baseUrl/user/leave/quota/history?page=${page.toString()}');
-    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Iterable it = jsonDecode(response.body)["data"]["history"];

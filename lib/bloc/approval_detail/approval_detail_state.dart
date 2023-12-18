@@ -27,6 +27,6 @@ class ApprovalDetailLoadFailure extends ApprovalDetailState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load detail {error: $error}';
   }
 }

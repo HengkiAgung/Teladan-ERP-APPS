@@ -27,6 +27,6 @@ class LeaveQuotaLoadFailure extends LeaveQuotaState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load quota {error: $error}';
   }
 }

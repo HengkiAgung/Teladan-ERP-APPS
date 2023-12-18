@@ -29,6 +29,6 @@ class RequestAttendanceListLoadFailure extends RequestAttendanceListState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load attendance {error: $error}';
   }
 }

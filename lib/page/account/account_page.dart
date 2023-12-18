@@ -1,6 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/page/account/employment_page.dart';
-import 'package:teladan/page/account/payroll/payroll_page.dart';
 import 'package:teladan/utils/auth.dart';
 import 'package:teladan/utils/middleware.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _AccountPageState extends State<AccountPage> {
         // Info Saya
         Container(
           color: Colors.white,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -53,7 +54,7 @@ class _AccountPageState extends State<AccountPage> {
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 51, 51, 51),
+                  color: const Color.fromARGB(255, 51, 51, 51),
                 ),
               ),
               const SizedBox(
@@ -66,13 +67,13 @@ class _AccountPageState extends State<AccountPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PersonalPage(),
+                      builder: (context) => const PersonalPage(),
                     ),
                   );
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.account_circle),
+                    const Icon(Icons.account_circle),
                     const SizedBox(
                       width: 12,
                     ),
@@ -84,7 +85,7 @@ class _AccountPageState extends State<AccountPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 51, 51, 51),
+                            color: const Color.fromARGB(255, 51, 51, 51),
                           ),
                         ),
                         Text(
@@ -115,7 +116,7 @@ class _AccountPageState extends State<AccountPage> {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.perm_contact_cal_rounded),
+                    const Icon(Icons.perm_contact_cal_rounded),
                     const SizedBox(
                       width: 12,
                     ),
@@ -127,7 +128,7 @@ class _AccountPageState extends State<AccountPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 51, 51, 51),
+                            color: const Color.fromARGB(255, 51, 51, 51),
                           ),
                         ),
                         Text(
@@ -206,13 +207,13 @@ class _AccountPageState extends State<AccountPage> {
           },
           child: Container(
             color: Colors.white,
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.web_asset),
+                    const Icon(Icons.web_asset),
                     const SizedBox(
                       width: 12,
                     ),
@@ -221,11 +222,11 @@ class _AccountPageState extends State<AccountPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                       ),
                     ),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios_rounded),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios_rounded),
                   ],
                 ),
                 const SizedBox(
@@ -244,13 +245,13 @@ class _AccountPageState extends State<AccountPage> {
           onTap: () => launch("https://erp.comtelindo.com/privacy"),
           child: Container(
             color: Colors.white,
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.privacy_tip_outlined),
+                    const Icon(Icons.privacy_tip_outlined),
                     const SizedBox(
                       width: 12,
                     ),
@@ -259,11 +260,11 @@ class _AccountPageState extends State<AccountPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                       ),
                     ),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios_rounded),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios_rounded),
                   ],
                 ),
                 const SizedBox(
@@ -280,7 +281,7 @@ class _AccountPageState extends State<AccountPage> {
         // Log Out
         Container(
           color: Colors.white,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -290,7 +291,7 @@ class _AccountPageState extends State<AccountPage> {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.logout),
+                    const Icon(Icons.logout),
                     const SizedBox(
                       width: 12,
                     ),
@@ -299,10 +300,10 @@ class _AccountPageState extends State<AccountPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),

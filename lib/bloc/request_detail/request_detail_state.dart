@@ -28,6 +28,6 @@ class RequestDetailLoadFailure extends RequestDetailState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load detail request {error: $error}';
   }
 }

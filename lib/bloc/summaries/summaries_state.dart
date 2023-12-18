@@ -27,6 +27,6 @@ class SummariesLoadFailure extends SummariesState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load summaries {error: $error}';
   }
 }

@@ -112,14 +112,11 @@ class _MainPageState extends State<MainPage> {
                     const Spacer(),
                     GestureDetector(
                       onTap: () async {
-                        User user = await UserRepository().getUser(token);
-                        if (user.name != "") {
-                          setState(() {
-                            error = false;
-                            // ignore: use_build_context_synchronously
-                            context.read<UserBloc>().add(GetUser());
-                          });
-                        }
+                        setState(() {
+                          error = false;
+                          // ignore: use_build_context_synchronously
+                          context.read<UserBloc>().add(GetUser());
+                        });
                       },
                       child: Container(
                         height: 50,
@@ -159,6 +156,7 @@ class _MainPageState extends State<MainPage> {
                   token = state.token; 
 
                   return BottomNavigationBar(
+                    backgroundColor:Colors.white,
                     type: BottomNavigationBarType.fixed,
                     currentIndex: bottomNavIndex,
                     items: _bottomNavBarItems,

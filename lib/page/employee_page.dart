@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/models/Employee/User.dart';
+import 'package:teladan/utils/helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,8 +18,9 @@ class EmployeePage extends StatefulWidget {
 }
 
 class _EmployeePageState extends State<EmployeePage> {
-  
   List<User> _userEmployment = [];
+  Timer? _debounce;
+  String search = "";
 
   late ScrollController _scrollController;
   int page = 1;
@@ -26,7 +30,7 @@ class _EmployeePageState extends State<EmployeePage> {
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
       page = page + 1;
-      context.read<EmployeeBloc>().add(ScrollFetch(page: page));
+      context.read<EmployeeBloc>().add(ScrollFetch(page: page, name: search));
     }
   }
 
@@ -45,22 +49,62 @@ class _EmployeePageState extends State<EmployeePage> {
     if (employee.state is! EmployeeLoadSuccess) {
       Middleware().authenticated(context);
 
-      context.read<EmployeeBloc>().add(GetEmployee()); 
+      context.read<EmployeeBloc>().add(GetEmployee(name: search));
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        bottomOpacity: 0.0,
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        title: Text(
+          "Daftar Karyawan",
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.only(top: 30, left: 12),
-            margin: EdgeInsetsDirectional.only(top: 20),
-            alignment: AlignmentDirectional.centerStart,
-            child: Text(
-              "Daftar Karyawan",
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                color: Colors.black,
+          // input search
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 18,
+              right: 18,
+              top: 10,
+              bottom: 10,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(134, 226, 226, 226),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Cari nama karyawan",
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                ),
+                onChanged: (value) {
+                  if (_debounce?.isActive ?? false) _debounce?.cancel();
+                  _debounce = Timer(const Duration(milliseconds: 500), () {
+                    setState(() {
+                      search = value;
+                    });
+                    context
+                        .read<EmployeeBloc>()
+                        .add(GetEmployee(name: value ?? ""));
+                  });
+                },
               ),
             ),
           ),
@@ -81,21 +125,25 @@ class _EmployeePageState extends State<EmployeePage> {
                 return Column(
                   children: [
                     Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        Middleware().authenticated(context);
-                        
-                        context.read<EmployeeBloc>().add(GetEmployee());
-                        setState(() {
-                          page = 1;
-                        });
-                      },
-                      child: ListView.builder(
-                          controller: _userEmployment.length > 9 ? _scrollController : null,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          Middleware().authenticated(context);
+
+                          context
+                              .read<EmployeeBloc>()
+                              .add(GetEmployee(name: search));
+                          setState(() {
+                            page = 1;
+                          });
+                        },
+                        child: ListView.builder(
+                          controller: _userEmployment.length > 9
+                              ? _scrollController
+                              : null,
                           itemCount: _userEmployment.length,
                           itemBuilder: (BuildContext context, int index) {
                             var user = _userEmployment[index];
-                      
+
                             return Container(
                               padding: const EdgeInsets.only(
                                 right: 10,
@@ -121,8 +169,8 @@ class _EmployeePageState extends State<EmployeePage> {
                                       user.foto_file != ""
                                           ? CircleAvatar(
                                               radius: 25, // Image radius
-                                              backgroundImage:
-                                                  NetworkImage(user.foto_file))
+                                              backgroundImage: NetworkImage(
+                                                  "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
                                           : const CircleAvatar(
                                               radius: 25, // Image radius
                                               backgroundImage: AssetImage(
@@ -130,26 +178,32 @@ class _EmployeePageState extends State<EmployeePage> {
                                             ),
                                       const SizedBox(width: 10),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            user.name,
+                                            truncateWithEllipsis(20, user.name),
                                             style: GoogleFonts.poppins(
                                               fontSize: 13,
-                                              color: Color.fromARGB(255, 51, 51, 51),
+                                              color: Color.fromARGB(
+                                                  255, 51, 51, 51),
                                             ),
                                           ),
                                           Text(
-                                            user.email,
+                                            user.department != null
+                                                ? user
+                                                    .department!.department_name
+                                                : "",
                                             style: GoogleFonts.poppins(
                                               fontSize: 10,
                                               color: Colors.grey,
                                             ),
                                           ),
                                           Text(
-                                            user.kontak != ""
-                                                ? "+62 ${user.kontak}"
+                                            user.division != null
+                                                ? user.division!.divisi_name
                                                 : "",
                                             style: GoogleFonts.poppins(
                                               fontSize: 10,
@@ -160,14 +214,16 @@ class _EmployeePageState extends State<EmployeePage> {
                                       ),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: () => launch("tel:0${user.kontak}"),
+                                        onTap: () =>
+                                            launch("tel:0${user.kontak}"),
                                         child: Icon(Icons.phone),
                                       ),
                                       SizedBox(
                                         width: 15,
                                       ),
                                       GestureDetector(
-                                        onTap: () => launch("mailto:${user.email}"),
+                                        onTap: () =>
+                                            launch("mailto:${user.email}"),
                                         child: Icon(Icons.mail_outline,
                                             size: 25, color: Colors.red),
                                       ),
@@ -175,11 +231,12 @@ class _EmployeePageState extends State<EmployeePage> {
                                         width: 15,
                                       ),
                                       GestureDetector(
-                                        onTap: () =>
-                                            launch("https://wa.me/+62${user.kontak}"),
+                                        onTap: () => launch(
+                                            "https://wa.me/+62${user.kontak}"),
                                         child: const Image(
                                           height: 23,
-                                          image: AssetImage("images/whatsapp.png"),
+                                          image:
+                                              AssetImage("images/whatsapp.png"),
                                         ),
                                       ),
                                     ],
@@ -192,17 +249,16 @@ class _EmployeePageState extends State<EmployeePage> {
                       ),
                     ),
                     (state is EmployeeFetchNew)
-                      ? const Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: SizedBox(
-                            height: 40,
-                            child: Text("Loading..."),
-                          ),
-                        )
-                      : const SizedBox(),
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 10),
+                            child: SizedBox(
+                              height: 40,
+                              child: Text("Loading..."),
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 );
-            
               },
             ),
           ),

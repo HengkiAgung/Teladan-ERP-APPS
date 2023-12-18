@@ -7,12 +7,17 @@ class EmployeeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetEmployee extends EmployeeEvent {}
+class GetEmployee extends EmployeeEvent {
+  final String name;
+
+  const GetEmployee({required this.name});
+}
 
 class LogOut extends EmployeeEvent {}
 
 class ScrollFetch extends EmployeeEvent {
+  final String name;
   final int page;
 
-  const ScrollFetch({required this.page});
+  const ScrollFetch({required this.page, required this.name});
 }

@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/page/inbox/approval/assignment/assignment_approval_page.dart';
 import 'package:teladan/page/inbox/approval/attendance/attendance_approval_page.dart';
 import 'package:teladan/page/inbox/approval/time_off/time_off_approval_page.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +26,6 @@ class NeedApprovalPage extends StatelessWidget {
           // Cuti
           GestureDetector(
             onTap: () {
-              // context.read<UserBloc>().add(CheckAuth());
-              // final user = BlocProvider.of<UserBloc>(context);
-
-              // if (user.state is UserUnauthenticated) Auth().logOut(context);
               Middleware().authenticated(context);
 
               context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));
@@ -79,10 +77,6 @@ class NeedApprovalPage extends StatelessWidget {
           // Absensi
           GestureDetector(
             onTap: () {
-              // context.read<UserBloc>().add(CheckAuth());
-              // final user = BlocProvider.of<UserBloc>(context);
-
-              // if (user.state is UserUnauthenticated) Auth().logOut(context);
               Middleware().authenticated(context);
 
               context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
@@ -130,60 +124,9 @@ class NeedApprovalPage extends StatelessWidget {
             ),
           ),
         
-          // Lembur
-          // GestureDetector(
-          //   onTap: () {
-          //     // Navigator.push(
-          //     //   context,
-          //     //   MaterialPageRoute(
-          //     //     builder: (context) => PersonalPage(),
-          //     //   ),
-          //     // );
-          //   },
-          //   child: Container(
-          //     padding: EdgeInsets.symmetric(vertical: 20),
-          //     decoration: const BoxDecoration(
-          //       color: Color.fromARGB(255, 255, 255, 255),
-          //       border: Border(
-          //         bottom: BorderSide(
-          //           width: 0.5,
-          //           color: Color.fromARGB(160, 158, 158, 158),
-          //         ),
-          //       ),
-          //     ),
-          //     child: Row(
-          //       children: [
-          //         const SizedBox(
-          //           width: 12,
-          //         ),
-          //         const Icon(Icons.access_time),
-          //         const SizedBox(
-          //           width: 12,
-          //         ),
-          //         Text(
-          //           "Lembur",
-          //           style: GoogleFonts.poppins(
-          //             fontSize: 13,
-          //             color: const Color.fromARGB(255, 51, 51, 51),
-          //           ),
-          //         ),
-          //         const Spacer(),
-          //         const Icon(Icons.keyboard_arrow_right_rounded),
-          //         const SizedBox(
-          //           width: 12,
-          //         )
-          //       ],
-          //     ),
-          //   ),
-          // ),
-        
           // Perubahan Shift
           GestureDetector(
             onTap: () {
-              // context.read<UserBloc>().add(CheckAuth());
-              // final user = BlocProvider.of<UserBloc>(context);
-
-              // if (user.state is UserUnauthenticated) Auth().logOut(context);
               Middleware().authenticated(context);
 
               context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
@@ -216,6 +159,56 @@ class NeedApprovalPage extends StatelessWidget {
                   ),
                   Text(
                     "Perubahan Shift",
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: const Color.fromARGB(255, 51, 51, 51),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.keyboard_arrow_right_rounded),
+                  const SizedBox(
+                    width: 12,
+                  )
+                ],
+              ),
+            ),
+          ),
+
+          // Assignment
+          GestureDetector(
+            onTap: () {
+              Middleware().authenticated(context);
+
+              context.read<ApprovalAssignmentListBloc>().add(const GetApprovalAssigment());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AssignmentApprovalPage(),
+                ),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                border: Border(
+                  bottom: BorderSide(
+                    width: 0.5,
+                    color: Color.fromARGB(160, 158, 158, 158),
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  const Icon(Icons.assignment),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Text(
+                    "Assignment",
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       color: const Color.fromARGB(255, 51, 51, 51),

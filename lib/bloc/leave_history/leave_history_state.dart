@@ -29,6 +29,6 @@ class LeaveHistoryLoadFailure extends LeaveHistoryState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load history {error: $error}';
   }
 }

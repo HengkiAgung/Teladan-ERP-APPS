@@ -1,7 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
+import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
 import 'package:teladan/bloc/leave_history/leave_history_bloc.dart';
 import 'package:teladan/bloc/leave_quota/leave_quota_bloc.dart';
+import 'package:teladan/bloc/request_assigment_detail/request_assignment_detail_bloc.dart';
+import 'package:teladan/bloc/request_assignment_list/request_assignment_list_bloc.dart';
+import 'package:teladan/color_schemes.g.dart';
 import 'package:teladan/page/auth/reset_password_page.dart';
 
 import 'bloc/approval_detail/approval_detail_bloc.dart';
@@ -86,6 +91,18 @@ void main() {
       BlocProvider<LeaveHistoryBloc>(
         create: (context) => LeaveHistoryBloc(),
       ),
+      BlocProvider<RequestAssignmentListBloc>(
+        create: (context) => RequestAssignmentListBloc(),
+      ),
+      BlocProvider<RequestAssignmentDetailBloc>(
+        create: (context) => RequestAssignmentDetailBloc(),
+      ),
+      BlocProvider<ApprovalAssignmentListBloc>(
+        create: (context) => ApprovalAssignmentListBloc(),
+      ),
+      BlocProvider<ApprovalAssignmentDetailBloc>(
+        create: (context) => ApprovalAssignmentDetailBloc(),
+      ),
     ],
     child: const MainApp(),
   ));
@@ -100,12 +117,8 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.amber,
-            secondary: const Color(0xFFFFC107),
-          ),
-        ),
+        theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+        darkTheme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
         home: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoading) {

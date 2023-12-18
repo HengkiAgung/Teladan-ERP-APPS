@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,8 +27,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final attendanceLog = BlocProvider.of<AttendanceTodayBloc>(context);
 
-    if (attendanceLog.state is! AttendanceTodayLoadSuccess)
+    if (attendanceLog.state is! AttendanceTodayLoadSuccess){
       context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
+    }
 
     final summaries = BlocProvider.of<SummariesBloc>(context);
     if (summaries.state is! SummariesLoadSuccess) {
@@ -156,11 +159,8 @@ class _HomePageState extends State<HomePage> {
                                                               context, token);
 
                                                   if (attend) {
-                                                    context
-                                                        .read<
-                                                            AttendanceTodayBloc>()
-                                                        .add(
-                                                            GetAttendanceToday());
+                                                    context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
+                                                    context.read<SummariesBloc>().add(GetAttendanceSummaries());
                                                   }
                                                 }
                                               },
@@ -217,11 +217,8 @@ class _HomePageState extends State<HomePage> {
                                                               context, token);
 
                                                   if (attend) {
-                                                    context
-                                                        .read<
-                                                            AttendanceTodayBloc>()
-                                                        .add(
-                                                            GetAttendanceToday());
+                                                    context.read<AttendanceTodayBloc>().add(GetAttendanceToday());
+                                                    context.read<SummariesBloc>().add(GetAttendanceSummaries());
                                                   }
                                                 }
                                               },

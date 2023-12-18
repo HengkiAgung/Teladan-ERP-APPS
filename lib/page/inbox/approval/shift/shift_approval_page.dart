@@ -30,8 +30,8 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
       context.read<ApprovalListBloc>().add(
             ScrollFetch(
               page: page,
-              key: 'userAttendanceRequest',
-              type: 'attendance',
+              key: 'userShiftRequest',
+              type: 'shift',
               model: UserShiftRequest(),
             ),
           );
@@ -93,7 +93,7 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
             child: Text("loading..."),
           );
         } else if (state is ApprovalListLoadFailure) {
-          return Text("Failed to load attendance log");
+          return const Text("Failed to load attendance log");
         } else if (state is ApprovalListLoadSuccess) {
           _request = state.request;
         }
@@ -103,8 +103,8 @@ class _ShiftApprovalPageState extends State<ShiftApprovalPage> {
 
             context.read<ApprovalListBloc>().add(
                   GetRequestList(
-                    key: 'userAttendanceRequest',
-                    type: 'attendance',
+                    key: 'userShiftRequest',
+                    type: 'shift',
                     model: UserShiftRequest(),
                   ),
                 );

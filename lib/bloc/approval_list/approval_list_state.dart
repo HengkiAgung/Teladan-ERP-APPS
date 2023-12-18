@@ -29,6 +29,6 @@ class ApprovalListLoadFailure extends ApprovalListState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load request {error: $error}';
   }
 }

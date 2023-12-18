@@ -274,6 +274,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                     onTap: () async {
                       TimeOfDay? newTime = await showTimePicker(
                         context: context,
+                        initialEntryMode: TimePickerEntryMode.input,
                         initialTime: TimeOfDay.now(),
                       );
                       if (newTime == null) return;
@@ -331,6 +332,7 @@ class _FormAttendanceRequestPageState extends State<FormAttendanceRequestPage> {
                     onTap: () async {
                       TimeOfDay? newTime = await showTimePicker(
                         context: context,
+                        initialEntryMode: TimePickerEntryMode.input,
                         initialTime: TimeOfDay.now(),
                       );
                       if (newTime == null) return;

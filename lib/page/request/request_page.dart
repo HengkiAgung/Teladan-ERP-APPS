@@ -1,9 +1,9 @@
+import 'package:teladan/page/request/assignment/assignment_request_page.dart';
+import 'package:teladan/page/request/attendance/attendance_request_page.dart';
 import 'package:teladan/page/request/shift/shift_request_page.dart';
 import 'package:teladan/page/request/time_off/time_off_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'attendance/attendance_request_page.dart';
 
 class RequestPage extends StatefulWidget {
   const RequestPage({super.key});
@@ -14,103 +14,219 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   int navIndex = 0;
-  
-  final List<Widget> _listWidget = [
-    const AttendanceRequestPage(),
-    const ShiftRequestPage(),
-    const TimeOffRequestPage(),
-  ];
-  void _onNavBarTapped(int index) {
-    setState(() {
-      navIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
+      color: Colors.white,
       child: Column(
         children: [
           Container(
+            color: Colors.white,
             padding: EdgeInsets.only(top: 30, left: 12),
             margin: EdgeInsetsDirectional.only(top: 20),
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              "Riwayat Pengajuan",
+              "Persetujuan",
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 color: Colors.black,
               ),
             ),
           ),
-          Container(
-            width: double.maxFinite,
-            margin: EdgeInsetsDirectional.only(top: 20),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  width: 0.5,
-                  color: Color.fromARGB(160, 158, 158, 158),
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
+          Expanded(
+            child: ListView(
               children: [
+                // Cuti
                 GestureDetector(
-                  onTap: (){
-                    _onNavBarTapped(0);
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TimeOffRequestPage(),
+                      ),
+                    );
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Attendance",
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: navIndex == 0 ?Colors.amber : Colors.black,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.5,
+                          color: Color.fromARGB(160, 158, 158, 158),
+                        ),
                       ),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        const Icon(Icons.calendar_month_outlined),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Time Off",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: const Color.fromARGB(255, 51, 51, 51),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.keyboard_arrow_right_rounded),
+                        const SizedBox(
+                          width: 12,
+                        )
+                      ],
                     ),
                   ),
                 ),
+    
+                // Absensi
                 GestureDetector(
-                  onTap: (){
-                    _onNavBarTapped(1);
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AttendanceRequestPage(),
+                      ),
+                    );
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Shift",
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: navIndex == 1 ?Colors.amber : Colors.black,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.5,
+                          color: Color.fromARGB(160, 158, 158, 158),
+                        ),
                       ),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        const Icon(Icons.location_history_rounded),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Absensi",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: const Color.fromARGB(255, 51, 51, 51),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.keyboard_arrow_right_rounded),
+                        const SizedBox(
+                          width: 12,
+                        )
+                      ],
                     ),
                   ),
                 ),
+    
+                // Perubahan Shift
                 GestureDetector(
-                  onTap: (){
-                    _onNavBarTapped(2);
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShiftRequestPage(),
+                      ),
+                    );
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Time Off",
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: navIndex == 2 ?Colors.amber : Colors.black,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.5,
+                          color: Color.fromARGB(160, 158, 158, 158),
+                        ),
                       ),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        const Icon(Icons.loop_rounded),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Perubahan Shift",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: const Color.fromARGB(255, 51, 51, 51),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.keyboard_arrow_right_rounded),
+                        const SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+    
+                // Assignment
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AssignmentRequestPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.5,
+                          color: Color.fromARGB(160, 158, 158, 158),
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        const Icon(Icons.assignment),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          "Assignment",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: const Color.fromARGB(255, 51, 51, 51),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.keyboard_arrow_right_rounded),
+                        const SizedBox(
+                          width: 12,
+                        )
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          _listWidget[navIndex],
         ],
       ),
     );

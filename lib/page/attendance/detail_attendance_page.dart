@@ -65,9 +65,6 @@ class DetailAttendance extends StatelessWidget {
             );
           } else if (state is AttendanceDetailLoadSuccess) {
             Attendance attendance = state.attendance;
-            print("attendance.check_in");
-            print(attendance.check_in);
-
             return attendance.check_in != "" || attendance.check_out != ""
                 ? ListView(
                     children: [

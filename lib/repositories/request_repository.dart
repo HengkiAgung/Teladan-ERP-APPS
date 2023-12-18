@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:teladan/models/Assignment/Assignment.dart';
+import 'package:teladan/models/Employee/User.dart';
 
 
 import '../components/modal_bottom_sheet_component.dart';
@@ -47,8 +51,6 @@ class RequestRepository {
         'id': id,
       }),
     );
-    print(jsonDecode(response.body)["data"]);
-
     if (response.statusCode == 200) {
       return model.fromJson(jsonDecode(response.body)["data"]);
     }
@@ -250,7 +252,7 @@ class RequestRepository {
     String? token = await Auth().getToken();
     DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
 
-    if (category!.id == null || category!.id == "") {
+    if (category == null || category.id == 0) {
       // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Kolom kategori wajib diisi!");
       return false;
@@ -284,11 +286,11 @@ class RequestRepository {
     request.fields['leave_request_category_id'] = category.id.toString();
 
     if (category.half_day != 1) {
-      if (startDate.isBefore(now)) {
-        // ignore: use_build_context_synchronously
-        ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
-        return false;
-      }
+      // if (startDate.isBefore(now)) {
+      //   // ignore: use_build_context_synchronously
+      //   ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
+      //   return false;
+      // }
 
       if (endDate.isBefore(startDate)) {
         // ignore: use_build_context_synchronously
@@ -405,5 +407,154 @@ class RequestRepository {
     }
 
     return false;
+  }
+
+  Future<bool> makeAssignmentRequest({required BuildContext context,
+    required String signed_by,
+    required DateTime start_date,
+    required DateTime end_date,
+    required String override_holiday,
+    required String name,
+    required String location,
+    required String latitude,
+    required String longitude,
+    required String working_start,
+    required String working_end,
+    required String radius,
+    required String purpose,
+    required dynamic work_schedule,
+  }) async {
+    String? token = await Auth().getToken();
+
+    // if (working_shift_id == "") {
+    //   // ignore: use_build_context_synchronously
+    //   ModalBottomSheetComponent().errorIndicator(context, "Shift baru wajib diisi!");
+    //   return false;
+    // }
+
+    ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/store'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'signed_by' : signed_by,
+        'start_date' : "${start_date.year}-${start_date.month}-${start_date.day}",
+        'end_date' : "${end_date.year}-${end_date.month}-${end_date.day}",
+        'override_holiday' : override_holiday,
+        'name' : name,
+        'location' : location,
+        'latitude' : latitude,
+        'longitude' : longitude,
+        'working_start' : working_start,
+        'working_end' : working_end,
+        'radius' : radius,
+        'purpose' : purpose,
+        'work_schedule' : work_schedule,
+      }),
+    );
+
+    Navigator.pop(context);
+    if (int.parse(response.statusCode.toString()[0]) == 2) {
+      return true;
+      
+    } else {
+      final errorMessage = json.decode(response.body)['message'];
+
+      ModalBottomSheetComponent().errorIndicator(context, errorMessage);
+
+      return false;
+    }
+  }
+  
+  Future<bool> cancelAssignmentRequest({required int id}) async {
+    String? token = await Auth().getToken();
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/cancel'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'id': id,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
+  }
+  
+  Future<List<Assignment>> getAssignmentRequest({String page = "1", required String token,}) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/get/request?page=$page'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Iterable it = jsonDecode(response.body)["data"]["assignments"];
+
+      return it.map((e) {
+        var data = Assignment.fromJson(e);
+        return data;
+      }).toList();
+    }
+
+    return [];
+  }
+
+  Future<Assignment> getAssignmentRequestDetail({required String token, required int id}) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/get/detail/$id'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    
+    if (response.statusCode == 200) {
+      return Assignment.fromJson(jsonDecode(response.body)["data"]["assignment"]);
+    }
+
+    return Assignment.fromJson({});
+  }
+
+  Future<List<dynamic>> getCreateDataAssignment({String page = "1"}) async {
+    String? token = await Auth().getToken();
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/get/create-data'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print(jsonDecode(response.body)["data"]);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body)["data"];
+      
+      return [
+        data["users"],
+        data["days"],
+      ];
+    }
+
+    return [];
   }
 }

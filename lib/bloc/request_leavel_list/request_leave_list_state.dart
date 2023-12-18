@@ -29,6 +29,6 @@ class RequestLeaveListLoadFailure extends RequestLeaveListState {
 
   @override
   String toString() {
-    return 'Failed to load employee {error: $error}';
+    return 'Failed to load request {error: $error}';
   }
 }

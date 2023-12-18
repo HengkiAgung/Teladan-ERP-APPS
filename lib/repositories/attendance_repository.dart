@@ -15,8 +15,9 @@ import '../models/Summaries.dart';
 
 class AttendanceRepository {
   static final String _baseUrl = Config.apiUrl;
-  
-  Future<Attendance> getAttendanceDetail({required String date, required String token}) async {
+
+  Future<Attendance> getAttendanceDetail(
+      {required String date, required String token}) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/history/detail'),
       headers: {
@@ -25,21 +26,25 @@ class AttendanceRepository {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-          'date': date,
-        }),
+        'date': date,
+      }),
     );
 
     if (response.statusCode == 200) {
-      Attendance attendance = Attendance.fromJson(jsonDecode(response.body)["data"] ?? {});
+      Attendance attendance =
+          Attendance.fromJson(jsonDecode(response.body)["data"] ?? {});
 
       return attendance;
     }
 
     return Attendance.fromJson(jsonDecode(response.body));
   }
-  
+
   Future getImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 25,
+    );
     if (image == null) return;
 
     final imageTemporary = File(image.path);
@@ -70,7 +75,8 @@ class AttendanceRepository {
     return await location.getLocation();
   }
 
-  Future<bool> validateLocation(BuildContext context, String token, String latitude, String longitude) async {
+  Future<bool> validateLocation(BuildContext context, String token,
+      String latitude, String longitude) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/cmt-attendance/attend/location/validate'),
       headers: {
@@ -102,7 +108,8 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
-      ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
+      ModalBottomSheetComponent()
+          .loadingIndicator(context, "Sedang memeriksa lokasimu...");
 
       await getLocation().then((value) {
         latitude = '${value.latitude}';
@@ -110,8 +117,9 @@ class AttendanceRepository {
         // latitude = '-1.249637';
         // longitude = '116.877503';
       });
-      
-      bool validate = await validateLocation(context, token, latitude, longitude);
+
+      bool validate =
+          await validateLocation(context, token, latitude, longitude);
 
       if (validate) {
         Navigator.pop(context);
@@ -129,7 +137,8 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
-          ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+        ModalBottomSheetComponent()
+            .loadingIndicator(context, "Sedang mengirim data...");
 
         request.files.add(imageFile);
 
@@ -142,20 +151,20 @@ class AttendanceRepository {
         try {
           final response = await request.send();
 
-              Navigator.pop(context);
+          Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             var result = await response.stream.bytesToString();
             String message = result.split('"message":"')[1].split('"}')[0];
 
-                  ModalBottomSheetComponent().errorIndicator(context, message);
+            ModalBottomSheetComponent().errorIndicator(context, message);
 
             return false;
           }
         } catch (e) {
-              ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
-
+          ModalBottomSheetComponent()
+              .errorIndicator(context, "Error sending request: $e");
 
           return false;
         }
@@ -174,17 +183,19 @@ class AttendanceRepository {
       String latitude = "0";
       String longitude = "0";
 
-      ModalBottomSheetComponent().loadingIndicator(context, "Sedang memeriksa lokasimu...");
-      
+      ModalBottomSheetComponent()
+          .loadingIndicator(context, "Sedang memeriksa lokasimu...");
+
       await getLocation().then((value) {
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
       });
-      
-      bool validate = await validateLocation(context, token, latitude, longitude);
+
+      bool validate =
+          await validateLocation(context, token, latitude, longitude);
 
       if (validate) {
-          Navigator.pop(context);
+        Navigator.pop(context);
 
         var request = http.MultipartRequest(
           'POST',
@@ -200,8 +211,9 @@ class AttendanceRepository {
           data.path,
           filename: "absen.jpg",
         );
-        
-          ModalBottomSheetComponent().loadingIndicator(context, "Sedang mengirim data...");
+
+        ModalBottomSheetComponent()
+            .loadingIndicator(context, "Sedang mengirim data...");
 
         request.files.add(imageFile);
 
@@ -213,20 +225,21 @@ class AttendanceRepository {
 
         try {
           final response = await request.send();
-          
-              Navigator.pop(context);
+
+          Navigator.pop(context);
           if (int.parse(response.statusCode.toString()[0]) == 2) {
             return true;
           } else {
             var result = await response.stream.bytesToString();
             String message = result.split('"message":"')[1].split('"}')[0];
 
-                  ModalBottomSheetComponent().errorIndicator(context, message);
+            ModalBottomSheetComponent().errorIndicator(context, message);
 
             return false;
           }
         } catch (e) {
-              ModalBottomSheetComponent().errorIndicator(context, "Error sending request: $e");
+          ModalBottomSheetComponent()
+              .errorIndicator(context, "Error sending request: $e");
 
           return false;
         }
@@ -240,7 +253,8 @@ class AttendanceRepository {
     }
   }
 
-  Future<List<Attendance>> getHistoryAttendance({String page = "1", required String token}) async {
+  Future<List<Attendance>> getHistoryAttendance(
+      {String page = "1", required String token}) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/cmt-attendance/history?page=$page'),
       headers: {
@@ -263,7 +277,8 @@ class AttendanceRepository {
     return [];
   }
 
-  Future<Summaries> getSummaries(String? startDate, String? endDate, token) async {
+  Future<Summaries> getSummaries(
+    String? startDate, String? endDate, token) async {
     String params = "?";
     if (startDate != null) {
       params += "startDate=$startDate";
@@ -272,8 +287,12 @@ class AttendanceRepository {
       params += "endDate=$endDate";
     }
 
+    DateTime now = new DateTime.now();
+    int month = now.day > 27 ? now.month : now.month - 1;
+    String date = "${now.year}-$month-27";
+
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-attendance/summaries/me$params'),
+      Uri.parse('$_baseUrl/cmt-attendance/summaries/me?startDate=$date'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

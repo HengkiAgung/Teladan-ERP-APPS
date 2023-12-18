@@ -12,7 +12,6 @@ class LeaveQuotaBloc extends Bloc<LeaveQuotaEvent, LeaveQuotaState> {
       emit(LeaveQuotaLoading());
       try {
         String token = await Auth().getToken();
-
         final attendance = await LeaveRepository().getLeaveQuota(token: token);
 
         emit(LeaveQuotaLoadSuccess(attendance));

@@ -315,7 +315,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                                 } else {
                                   return TextFieldComponent(
                                     label: "Current Shift",
-                                    content: snapshot.data!.name,
+                                    content: "${snapshot.data!.name}, ${snapshot.data!.working_start} - ${snapshot.data!.working_end}",
                                   );
                                 }
                               },
@@ -359,7 +359,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                               (WorkingShift value) {
                             return DropdownMenuItem<String>(
                               value: value.id.toString(),
-                              child: Text(value.name),
+                              child: Text("${value.name}, ${value.working_start} - ${value.working_end}"),
                             );
                           }).toList(),
                         ),

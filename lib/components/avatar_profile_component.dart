@@ -22,7 +22,8 @@ class AvatarProfileComponent extends StatelessWidget {
           user.foto_file != ""
               ? CircleAvatar(
                   radius: 25, // Image radius
-                  backgroundImage: NetworkImage(user.foto_file))
+                  backgroundImage: NetworkImage(
+                      "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
               : const CircleAvatar(
                   radius: 25, // Image radius
                   backgroundImage: AssetImage("images/profile_placeholder.jpg"),
@@ -37,18 +38,18 @@ class AvatarProfileComponent extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 51, 51, 51),
+                  color: const Color.fromARGB(255, 51, 51, 51),
                 ),
               ),
               Text(
-                user.kontak != "" ? "+62 ${user.kontak}" : "",
+                user.department != null ? user.department!.department_name : "",
                 style: GoogleFonts.poppins(
                   fontSize: 10,
                   color: Colors.grey,
                 ),
               ),
               Text(
-                user.email,
+                user.division != null ? user.division!.divisi_name : "",
                 style: GoogleFonts.poppins(
                   fontSize: 10,
                   color: Colors.grey,
@@ -56,7 +57,7 @@ class AvatarProfileComponent extends StatelessWidget {
               ),
             ],
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
