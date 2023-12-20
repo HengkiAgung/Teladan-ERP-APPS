@@ -160,8 +160,9 @@ class _TimeOffRequestPageState extends State<TimeOffRequestPage> {
                                 BlocBuilder<LeaveQuotaBloc, LeaveQuotaState>(
                                   builder: (context, state) {
                                     if (state is LeaveQuotaLoadSuccess) {
+                                      int quota = state.quota;
                                       return Text(
-                                        "${state.quota} days",
+                                        "$quota days",
                                         style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           color: Colors.black,

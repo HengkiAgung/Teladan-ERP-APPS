@@ -22,7 +22,7 @@ class LeaveRepository {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)["data"];
-      return data;
+      return int. parse(data);
 
     }
     return 0;

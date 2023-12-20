@@ -7,7 +7,12 @@ class AttendanceLogEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetAttendanceLog extends AttendanceLogEvent {}
+class GetAttendanceLog extends AttendanceLogEvent {
+  final int month;
+  final int year;
+
+  const GetAttendanceLog({required this.month, required this.year});
+}
 
 class ScrollFetch extends AttendanceLogEvent {
   final int page;

@@ -304,10 +304,12 @@ class _HomePageState extends State<HomePage> {
                           // final user = BlocProvider.of<UserBloc>(context);
                           // if (user.state is UserUnauthenticated) Auth().logOut(context);
                           Middleware().authenticated(context);
+                          DateTime now = DateTime.now();
+                          int month = now.month;
 
                           context
                               .read<AttendanceLogBloc>()
-                              .add(GetAttendanceLog());
+                              .add(GetAttendanceLog(month: month, year: now.year));
                         }
 
                         Navigator.push(
@@ -417,7 +419,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Text(
-                      'Satu bulan terakhir',
+                      'Dari tanggal 27 hingga Sekarang',
                       style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: Colors.grey,

@@ -115,6 +115,15 @@ class _LeaveHistoryPageState extends State<LeaveHistoryPage> {
                     itemCount: _userLeaveHistory.length,
                     itemBuilder: (BuildContext context, int index) {
                       var leaveHistory = _userLeaveHistory[index];
+                      var taken = "";
+                      var color = Colors.white;
+                      if (leaveHistory.type == "plus") {
+                        taken = "+ ${leaveHistory.quota_change} days";
+                        color = Colors.green;
+                      } else {
+                        taken = "- ${leaveHistory.quota_change} days";
+                        color = Colors.red;
+                      }
                       return Padding(
                         padding: const EdgeInsets.only(
                           left: 18,
@@ -125,6 +134,7 @@ class _LeaveHistoryPageState extends State<LeaveHistoryPage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
+                            border: Border.all(color: color),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -162,7 +172,7 @@ class _LeaveHistoryPageState extends State<LeaveHistoryPage> {
                                   height: 5,
                                 ),
                                 Text(
-                                  "${leaveHistory.type} ${leaveHistory.quota_change} days",
+                                  taken,
                                   style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     color: Colors.black,

@@ -27,8 +27,8 @@ class _FormAssignmentRequestPageState extends State<FormAssignmentRequestPage> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(const Duration(days: 1));
   String? _signedById;
-  String lat = "";
-  String long = "";
+  double lat = -1.2497202;
+  double long = 116.8772024;
   List work_schedule = [];
 
   final TextEditingController _nameAssignmetController = TextEditingController();
@@ -103,8 +103,8 @@ class _FormAssignmentRequestPageState extends State<FormAssignmentRequestPage> {
                 override_holiday: "1",
                 name: _nameAssignmetController.text,
                 location: _locationController.text,
-                latitude: lat,
-                longitude: long,
+                latitude: lat.toString(),
+                longitude: long.toString(),
                 working_start: "00:02",
                 working_end: "23:58",
                 radius: "1000",
@@ -561,13 +561,13 @@ class _FormAssignmentRequestPageState extends State<FormAssignmentRequestPage> {
                       height: 500,
                       width: double.infinity,
                       child: OpenStreetMapSearchAndPick(
-                        center: const LatLong(-1.2497202, 116.8772024),
+                        center: LatLong(lat, long),
                         zoomOutIcon: Icons.zoom_out,
                         zoomInIcon: Icons.zoom_in,
                         onPicked: (onpicked) {
                           setState(() {
-                            lat = onpicked.latLong.latitude.toString();
-                            long = onpicked.latLong.longitude.toString();
+                            lat = onpicked.latLong.latitude;
+                            long = onpicked.latLong.longitude;
                           });
                         },
                       ),

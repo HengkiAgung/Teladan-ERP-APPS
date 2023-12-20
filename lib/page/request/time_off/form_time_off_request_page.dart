@@ -334,70 +334,66 @@ class _FormTimeOffRequestPageState extends State<FormTimeOffRequestPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  _category?.half_day == 0
-                      ?
-                      // start date
-                      Row(
-                          children: [
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            const Icon(Icons.calendar_month,
-                                color: Color.fromARGB(255, 109, 109, 109)),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  DateTime? newDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: _startDate,
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime(2025),
-                                  );
+                  // start date
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      const Icon(Icons.calendar_month,
+                          color: Color.fromARGB(255, 109, 109, 109)),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: _startDate,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2025),
+                            );
 
-                                  if (newDate == null) return;
-                                  setState(() => _startDate = newDate);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        width: 0.5,
-                                        color:
-                                            Color.fromARGB(160, 158, 158, 158),
-                                      ),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Tanggal Mulai",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 11,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${_startDate.year}/${_startDate.month}/${_startDate.day}",
-                                        // '',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            if (newDate == null) return;
+                            setState(() => _startDate = newDate);
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 0.5,
+                                  color: Color.fromARGB(160, 158, 158, 158),
                                 ),
                               ),
-                            )
-                          ],
-                        )
-                      : const SizedBox(),
-                  SizedBox(
-                    height: _category?.half_day == 0 ? 20 : 0,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _category?.half_day == 0 ? "Tanggal Mulai" : "Tanggal",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "${_startDate.year}/${_startDate.month}/${_startDate.day}",
+                                  // '',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(
+                    height: 20,
                   ),
 
                   _category?.half_day == 0

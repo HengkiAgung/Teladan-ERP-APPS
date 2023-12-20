@@ -254,9 +254,15 @@ class AttendanceRepository {
   }
 
   Future<List<Attendance>> getHistoryAttendance(
-      {String page = "1", required String token}) async {
+      {String page = "1", required String token, int month = 0, int year = 0}) async {
+
+    if (month == 0) {
+      DateTime now = DateTime.now();
+      month = now.month;
+    }
+
     final response = await http.get(
-      Uri.parse('$_baseUrl/cmt-attendance/history?page=$page'),
+      Uri.parse('$_baseUrl/cmt-attendance/history?page=$page&filterMonth=$month&filterYear=$year&itemCount=100'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

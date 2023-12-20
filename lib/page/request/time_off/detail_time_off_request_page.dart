@@ -142,162 +142,174 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                       ),
 
                       // tanggal mulai
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.5,
-                              color: Color.fromARGB(160, 158, 158, 158),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Tanggal Mulai",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey,
+                      request.start_date != ""
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                request.start_date,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: const Color.fromARGB(255, 51, 51, 51),
-                                ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Tanggal Mulai",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.start_date,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : const SizedBox(),
 
                       // tanggal selesai
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.5,
-                              color: Color.fromARGB(160, 158, 158, 158),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Tanggal Selesai",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey,
+                      request.end_date != ""
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                request.end_date,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: const Color.fromARGB(255, 51, 51, 51),
-                                ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Tanggal Selesai",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.end_date,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
+                            )
+                          : const SizedBox(),
+
                       // Total hari
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.5,
-                              color: Color.fromARGB(160, 158, 158, 158),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Total hari",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey,
+                      request.taken != 0
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                request.taken.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: const Color.fromARGB(255, 51, 51, 51),
-                                ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Total hari",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.taken.toString(),
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
+                            )
+                          : const SizedBox(),
+
                       // alasan
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.5,
-                              color: Color.fromARGB(160, 158, 158, 158),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Alasan",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey,
+                      request.notes != ""
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                request.notes,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: const Color.fromARGB(255, 51, 51, 51),
-                                ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Alasan",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.notes,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
+                            )
+                          : const SizedBox(),
+
                       request.approvalLine!.email != ""
                           ? Column(
                               children: [
@@ -390,52 +402,180 @@ class DetailTimeOffRequestPageState extends State<DetailTimeOffRequestPage> {
                               ],
                             )
                           : const SizedBox(),
-                      
+
                       // file
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 15,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.5,
-                              color: Color.fromARGB(160, 158, 158, 158),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "File",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.grey,
-                                ),
+                      request.file != ""
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
                               ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  launch(
-                                      "${Config.storageUrl}/request/timeoff/${request.file}");
-                                },
-                                child: Text(
-                                  request.file,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 13,
-                                    color: Colors.blueAccent,
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "File",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        launch(
+                                            "${Config.storageUrl}/request/timeoff/${request.file}");
+                                      },
+                                      child: Text(
+                                        request.file,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 13,
+                                          color: Colors.blueAccent,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+
+                      // date
+                      request.date != null
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Date",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.date!,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+
+                      // working start
+                      request.working_start != null
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Working Start",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.working_start!,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+
+                      // working end
+                      request.working_end != null
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 15,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                border: Border(
+                                  bottom: BorderSide(
+                                    width: 0.5,
+                                    color: Color.fromARGB(160, 158, 158, 158),
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Working End",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      request.working_end!,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 51, 51, 51),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ),

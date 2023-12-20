@@ -89,6 +89,12 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
                 ]);
               }
 
+              if (request.leaveRequestCategory.name != "") {
+                stringChildren.addAll([
+                  ["Category", request.leaveRequestCategory.name],
+                ]);
+              }
+
               if (request.start_date != "") {
                 stringChildren.addAll([
                   ["Start Date", request.start_date],

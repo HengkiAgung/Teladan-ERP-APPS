@@ -51,6 +51,8 @@ class RequestRepository {
         'id': id,
       }),
     );
+    print(id);
+
     if (response.statusCode == 200) {
       return model.fromJson(jsonDecode(response.body)["data"]);
     }
@@ -263,7 +265,7 @@ class RequestRepository {
       Uri.parse('$_baseUrl/cmt-request/personal/time-off/make'),
     ); 
     
-    if (category.attachment == 1) {
+    if (category.attachment == 1 || selectedFile != null) {
       if (selectedFile == null) {
         // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, "File bukti wajib diisi!");
@@ -284,6 +286,7 @@ class RequestRepository {
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['Authorization'] = 'Bearer $token';  
     request.fields['leave_request_category_id'] = category.id.toString();
+    request.fields['notes'] = reason ?? "";
 
     if (category.half_day != 1) {
       // if (startDate.isBefore(now)) {
@@ -300,7 +303,6 @@ class RequestRepository {
 
       request.fields['start_date'] = "${startDate.year}-${startDate.month}-${startDate.day}";
       request.fields['end_date'] = "${endDate.year}-${endDate.month}-${endDate.day}";
-      request.fields['notes'] = reason ?? "";
     } else {
       if (working_start == null && working_end == null) {
         // ignore: use_build_context_synchronously

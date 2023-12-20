@@ -102,7 +102,7 @@ class _AssignmentRequestPageState extends State<AssignmentRequestPage> {
                     child: Text("loading..."),
                   );
                 } else if (state is RequestAssignmentListLoadFailure) {
-                  return const Text("Failed to load attendance log");
+                  return const Text("Failed to load assigment log");
                 } else if (state is RequestAssignmentListLoadSuccess) {
                   _userAssignmentRequest =
                       state.request.cast<Assignment>();

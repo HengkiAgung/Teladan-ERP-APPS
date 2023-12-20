@@ -1,7 +1,7 @@
 name: teladan
 description: A new Flutter project.
 publish_to: 'none'
-version: 0.4.1+12
+version: 0.4.4+15
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -40,6 +40,7 @@ dependencies:
   flutter_map: ^3.0.0
   latlong2: ^0.8.0
   open_street_map_search_and_pick: ^0.1.0
+  month_picker_dialog: ^2.4.0
   # flutter_file_downloader: ^1.2.0
   # flutter_osm_plugin: ^0.70.3
   # google_maps_flutter: ^2.5.0

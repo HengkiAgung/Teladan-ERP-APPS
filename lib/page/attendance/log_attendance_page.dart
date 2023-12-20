@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../bloc/attendance_log/attendance_log_bloc.dart';
@@ -20,6 +21,7 @@ class _LogAttendanceState extends State<LogAttendance> {
 
   late ScrollController _scrollController;
   int page = 1;
+  DateTime selectedDate = DateTime.now();
 
   _scrollListener() {
     if (_scrollController.offset >=
@@ -93,18 +95,139 @@ class _LogAttendanceState extends State<LogAttendance> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // filter date dropdown
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 20,
+                  right: 20,
+                  left: 20,
+                ),
+                padding: const EdgeInsets.only(
+                  right: 20,
+                  left: 20,
+                  top: 20,
+                  bottom: 20,
+                ),
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    border: Border.all(
+                      width: 1.0,
+                      color: Color.fromARGB(160, 158, 158, 158),
+                    ),
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Filter Date",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          "${selectedDate.year}-${selectedDate.month}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showMonthPicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                        ).then((date) {
+                          if (date != null) {
+                            setState(() {
+                              selectedDate = date;
+                              context.read<AttendanceLogBloc>().add(GetAttendanceLog(month: date.month, year: date.year));
+                            });
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 60),
+                        child: Icon(Icons.date_range),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.only(
+                  right: 10,
+                  left: 10,
+                  top: 20,
+                  bottom: 20,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Date",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 60),
+                        child: Text(
+                          "Check In",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "Check Out",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
                     Middleware().authenticated(context);
-                    
-                    context.read<AttendanceLogBloc>().add(GetAttendanceLog());
+                    DateTime now = DateTime.now();
+                    int month = now.month;
+
+                    context
+                        .read<AttendanceLogBloc>()
+                        .add(GetAttendanceLog(month: month, year: now.year));
                     setState(() {
                       page = 1;
+                      selectedDate = DateTime.now();
                     });
                   },
                   child: ListView.builder(
-                    controller: _logAtendance.length > 9 ? _scrollController : null,
+                    controller:
+                        _logAtendance.length > 9 ? _scrollController : null,
                     itemCount: _logAtendance.length,
                     itemBuilder: (BuildContext context, int index) {
                       var attendance = _logAtendance[index];
