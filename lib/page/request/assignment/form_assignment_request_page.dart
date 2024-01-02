@@ -354,13 +354,13 @@ class _FormAssignmentRequestPageState extends State<FormAssignmentRequestPage> {
                             onTap: () async {
                               DateTime? newDate = await showDatePicker(
                                 context: context,
-                                initialDate: _startDate,
+                                initialDate: _endDate,
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2025),
                               );
 
                               if (newDate == null) return;
-                              setState(() => _startDate = newDate);
+                              setState(() => _endDate = newDate);
                             },
                             child: Container(
                               decoration: const BoxDecoration(

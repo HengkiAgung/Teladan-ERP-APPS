@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/models/Summaries.dart';
 
 import '../bloc/attendance_log/attendance_log_bloc.dart';
@@ -34,6 +35,11 @@ class _HomePageState extends State<HomePage> {
     final summaries = BlocProvider.of<SummariesBloc>(context);
     if (summaries.state is! SummariesLoadSuccess) {
       context.read<SummariesBloc>().add(GetAttendanceSummaries());
+    }
+
+    final notification = BlocProvider.of<NotificationBadgeBloc>(context);
+    if (notification.state is! NotificationBadgeLoadSuccess) {
+      context.read<NotificationBadgeBloc>().add(GetAllNotification());
     }
 
     DateTime now = DateTime.now();

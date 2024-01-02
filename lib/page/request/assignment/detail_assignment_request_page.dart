@@ -10,7 +10,10 @@ import 'package:teladan/bloc/request_assignment_list/request_assignment_list_blo
 import 'package:teladan/components/cancel_request_component.dart';
 import 'package:teladan/components/modal_bottom_sheet_component.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
+import 'package:teladan/models/Employee/User.dart';
 import 'package:teladan/repositories/request_repository.dart';
+import 'package:teladan/utils/helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../utils/middleware.dart';
 
@@ -84,7 +87,8 @@ class DetailAssignmentRequestPageState
               child: Text("loading..."),
             );
           } else if (state is RequestAssignmentDetailLoadSuccess) {
-            Assignment assignment = state.assignment;
+            Assignment assignment = state.assignment[0];
+            String pdf = state.assignment[1] ?? "";
             Color colorStatus;
             
             if (assignment.status == "Waiting") {
@@ -416,6 +420,181 @@ class DetailAssignmentRequestPageState
                           ],
                         ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 15,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Signed By",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                assignment.signedBy.name,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: const Color.fromARGB(255, 51, 51, 51),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      assignment.status == "Approved" ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 15,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "PDF",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final Uri url = Uri.parse(pdf);
+                                  if (!await launchUrl(url)) {
+                                    throw Exception('Could not launch $url');
+                                  }
+                                },
+                                child: Text(
+                                  "PDF File",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ) : const SizedBox(),
+
+                      // list of user_assignment
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 15,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "User Assignment",
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: assignment.user_assignments.length,
+                              itemBuilder: (context, index) {
+                                User user = assignment.user_assignments[index].user;
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        user.foto_file != ""
+                                            ? CircleAvatar(
+                                                radius: 25, // Image radius
+                                                backgroundImage: NetworkImage(
+                                                    "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
+                                            : const CircleAvatar(
+                                                radius: 25, // Image radius
+                                                backgroundImage: AssetImage(
+                                                    "images/profile_placeholder.jpg"),
+                                              ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              truncateWithEllipsis(20, assignment.user_assignments[index].name ?? user.name),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 13,
+                                                color: const Color.fromARGB(
+                                                    255, 51, 51, 51),
+                                              ),
+                                            ),
+                                            Text(
+                                              assignment.user_assignments[index].position ?? user.division!.divisi_name,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Text(
+                                              assignment.user_assignments[index].nik ?? user.nik,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    
                     ],
                   ),
                 ),

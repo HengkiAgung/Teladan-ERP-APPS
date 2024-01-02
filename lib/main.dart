@@ -2,8 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/bloc/employee_detail/employee_detail_bloc.dart';
 import 'package:teladan/bloc/leave_history/leave_history_bloc.dart';
 import 'package:teladan/bloc/leave_quota/leave_quota_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/bloc/request_assigment_detail/request_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/request_assignment_list/request_assignment_list_bloc.dart';
 import 'package:teladan/color_schemes.g.dart';
@@ -102,6 +104,12 @@ void main() {
       ),
       BlocProvider<ApprovalAssignmentDetailBloc>(
         create: (context) => ApprovalAssignmentDetailBloc(),
+      ),
+      BlocProvider<EmployeeDetailBloc>(
+        create: (context) => EmployeeDetailBloc(),
+      ),
+      BlocProvider<NotificationBadgeBloc>(
+        create: (context) => NotificationBadgeBloc(),
       ),
     ],
     child: const MainApp(),

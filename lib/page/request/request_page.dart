@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/page/request/assignment/assignment_request_page.dart';
 import 'package:teladan/page/request/attendance/attendance_request_page.dart';
 import 'package:teladan/page/request/shift/shift_request_page.dart';
@@ -75,7 +77,6 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.keyboard_arrow_right_rounded),
                         const SizedBox(
                           width: 12,
                         )
@@ -83,7 +84,7 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ),
                 ),
-    
+
                 // Absensi
                 GestureDetector(
                   onTap: () {
@@ -122,7 +123,6 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.keyboard_arrow_right_rounded),
                         const SizedBox(
                           width: 12,
                         )
@@ -130,7 +130,7 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ),
                 ),
-    
+
                 // Perubahan Shift
                 GestureDetector(
                   onTap: () {
@@ -169,7 +169,6 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.keyboard_arrow_right_rounded),
                         const SizedBox(
                           width: 12,
                         )
@@ -177,7 +176,7 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ),
                 ),
-    
+
                 // Assignment
                 GestureDetector(
                   onTap: () {
@@ -216,7 +215,6 @@ class _RequestPageState extends State<RequestPage> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.keyboard_arrow_right_rounded),
                         const SizedBox(
                           width: 12,
                         )

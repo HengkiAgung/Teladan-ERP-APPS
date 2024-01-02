@@ -14,6 +14,7 @@ class User {
   late String kontak;
   late int status;
   late String foto_file;
+  late String nik;
   late Team? team;
   late List<Role>? roles;
   late Division? division;
@@ -24,6 +25,7 @@ class User {
   User({
     required this.id,
     required this.name,
+    required this.nik,
     required this.email,
     required this.is_new,
     required this.signFile,
@@ -41,6 +43,7 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? 0;
     name = json['name'] ?? "";
+    nik = json['nik'] ?? "";
     is_new = json['is_new'] == 0 || json['is_new'] == "0" ? false : true;
     email = json['email'] ?? "";
     signFile = json['signFile'] ?? "";

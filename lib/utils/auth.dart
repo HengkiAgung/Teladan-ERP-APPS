@@ -13,6 +13,7 @@ import '../../bloc/request_attendance_list/request_attendance_list_bloc.dart' as
 import '../../bloc/request_leavel_list/request_leave_list_bloc.dart' as request_leave_list_bloc;
 import '../../bloc/request_shift_list/request_shift_list_bloc.dart' as request_shift_list_bloc;
 import '../../bloc/summaries/summaries_bloc.dart' as summaries_bloc;
+import '../../bloc/notification_badge/notification_badge_bloc.dart' as notification_badge_bloc;
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
 import 'middleware.dart';
@@ -139,6 +140,7 @@ class Auth {
     context.read<request_leave_list_bloc.RequestLeaveListBloc>().add(request_leave_list_bloc.LogOut());
     context.read<request_shift_list_bloc.RequestShiftListBloc>().add(request_shift_list_bloc.LogOut());
     context.read<summaries_bloc.SummariesBloc>().add(summaries_bloc.LogOut());
+    context.read<notification_badge_bloc.NotificationBadgeBloc>().add(notification_badge_bloc.LogOut());
 
     Middleware().redirectToLogin(context);
     deleteToken();

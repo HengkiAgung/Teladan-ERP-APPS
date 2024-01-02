@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/page/account/account_page.dart';
-import 'package:teladan/page/employee_page.dart';
+import 'package:teladan/page/employee/employee_page.dart';
 import 'package:teladan/page/inbox/inbox_page.dart';
 import 'package:teladan/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +53,46 @@ class _MainPageState extends State<MainPage> {
       icon: Icon(Icons.insert_drive_file),
       label: 'Pengajuan',
     ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.move_to_inbox),
+    BottomNavigationBarItem(
+      icon: Stack(
+        children: <Widget>[
+          const Icon(Icons.move_to_inbox),
+          BlocBuilder<NotificationBadgeBloc, NotificationBadgeState>(
+            builder: (context, state) {
+              if (state is NotificationBadgeLoading) {
+                return const SizedBox();
+              } else if (state is NotificationBadgeLoadSuccess) {
+                var counter = state.total;
+
+                return counter > 0 ? Positioned(
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 12,
+                      minHeight: 12,
+                    ),
+                    child: Text(
+                      counter < 10 ? '$counter' : '9+',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ) : const SizedBox();
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ],
+      ),
       label: 'Inbox',
     ),
     const BottomNavigationBarItem(
@@ -153,10 +192,10 @@ class _MainPageState extends State<MainPage> {
                 if (state is UserLoading) {
                   return const SizedBox();
                 } else if (state is UserLoadSuccess) {
-                  token = state.token; 
+                  token = state.token;
 
                   return BottomNavigationBar(
-                    backgroundColor:Colors.white,
+                    backgroundColor: Colors.white,
                     type: BottomNavigationBarType.fixed,
                     currentIndex: bottomNavIndex,
                     items: _bottomNavBarItems,

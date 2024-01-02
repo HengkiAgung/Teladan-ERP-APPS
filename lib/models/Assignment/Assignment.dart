@@ -1,3 +1,5 @@
+import 'package:teladan/models/Assignment/UserAssignment.dart';
+
 import '../Employee/User.dart';
 
 class Assignment {
@@ -17,6 +19,7 @@ class Assignment {
   late int radius;
   late String purpose;
   late String status;
+  late List<UserAssignment> user_assignments;
 
   Assignment({
     required this.id,
@@ -35,6 +38,7 @@ class Assignment {
     required this.radius,
     required this.purpose,
     required this.status,
+    required this.user_assignments,
   });
 
   Assignment.fromJson(Map<String, dynamic> json) {
@@ -55,5 +59,21 @@ class Assignment {
     radius = json['radius'] ?? 0;
     purpose = json['purpose'] ?? "";
     status = json['status'] ?? "";
+
+    user_assignments = [];
+    if (json['user_assignments'] != null) {
+      json['user_assignments'].forEach((v) {
+        user_assignments.add(UserAssignment.fromJson(v));
+      });
+    }
+  }
+
+  updateUserAssignments(Map<String, dynamic> json) {
+    user_assignments = [];
+    if (json['user'] != null) {
+      json['user'].forEach((v) {
+        user_assignments.add(UserAssignment.fromJson(v));
+      });
+    }
   }
 }

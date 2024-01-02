@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/page/inbox/approval/assignment/assignment_approval_page.dart';
 import 'package:teladan/page/inbox/approval/attendance/attendance_approval_page.dart';
 import 'package:teladan/page/inbox/approval/time_off/time_off_approval_page.dart';
@@ -22,17 +23,18 @@ class NeedApprovalPage extends StatelessWidget {
       height: (MediaQuery.of(context).size.height) - 190,
       child: ListView(
         children: [
-        
           // Cuti
           GestureDetector(
             onTap: () {
               Middleware().authenticated(context);
 
-              context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));
+              context.read<ApprovalListBloc>().add(GetRequestList(
+                  key: "userTimeOffRequest",
+                  type: "time-off",
+                  model: UserLeaveRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(
-
                   builder: (context) => const TimeOffApprovalPage(),
                 ),
               );
@@ -65,7 +67,39 @@ class NeedApprovalPage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.keyboard_arrow_right_rounded),
+                  BlocBuilder<NotificationBadgeBloc, NotificationBadgeState>(
+                    builder: (context, state) {
+                      if (state is NotificationBadgeLoadSuccess) {
+                        var timeoffCounter = state.timeoff;
+
+                        return timeoffCounter > 0
+                            ? Container(
+                                  padding: const EdgeInsets.all(5),
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: Text(
+                                    timeoffCounter < 10 ? '$timeoffCounter' : '9+',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                              )
+                            : const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                   const SizedBox(
                     width: 12,
                   )
@@ -73,13 +107,16 @@ class NeedApprovalPage extends StatelessWidget {
               ),
             ),
           ),
-        
+
           // Absensi
           GestureDetector(
             onTap: () {
               Middleware().authenticated(context);
 
-              context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
+              context.read<ApprovalListBloc>().add(GetRequestList(
+                  key: "userAttendanceRequest",
+                  type: "attendance",
+                  model: UserAttendanceRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -115,7 +152,39 @@ class NeedApprovalPage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.keyboard_arrow_right_rounded),
+                  BlocBuilder<NotificationBadgeBloc, NotificationBadgeState>(
+                    builder: (context, state) {
+                      if (state is NotificationBadgeLoadSuccess) {
+                        var attendanceCounter = state.attendance;
+
+                        return attendanceCounter > 0
+                            ? Container(
+                                  padding: const EdgeInsets.all(5),
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: Text(
+                                    attendanceCounter < 10 ? '$attendanceCounter' : '9+',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                            : const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                   const SizedBox(
                     width: 12,
                   )
@@ -123,13 +192,16 @@ class NeedApprovalPage extends StatelessWidget {
               ),
             ),
           ),
-        
+
           // Perubahan Shift
           GestureDetector(
             onTap: () {
               Middleware().authenticated(context);
 
-              context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));
+              context.read<ApprovalListBloc>().add(GetRequestList(
+                  key: "userShiftRequest",
+                  type: "shift",
+                  model: UserShiftRequest()));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -165,7 +237,39 @@ class NeedApprovalPage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.keyboard_arrow_right_rounded),
+                  BlocBuilder<NotificationBadgeBloc, NotificationBadgeState>(
+                    builder: (context, state) {
+                      if (state is NotificationBadgeLoadSuccess) {
+                        var shiftCounter = state.shift;
+
+                        return shiftCounter > 0
+                            ? Container(
+                                  padding: const EdgeInsets.all(5),
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: Text(
+                                    shiftCounter < 10 ? '$shiftCounter' : '9+',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                            : const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                   const SizedBox(
                     width: 12,
                   )
@@ -179,7 +283,9 @@ class NeedApprovalPage extends StatelessWidget {
             onTap: () {
               Middleware().authenticated(context);
 
-              context.read<ApprovalAssignmentListBloc>().add(const GetApprovalAssigment());
+              context
+                  .read<ApprovalAssignmentListBloc>()
+                  .add(const GetApprovalAssigment());
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -215,7 +321,39 @@ class NeedApprovalPage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.keyboard_arrow_right_rounded),
+                  BlocBuilder<NotificationBadgeBloc, NotificationBadgeState>(
+                    builder: (context, state) {
+                      if (state is NotificationBadgeLoadSuccess) {
+                        var assignmentCounter = state.assignment;
+
+                        return assignmentCounter > 0
+                            ? Container(
+                                padding: const EdgeInsets.all(5),
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 12,
+                                  minHeight: 12,
+                                ),
+                                child: Text(
+                                  assignmentCounter < 10 ? '$assignmentCounter' : '9+',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            : const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                   const SizedBox(
                     width: 12,
                   )
@@ -223,7 +361,6 @@ class NeedApprovalPage extends StatelessWidget {
               ),
             ),
           ),
-        
         ],
       ),
     );

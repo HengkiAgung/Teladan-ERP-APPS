@@ -104,7 +104,7 @@ class ApprovalRepository {
       },
     );
 
-    print(jsonDecode(response.body)["data"]);
+    print(jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       Iterable it = jsonDecode(response.body)["data"]["assignment"];
@@ -215,8 +215,13 @@ class ApprovalRepository {
       },
     );
     
+    print("object");
+    print('$_baseUrl/cmt-request/assignment/get/detail/$id');
+    print(jsonDecode(response.body)["data"]);
     if (response.statusCode == 200) {
-      return Assignment.fromJson(jsonDecode(response.body)["data"]["assignment"]);
+      var assignements = Assignment.fromJson(jsonDecode(response.body)["data"]["assignment"]); 
+      assignements.updateUserAssignments(jsonDecode(response.body)["data"]);
+      return assignements;
     }
 
     return Assignment.fromJson({});
@@ -243,5 +248,24 @@ class ApprovalRepository {
     }
 
     return false;
+  }
+
+  Future<String> export({required int id, required int userId}) async {
+    String? token = await Auth().getToken();
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/cmt-request/personal/assignment/export/$id/$userId'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (jsonDecode(response.body)["status"] == "success") {
+      return jsonDecode(response.body)["data"];
+    }
+
+    return "";
   }
 }

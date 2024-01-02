@@ -1,14 +1,18 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/employee_detail/employee_detail_bloc.dart';
 import 'package:teladan/models/Employee/User.dart';
+import 'package:teladan/page/employee/detail_employee_page.dart';
 import 'package:teladan/utils/helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../bloc/employee/employee_bloc.dart';
-import '../utils/middleware.dart';
+import '../../bloc/employee/employee_bloc.dart';
+import '../../utils/middleware.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});
@@ -78,7 +82,7 @@ class _EmployeePageState extends State<EmployeePage> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(134, 226, 226, 226),
+                color: const Color.fromARGB(134, 226, 226, 226),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(
@@ -117,7 +121,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     child: Text("loading..."),
                   );
                 } else if (state is EmployeeLoadFailure) {
-                  return Text("Failed to load employee");
+                  return const Text("Failed to load employee");
                 } else if (state is EmployeeLoadSuccess) {
                   _userEmployment = state.employee;
                 }
@@ -166,68 +170,87 @@ class _EmployeePageState extends State<EmployeePage> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
-                                      user.foto_file != ""
-                                          ? CircleAvatar(
-                                              radius: 25, // Image radius
-                                              backgroundImage: NetworkImage(
-                                                  "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
-                                          : const CircleAvatar(
-                                              radius: 25, // Image radius
-                                              backgroundImage: AssetImage(
-                                                  "images/profile_placeholder.jpg"),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Middleware().authenticated(context);
+                          
+                                          context.read<EmployeeDetailBloc>().add(GetEmployeeDetail(id: user.id.toString()));
+                          
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DetailEmployeePage(),
                                             ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            truncateWithEllipsis(20, user.name),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 13,
-                                              color: Color.fromARGB(
-                                                  255, 51, 51, 51),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            user.foto_file != ""
+                                                ? CircleAvatar(
+                                                    radius: 25, // Image radius
+                                                    backgroundImage: NetworkImage(
+                                                        "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
+                                                : const CircleAvatar(
+                                                    radius: 25, // Image radius
+                                                    backgroundImage: AssetImage(
+                                                        "images/profile_placeholder.jpg"),
+                                                  ),
+                                            const SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  truncateWithEllipsis(20, user.name),
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 13,
+                                                    color: const Color.fromARGB(
+                                                        255, 51, 51, 51),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  user.department != null
+                                                      ? user
+                                                          .department!.department_name
+                                                      : "",
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 10,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  user.division != null
+                                                      ? user.division!.divisi_name
+                                                      : "",
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 10,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Text(
-                                            user.department != null
-                                                ? user
-                                                    .department!.department_name
-                                                : "",
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 10,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          Text(
-                                            user.division != null
-                                                ? user.division!.divisi_name
-                                                : "",
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 10,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       GestureDetector(
                                         onTap: () =>
                                             launch("tel:0${user.kontak}"),
-                                        child: Icon(Icons.phone),
+                                        child: const Icon(Icons.phone),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 15,
                                       ),
                                       GestureDetector(
                                         onTap: () =>
                                             launch("mailto:${user.email}"),
-                                        child: Icon(Icons.mail_outline,
+                                        child: const Icon(Icons.mail_outline,
                                             size: 25, color: Colors.red),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 15,
                                       ),
                                       GestureDetector(

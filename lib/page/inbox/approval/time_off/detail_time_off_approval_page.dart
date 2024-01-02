@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
@@ -28,6 +29,7 @@ class _DetailTimeOffApprovalPageState extends State<DetailTimeOffApprovalPage> {
 
   void refreshBloc() {
     Middleware().authenticated(context);
+    context.read<NotificationBadgeBloc>().add(UpdateTimeOffNotification());
 
     context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "time-off",model: UserLeaveRequest()));
     context.read<ApprovalListBloc>().add(GetRequestList(key: "userTimeOffRequest", type: "time-off", model: UserLeaveRequest()));

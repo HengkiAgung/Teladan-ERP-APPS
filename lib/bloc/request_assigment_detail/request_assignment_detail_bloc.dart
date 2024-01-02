@@ -14,7 +14,7 @@ class RequestAssignmentDetailBloc extends Bloc<RequestAssignmentDetailEvent, Req
       try {
         String token = await Auth().getToken();
 
-        final Assignment data = await RequestRepository().getAssignmentRequestDetail(token: token, id: event.id);
+        final List data = await RequestRepository().getAssignmentRequestDetail(token: token, id: event.id);
 
         emit(RequestAssignmentDetailLoadSuccess(data));
       } catch (error) {

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +29,7 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
 
   void refreshBloc() {
     Middleware().authenticated(context);
+    context.read<NotificationBadgeBloc>().add(UpdateShiftNotification());
 
     context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "shift",model: UserShiftRequest()));
     context.read<ApprovalListBloc>().add(GetRequestList(key: "userShiftRequest", type: "shift", model: UserShiftRequest()));

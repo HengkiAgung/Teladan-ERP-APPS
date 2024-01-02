@@ -24,12 +24,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
   final int id;
 
   void onCancle() {
-    // context.read<UserBloc>().add(CheckAuth());
-    // final user = BlocProvider.of<UserBloc>(context);
-
-    // if (user.state is UserUnauthenticated) Auth().logOut(context);
     Middleware().authenticated(context);
-
 
     context.read<RequestDetailBloc>().add(GetRequestDetail(
         id: id.toString(), type: "attendance", model: UserShiftRequest()));

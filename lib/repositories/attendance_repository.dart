@@ -189,6 +189,8 @@ class AttendanceRepository {
       await getLocation().then((value) {
         latitude = '${value.latitude}';
         longitude = '${value.longitude}';
+        // latitude = '-1.249637';
+        // longitude = '116.877503';
       });
 
       bool validate =

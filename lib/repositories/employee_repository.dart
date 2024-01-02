@@ -30,4 +30,23 @@ class EmployeeRepository {
 
     return [];
   }
+
+  Future<User> getDetailEmployee({required String token, required String id}) async {
+    final response = await http.get(
+      Uri.parse("${Config.apiUrl}/cmt-employee/detail?id=$id"),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      User user = User.fromJson(jsonDecode(response.body)["employee"]);
+
+      return user;
+    }
+
+    return User.fromJson({});
+  }
 }

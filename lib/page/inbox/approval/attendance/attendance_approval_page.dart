@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:teladan/page/inbox/approval/attendance/detail_attendance_approval_page.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
           return RefreshIndicator(
             onRefresh: () async {
               Middleware().authenticated(context);
-
+              context.read<NotificationBadgeBloc>().add(UpdateAttendanceNotification());
               context.read<ApprovalListBloc>().add(GetRequestList(
                     key: 'userAttendanceRequest',
                     type: 'attendance',

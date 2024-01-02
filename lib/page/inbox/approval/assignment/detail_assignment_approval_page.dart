@@ -1,16 +1,24 @@
 // ignore_for_file: no_logic_in_create_state, use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/components/modal_bottom_sheet_component.dart';
 import 'package:teladan/config.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
+import 'package:teladan/models/Employee/User.dart';
+import 'package:teladan/page/inbox/pdf/string_to_pdf_page.dart';
 import 'package:teladan/repositories/approval_repository.dart';
+import 'package:teladan/utils/helper.dart';
 import 'package:teladan/utils/middleware.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,8 +36,7 @@ class DetailAssignmentApprovalPageState
   final int id;
 
   void function() {
-    Middleware().authenticated(context);
-
+    context.read<NotificationBadgeBloc>().add(UpdateAssignmetNotification());
     context
         .read<ApprovalAssignmentDetailBloc>()
         .add(GetRequestAssigmentDetail(id: id));
@@ -392,153 +399,331 @@ class DetailAssignmentApprovalPageState
                           ],
                         ),
                       ),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 15,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Signed By",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                assignment.signedBy.name,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: const Color.fromARGB(255, 51, 51, 51),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // list of user_assignment
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 15,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.5,
+                              color: Color.fromARGB(160, 158, 158, 158),
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "User Assignment",
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: assignment.user_assignments.length,
+                              itemBuilder: (context, index) {
+                                User user =
+                                    assignment.user_assignments[index].user;
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        user.foto_file != ""
+                                            ? CircleAvatar(
+                                                radius: 25, // Image radius
+                                                backgroundImage: NetworkImage(
+                                                    "https://erp.comtelindo.com/storage/personal/avatar/${user.foto_file}"))
+                                            : const CircleAvatar(
+                                                radius: 25, // Image radius
+                                                backgroundImage: AssetImage(
+                                                    "images/profile_placeholder.jpg"),
+                                              ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              truncateWithEllipsis(
+                                                  20,
+                                                  user.name != ""
+                                                      ? user.name
+                                                      : assignment
+                                                          .user_assignments[
+                                                              index]
+                                                          .name!),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 13,
+                                                color: const Color.fromARGB(
+                                                    255, 51, 51, 51),
+                                              ),
+                                            ),
+                                            Text(
+                                              assignment.user_assignments[index]
+                                                      .position ??
+                                                  user.division!.divisi_name,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Text(
+                                              assignment.user_assignments[index]
+                                                      .nik ??
+                                                  user.nik,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // pdf button
+                                        const Spacer(),
+
+                                        assignment.status == "Approved"
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  final Uri url = Uri.parse(assignment.user_assignments[index].pdf!);
+                                                  if (!await launchUrl(url)) {
+                                                    throw Exception('Could not launch $url');
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors.blue,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.picture_as_pdf,
+                                                    color: Colors.white,
+                                                    size: 15,
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 assignment.status == "Waiting"
                     ? Container(
-                  height: 150,
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 212, 212, 212),
-                        blurRadius: 4,
-                        offset: Offset(-2, 2), // Shadow position
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                ModalBottomSheetComponent().loadingIndicator(context, "Mengirim data...");
+                        height: 150,
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 212, 212, 212),
+                              blurRadius: 4,
+                              offset: Offset(-2, 2), // Shadow position
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      ModalBottomSheetComponent()
+                                          .loadingIndicator(
+                                              context, "Mengirim data...");
 
-                                bool updated = await ApprovalRepository()
-                                    .updateStatusRequestAssigment(status: "Rejected", id: id);
+                                      bool updated = await ApprovalRepository()
+                                          .updateStatusRequestAssigment(
+                                              status: "Rejected", id: id);
 
-                                Navigator.pop(context);
-                                if (updated) {
-                                  function();
-                                } else {
-                                  ModalBottomSheetComponent().errorIndicator(
-                                      context, "Gagal mengubah status request");
-                                }
-                              },
-                              child: Container(
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Text(
-                                  "Reject",
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
+                                      Navigator.pop(context);
+                                      if (updated) {
+                                        function();
+                                      } else {
+                                        ModalBottomSheetComponent()
+                                            .errorIndicator(context,
+                                                "Gagal mengubah status request");
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Text(
+                                        "Reject",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                ModalBottomSheetComponent().loadingIndicator(
-                                    context, "Mengirim data...");
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      ModalBottomSheetComponent()
+                                          .loadingIndicator(
+                                              context, "Mengirim data...");
 
-                                bool updated = await ApprovalRepository()
-                                    .updateStatusRequestAssigment(status: "Approved", id: id);
+                                      bool updated = await ApprovalRepository()
+                                          .updateStatusRequestAssigment(
+                                              status: "Approved", id: id);
 
-                                Navigator.pop(context);
-                                if (updated) {
-                                  function();
-                                } else {
-                                  ModalBottomSheetComponent().errorIndicator(
-                                      context, "Gagal mengubah status request");
-                                }
-                              },
-                              child: Container(
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.blue,
-                                ),
-                                child: Text(
-                                  "Approve",
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                      Navigator.pop(context);
+                                      if (updated) {
+                                        function();
+                                      } else {
+                                        ModalBottomSheetComponent()
+                                            .errorIndicator(context,
+                                                "Gagal mengubah status request");
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.blue,
+                                      ),
+                                      child: Text(
+                                        "Approve",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                ModalBottomSheetComponent().loadingIndicator(
-                                    context, "Mengirim data...");
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      ModalBottomSheetComponent()
+                                          .loadingIndicator(
+                                              context, "Mengirim data...");
 
-                                bool updated = await ApprovalRepository()
-                                    .updateStatusRequestAssigment(status: "Canceled", id: id);
+                                      bool updated = await ApprovalRepository()
+                                          .updateStatusRequestAssigment(
+                                              status: "Canceled", id: id);
 
-                                Navigator.pop(context);
-                                if (updated) {
-                                  function();
-                                } else {
-                                  ModalBottomSheetComponent().errorIndicator(
-                                      context, "Gagal mengubah status request");
-                                }
-                              },
-                              child: Container(
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Text(
-                                  "Cancel",
-                                  textAlign: TextAlign.left,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
+                                      Navigator.pop(context);
+                                      if (updated) {
+                                        function();
+                                      } else {
+                                        ModalBottomSheetComponent()
+                                            .errorIndicator(context,
+                                                "Gagal mengubah status request");
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Text(
+                                        "Cancel",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                          
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-                : const SizedBox(),
+                          ],
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             );
           } else {
@@ -547,5 +732,36 @@ class DetailAssignmentApprovalPageState
         },
       ),
     );
+  }
+
+  convert(String cfData, String name) async {
+    // Name is File Name that you want to give the file
+    var targetPath = await _localPath;
+    var targetFileName = name;
+
+    var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+        cfData, targetPath!, targetFileName);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(generatedPdfFile.toString()),
+    ));
+  }
+
+  Future<String?> get _localPath async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationSupportDirectory();
+      } else {
+        // if platform is android
+        directory = Directory('/storage/emulated/0/Download');
+        if (!await directory.exists()) {
+          directory = await getExternalStorageDirectory();
+        }
+      }
+    } catch (err, stack) {
+      print("Can-not get download folder path");
+    }
+    return directory?.path;
   }
 }

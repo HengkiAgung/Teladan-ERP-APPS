@@ -517,7 +517,7 @@ class RequestRepository {
     return [];
   }
 
-  Future<Assignment> getAssignmentRequestDetail({required String token, required int id}) async {
+  Future<List> getAssignmentRequestDetail({required String token, required int id}) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/cmt-request/personal/assignment/get/detail/$id'),
       headers: {
@@ -528,10 +528,16 @@ class RequestRepository {
     );
     
     if (response.statusCode == 200) {
-      return Assignment.fromJson(jsonDecode(response.body)["data"]["assignment"]);
+      var assignment = Assignment.fromJson(jsonDecode(response.body)["data"]["assignment"]);
+      var pdf = jsonDecode(response.body)["data"]["pdf"];
+
+      return [
+        assignment,
+        pdf,
+      ];
     }
 
-    return Assignment.fromJson({});
+    return [];
   }
 
   Future<List<dynamic>> getCreateDataAssignment({String page = "1"}) async {
@@ -545,8 +551,6 @@ class RequestRepository {
         'Authorization': 'Bearer $token',
       },
     );
-
-    print(jsonDecode(response.body)["data"]);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)["data"];

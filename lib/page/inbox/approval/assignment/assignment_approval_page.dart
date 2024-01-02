@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/config.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
 import 'package:teladan/page/inbox/approval/assignment/detail_assignment_approval_page.dart';
@@ -111,6 +112,7 @@ class _AssignmentApprovalPageState extends State<AssignmentApprovalPage> {
                     context
                         .read<ApprovalAssignmentListBloc>()
                         .add(const GetApprovalAssigment());
+                    context.read<NotificationBadgeBloc>().add(UpdateAssignmetNotification());
                     setState(() {
                       page = 1;
                     });

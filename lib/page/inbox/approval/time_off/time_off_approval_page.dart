@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -101,6 +102,7 @@ class _TimeOffApprovalPageState extends State<TimeOffApprovalPage> {
           return RefreshIndicator(
             onRefresh: () async {
               Middleware().authenticated(context);
+              context.read<NotificationBadgeBloc>().add(UpdateTimeOffNotification());
 
               context.read<ApprovalListBloc>().add(GetRequestList(
                     key: 'userTimeOffRequest',
