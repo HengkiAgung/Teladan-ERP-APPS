@@ -1,5 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/page/request/assignment/assignment_request_page.dart';
 import 'package:teladan/page/request/attendance/attendance_request_page.dart';
 import 'package:teladan/page/request/shift/shift_request_page.dart';
@@ -25,8 +23,8 @@ class _RequestPageState extends State<RequestPage> {
         children: [
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 30, left: 12),
-            margin: EdgeInsetsDirectional.only(top: 20),
+            padding: const EdgeInsets.only(top: 30, left: 12),
+            margin: const EdgeInsetsDirectional.only(top: 20),
             alignment: AlignmentDirectional.centerStart,
             child: Text(
               "Persetujuan",
@@ -50,7 +48,7 @@ class _RequestPageState extends State<RequestPage> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255),
                       border: Border(
@@ -96,7 +94,7 @@ class _RequestPageState extends State<RequestPage> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255),
                       border: Border(
@@ -142,7 +140,7 @@ class _RequestPageState extends State<RequestPage> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255),
                       border: Border(
@@ -188,7 +186,7 @@ class _RequestPageState extends State<RequestPage> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 255, 255, 255),
                       border: Border(

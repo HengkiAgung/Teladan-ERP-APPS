@@ -287,15 +287,8 @@ class AttendanceRepository {
 
   Future<Summaries> getSummaries(
     String? startDate, String? endDate, token) async {
-    String params = "?";
-    if (startDate != null) {
-      params += "startDate=$startDate";
-    }
-    if (endDate != null) {
-      params += "endDate=$endDate";
-    }
 
-    DateTime now = new DateTime.now();
+    DateTime now = DateTime.now();
     int month = now.day > 27 ? now.month : now.month - 1;
     String date = "${now.year}-$month-27";
 

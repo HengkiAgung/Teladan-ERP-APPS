@@ -63,8 +63,6 @@ class _DetailEmployeePageState extends State<DetailEmployeePage> {
           } else if (state is EmployeeDetailLoadSuccess) {
             User user = state.employee;
 
-            Color colorStatus;
-
             return Column(
               children: [
                 Expanded(

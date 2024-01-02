@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
 import 'package:teladan/repositories/approval_repository.dart';
-import 'package:teladan/repositories/request_repository.dart';
 import 'package:teladan/utils/auth.dart';
 
 part 'approval_assignment_detail_event.dart';

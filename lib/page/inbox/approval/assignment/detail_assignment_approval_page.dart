@@ -13,13 +13,10 @@ import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_deta
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/components/modal_bottom_sheet_component.dart';
-import 'package:teladan/config.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
 import 'package:teladan/models/Employee/User.dart';
-import 'package:teladan/page/inbox/pdf/string_to_pdf_page.dart';
 import 'package:teladan/repositories/approval_repository.dart';
 import 'package:teladan/utils/helper.dart';
-import 'package:teladan/utils/middleware.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailAssignmentApprovalPage extends StatefulWidget {
@@ -759,7 +756,7 @@ class DetailAssignmentApprovalPageState
           directory = await getExternalStorageDirectory();
         }
       }
-    } catch (err, stack) {
+    } catch (err) {
       print("Can-not get download folder path");
     }
     return directory?.path;

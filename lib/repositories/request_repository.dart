@@ -1,13 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
-
 import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:teladan/models/Assignment/Assignment.dart';
-import 'package:teladan/models/Employee/User.dart';
-
 
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
@@ -51,7 +47,6 @@ class RequestRepository {
         'id': id,
       }),
     );
-    print(id);
 
     if (response.statusCode == 200) {
       return model.fromJson(jsonDecode(response.body)["data"]);
@@ -71,7 +66,6 @@ class RequestRepository {
     String? token = await Auth().getToken();
 
     if (selectedTimeIn == null && selectedTimeOut == null) {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, 'Masukkan Check In atau Check Out!');
 
       return false;
@@ -134,16 +128,13 @@ class RequestRepository {
       if (int.parse(response.statusCode.toString()[0]) == 2) {
         return true;
       } else {
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, message);
 
         return false;
       }
     } catch (e) {
       Navigator.pop(context);
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Error sendiring request: $e");
-
 
       return false;
     }
@@ -200,13 +191,11 @@ class RequestRepository {
     DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
 
     if (working_shift_id == "") {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Shift baru wajib diisi!");
       return false;
     }
 
     if (date.isBefore(now)) {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
       return false;
     }
@@ -227,7 +216,6 @@ class RequestRepository {
       }),
     );
 
-    // ignore: use_build_context_synchronously
     Navigator.pop(context);
     if (int.parse(response.statusCode.toString()[0]) == 2) {
       return true;
@@ -252,10 +240,8 @@ class RequestRepository {
     required PlatformFile? selectedFile,
   }) async {
     String? token = await Auth().getToken();
-    DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day); 
 
     if (category == null || category.id == 0) {
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Kolom kategori wajib diisi!");
       return false;
     }
@@ -267,7 +253,6 @@ class RequestRepository {
     
     if (category.attachment == 1 || selectedFile != null) {
       if (selectedFile == null) {
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, "File bukti wajib diisi!");
         return false;
       }
@@ -289,14 +274,8 @@ class RequestRepository {
     request.fields['notes'] = reason ?? "";
 
     if (category.half_day != 1) {
-      // if (startDate.isBefore(now)) {
-      //   // ignore: use_build_context_synchronously
-      //   ModalBottomSheetComponent().errorIndicator(context, "Tanggal mulai tidak boleh lebih kecil dari sekarang!");
-      //   return false;
-      // }
 
       if (endDate.isBefore(startDate)) {
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, "Tanggal selesai tidak boleh lebih kecil dari tanggal mulai!");
         return false;
       }
@@ -305,7 +284,6 @@ class RequestRepository {
       request.fields['end_date'] = "${endDate.year}-${endDate.month}-${endDate.day}";
     } else {
       if (working_start == null && working_end == null) {
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, 'Masukkan Check In atau Check Out!');
 
         return false;
@@ -350,13 +328,11 @@ class RequestRepository {
         var result = await response.stream.bytesToString();
         String message = result.split('"message":"')[1].split('"}')[0];
 
-        // ignore: use_build_context_synchronously
         ModalBottomSheetComponent().errorIndicator(context, message);
         return false;
       }
     } catch (e) {
       Navigator.pop(context);
-      // ignore: use_build_context_synchronously
       ModalBottomSheetComponent().errorIndicator(context, "Error sendiring request: $e");
 
       return false;

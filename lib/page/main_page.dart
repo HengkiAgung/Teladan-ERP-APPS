@@ -1,14 +1,14 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/page/account/account_page.dart';
 import 'package:teladan/page/employee/employee_page.dart';
 import 'package:teladan/page/inbox/inbox_page.dart';
-import 'package:teladan/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../bloc/user/user_bloc.dart';
-import '../models/Employee/User.dart';
 import 'home_page.dart';
 import 'request/request_page.dart';
 
@@ -19,7 +19,6 @@ class MainPage extends StatefulWidget {
   MainPage({required this.index, this.error = false, super.key});
 
   @override
-  // ignore: no_logic_in_create_state
   State<MainPage> createState() =>
       _MainPageState(bottomNavIndex: index, error: error);
 }

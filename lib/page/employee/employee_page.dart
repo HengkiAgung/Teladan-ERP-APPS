@@ -106,7 +106,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     });
                     context
                         .read<EmployeeBloc>()
-                        .add(GetEmployee(name: value ?? ""));
+                        .add(GetEmployee(name: value));
                   });
                 },
               ),

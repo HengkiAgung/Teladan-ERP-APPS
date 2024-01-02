@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teladan/models/Employee/User.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

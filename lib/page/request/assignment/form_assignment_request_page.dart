@@ -1,17 +1,12 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names, use_build_context_synchronously
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:teladan/bloc/request_assignment_list/request_assignment_list_bloc.dart';
 import 'package:teladan/components/modal_bottom_sheet_component.dart';
 import 'package:teladan/models/Employee/User.dart';
 import 'package:teladan/repositories/request_repository.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
-
-import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
 
 class FormAssignmentRequestPage extends StatefulWidget {
   const FormAssignmentRequestPage({super.key});

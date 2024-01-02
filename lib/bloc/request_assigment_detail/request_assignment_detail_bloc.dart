@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:teladan/models/Assignment/Assignment.dart';
 import 'package:teladan/repositories/request_repository.dart';
 import 'package:teladan/utils/auth.dart';
 
