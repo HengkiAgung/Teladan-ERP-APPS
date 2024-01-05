@@ -109,7 +109,7 @@ class RequestRepository {
       if (minute.length < 2) {
         minute = "0$minute";
       }
-      request.fields['check_in'] = formatHourTime("$hour:$minute", gmt);
+      request.fields['check_in'] = formatHourTime("$hour:$minute", gmt*-1);
     } 
     if (selectedTimeOut != null) {
       String hour = selectedTimeOut.hour.toString();
@@ -120,7 +120,7 @@ class RequestRepository {
       if (minute.length < 2) {
         minute = "0$minute";
       }
-      request.fields['check_out'] = formatHourTime("$hour:$minute", gmt);
+      request.fields['check_out'] = formatHourTime("$hour:$minute", gmt*-1);
     }
 
     try {

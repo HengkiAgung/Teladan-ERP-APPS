@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/components/text_field_component.dart';
 import 'package:teladan/models/Employee/WorkingShift.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
 import '../../../bloc/user/user_bloc.dart';
@@ -27,6 +29,22 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
   bool onSubmit = true;
 
   final TextEditingController _reasonController = TextEditingController();
+
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +333,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                                 } else {
                                   return TextFieldComponent(
                                     label: "Current Shift",
-                                    content: "${snapshot.data!.name}, ${snapshot.data!.working_start} - ${snapshot.data!.working_end}",
+                                    content: "${snapshot.data!.name}, ${formatHourTime(snapshot.data!.working_start, gmt)} - ${formatHourTime(snapshot.data!.working_end, gmt)}",
                                   );
                                 }
                               },
@@ -359,7 +377,7 @@ class _FormShiftRequestPageState extends State<FormShiftRequestPage> {
                               (WorkingShift value) {
                             return DropdownMenuItem<String>(
                               value: value.id.toString(),
-                              child: Text("${value.name}, ${value.working_start} - ${value.working_end}"),
+                              child: Text("${value.name}, ${formatHourTime(value.working_start, gmt)} - ${formatHourTime(value.working_end, gmt)}"),
                             );
                           }).toList(),
                         ),

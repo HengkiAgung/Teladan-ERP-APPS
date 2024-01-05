@@ -9,7 +9,7 @@ String formatHourTime(String time, int gmt) {
     return "";
   }
   DateTime dateCheckIn = DateTime.parse("2022-10-10 $time");
-  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt));
+  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt*-1));
   // Use padLeft to add leading zeros
   String formattedHour = dateCheckIn.hour.toString().padLeft(2, '0');
   String formattedMinute = dateCheckIn.minute.toString().padLeft(2, '0');
@@ -22,7 +22,7 @@ String formatDateToHourTime(String time, int gmt) {
     return "";
   }
   DateTime dateCheckIn = DateTime.parse(time);
-  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt));
+  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt *-1));
   // Use padLeft to add leading zeros
   String formattedHour = dateCheckIn.hour.toString().padLeft(2, '0');
   String formattedMinute = dateCheckIn.minute.toString().padLeft(2, '0');
@@ -35,7 +35,7 @@ String formatDateTime(String time, int gmt) {
     return "";
   }
   DateTime dateCheckIn = DateTime.parse(time);
-  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt));
+  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt*-1));
   String formattedHour = dateCheckIn.hour.toString().padLeft(2, '0');
   String formattedMinute = dateCheckIn.minute.toString().padLeft(2, '0');
 
@@ -47,7 +47,7 @@ String formatDate(String time, int gmt) {
     return "";
   }
   DateTime dateCheckIn = DateTime.parse(time);
-  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt));
+  dateCheckIn = dateCheckIn.subtract(Duration(hours: gmt*-1));
 
   return "${dateCheckIn.year}-${dateCheckIn.month}-${dateCheckIn.day}";
 }
