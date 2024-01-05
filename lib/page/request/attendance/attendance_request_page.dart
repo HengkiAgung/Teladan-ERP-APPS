@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/models/Attendance/UserAttendanceRequest.dart';
 import 'package:teladan/page/request/attendance/detail_attendance_request_page.dart';
 import 'package:teladan/page/request/attendance/form_attendance_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
 import '../../../bloc/request_detail/request_detail_bloc.dart';
@@ -17,6 +19,16 @@ class AttendanceRequestPage extends StatefulWidget {
 }
 
 class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
+    int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
   List<UserAttendanceRequest> _userAttendanceRequest = [];
 
   late ScrollController _scrollController;
@@ -37,6 +49,7 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
 
   @override
   void initState() {
+    getGMT();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
@@ -160,10 +173,6 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  // context.read<UserBloc>().add(CheckAuth());
-                                  // final user = BlocProvider.of<UserBloc>(context);
-
-                                  // if (user.state is UserUnauthenticated) Auth().logOut(context);
                                   Middleware().authenticated(context);
 
                                   context.read<RequestDetailBloc>().add(
@@ -203,7 +212,7 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
                                           ),
                                           attendanceRequest.check_in != ""
                                               ? Text(
-                                                  "Check In pada ${attendanceRequest.check_in}",
+                                                  "Check In pada ${formatDateTime(attendanceRequest.check_in, gmt)}",
                                                   style: GoogleFonts.poppins(
                                                     fontSize: 11,
                                                     color: Colors.grey,
@@ -212,7 +221,7 @@ class _AttendanceRequestPageState extends State<AttendanceRequestPage> {
                                               : const SizedBox(),
                                           attendanceRequest.check_out != ""
                                               ? Text(
-                                                  "Check Out pada ${attendanceRequest.check_out}",
+                                                  "Check Out pada ${formatDateTime(attendanceRequest.check_out, gmt)}",
                                                   style: GoogleFonts.poppins(
                                                     fontSize: 11,
                                                     color: Colors.grey,

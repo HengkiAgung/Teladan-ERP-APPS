@@ -3,14 +3,37 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:locale_plus/locale_plus.dart';
+import 'package:teladan/utils/helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../models/Attendance.dart';
 
-class DetailAttendance extends StatelessWidget {
+class DetailAttendance extends StatefulWidget {
   const DetailAttendance({super.key});
 
+  @override
+  State<DetailAttendance> createState() => _DetailAttendanceState();
+}
+
+class _DetailAttendanceState extends State<DetailAttendance> {
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getGMT();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,9 +200,7 @@ class DetailAttendance extends StatelessWidget {
                                         ),
                                         Text(
                                           attendance.check_in != ""
-                                              ? attendance.check_in
-                                                  .split(' ')[1]
-                                                  .substring(0, 5)
+                                              ? formatDateToHourTime(attendance.check_in, gmt)
                                               : "-",
                                           style: GoogleFonts.poppins(
                                             fontSize: 15,
@@ -421,7 +442,9 @@ class DetailAttendance extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          attendance.check_out,
+                                          attendance.check_out != ""
+                                              ? formatDateToHourTime(attendance.check_out, gmt)
+                                              : "-",
                                           style: GoogleFonts.poppins(
                                             fontSize: 15,
                                             color: Colors.black,

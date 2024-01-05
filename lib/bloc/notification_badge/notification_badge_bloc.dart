@@ -60,7 +60,7 @@ class NotificationBadgeBloc extends Bloc<NotificationBadgeEvent, NotificationBad
       if (currentState is NotificationBadgeLoadSuccess) {
         total = currentState.total - currentState.shift;
         assignment = currentState.assignment;
-        attendance = currentState.shift;
+        attendance = currentState.attendance;
         timeOff = currentState.timeoff;
       } 
       
@@ -87,8 +87,8 @@ class NotificationBadgeBloc extends Bloc<NotificationBadgeEvent, NotificationBad
       if (currentState is NotificationBadgeLoadSuccess) {
         total = currentState.total - currentState.timeoff;
         assignment = currentState.assignment;
-        attendance = currentState.shift;
-        shift = currentState.timeoff;
+        attendance = currentState.attendance;
+        shift = currentState.shift;
       } 
       
       emit(NotificationBadgeLoading());
@@ -113,8 +113,8 @@ class NotificationBadgeBloc extends Bloc<NotificationBadgeEvent, NotificationBad
       final currentState = state;
       if (currentState is NotificationBadgeLoadSuccess) {
         total = currentState.total - currentState.assignment;
-        attendance = currentState.shift;
-        shift = currentState.timeoff;
+        attendance = currentState.attendance;
+        shift = currentState.shift;
         timeOff = currentState.timeoff;
       } 
       

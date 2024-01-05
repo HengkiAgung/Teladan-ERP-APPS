@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/components/cancel_request_component.dart';
+import 'package:teladan/utils/helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../bloc/request_attendance_list/request_attendance_list_bloc.dart';
@@ -22,8 +24,24 @@ class DetailAttendanceRequestPage extends StatefulWidget {
       DetailAttendanceRequestPageState(id: id);
 }
 
-class DetailAttendanceRequestPageState
-    extends State<DetailAttendanceRequestPage> {
+class DetailAttendanceRequestPageState extends State<DetailAttendanceRequestPage> {
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
+
+
   final int id;
 
   void onCancle() {
@@ -123,7 +141,7 @@ class DetailAttendanceRequestPageState
                         margin: EdgeInsets.symmetric(
                             horizontal:
                                 (MediaQuery.of(context).size.width / 2) - 60),
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
@@ -140,7 +158,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -177,7 +195,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -214,7 +232,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -240,9 +258,7 @@ class DetailAttendanceRequestPageState
                             ),
                             Expanded(
                               child: Text(
-                                request.workingShift!.working_start +
-                                    "-" +
-                                    request.workingShift!.working_end,
+                                "${formatDateToHourTime('${request.date} ${request.workingShift!.working_start}', gmt)} - ${formatDateToHourTime('${request.date} ${request.workingShift!.working_end}', gmt)}",
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -253,7 +269,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -279,7 +295,7 @@ class DetailAttendanceRequestPageState
                             ),
                             Expanded(
                               child: Text(
-                                request.check_in,
+                                formatDateTime(request.check_in, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -290,7 +306,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -316,7 +332,7 @@ class DetailAttendanceRequestPageState
                             ),
                             Expanded(
                               child: Text(
-                                request.check_out,
+                                formatDateTime(request.check_out, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -327,7 +343,7 @@ class DetailAttendanceRequestPageState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 20,
                           horizontal: 15,
                         ),
@@ -366,7 +382,7 @@ class DetailAttendanceRequestPageState
                       ),
                       request.file != null
                           ? Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 20,
                                 horizontal: 15,
                               ),
@@ -419,7 +435,7 @@ class DetailAttendanceRequestPageState
                         type: "attendance",
                         onCancle: onCancle,
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             );
           } else {

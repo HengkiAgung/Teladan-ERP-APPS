@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
+import 'package:teladan/bloc/current_shift/current_shift_bloc.dart';
 import 'package:teladan/bloc/employee_detail/employee_detail_bloc.dart';
 import 'package:teladan/bloc/leave_history/leave_history_bloc.dart';
 import 'package:teladan/bloc/leave_quota/leave_quota_bloc.dart';
@@ -110,6 +111,9 @@ void main() {
       ),
       BlocProvider<NotificationBadgeBloc>(
         create: (context) => NotificationBadgeBloc(),
+      ),
+      BlocProvider<CurrentShiftBloc>(
+        create: (context) => CurrentShiftBloc(),
       ),
     ],
     child: const MainApp(),

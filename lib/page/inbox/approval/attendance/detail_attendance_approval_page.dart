@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
@@ -24,6 +26,16 @@ class DetailAttendanceApprovalPage extends StatefulWidget {
 
 class _DetailAttendanceApprovalPageState
     extends State<DetailAttendanceApprovalPage> {
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
   String id;
 
   _DetailAttendanceApprovalPageState({required this.id});
@@ -33,6 +45,12 @@ class _DetailAttendanceApprovalPageState
     context.read<NotificationBadgeBloc>().add(UpdateAttendanceNotification());
     context.read<ApprovalDetailBloc>().add(GetRequestDetail(id: id.toString(),type: "attendance",model: UserAttendanceRequest()));
     context.read<ApprovalListBloc>().add( GetRequestList(key: "userAttendanceRequest", type: "attendance", model: UserAttendanceRequest()));
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
   }
 
   @override
@@ -90,11 +108,11 @@ class _DetailAttendanceApprovalPageState
             ]);
 
             if (request.check_in != "") {
-              stringChildren.add(["Check In", request.check_in]);
+              stringChildren.add(["Check In", formatDateTime(request.check_in, gmt)]);
             }
 
             if (request.check_out != "") {
-              stringChildren.add(["Check Out", request.check_out]);
+              stringChildren.add(["Check Out", formatDateTime(request.check_out, gmt)]);
             }
 
             if (request.comment != "") {

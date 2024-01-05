@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
@@ -24,6 +26,21 @@ class DetailShiftApprovalPage extends StatefulWidget {
 
 class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
   String id;
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
 
   _DetailShiftApprovalPageState({required this.id});
 
@@ -89,7 +106,7 @@ class _DetailShiftApprovalPageState extends State<DetailShiftApprovalPage> {
               ["Tanggal absensi", request.date],
               [
                 "Shift",
-                "${shift.name}, ${shift.working_start} - ${shift.working_end}"
+                "${shift.name}, ${formatHourTime(shift.working_start, gmt)} - ${formatHourTime(shift.working_end, gmt)}"
               ],
               ["Reason", request.notes],
             ]);

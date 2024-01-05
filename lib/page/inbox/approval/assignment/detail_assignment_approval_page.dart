@@ -8,6 +8,7 @@ import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:teladan/bloc/approval_assignment_detail/approval_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/approval_assignment_list/approval_assignment_list_bloc.dart';
@@ -40,6 +41,22 @@ class DetailAssignmentApprovalPageState
     context
         .read<ApprovalAssignmentListBloc>()
         .add(const GetApprovalAssigment());
+  }
+
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
   }
 
   DetailAssignmentApprovalPageState({required this.id});
@@ -312,7 +329,7 @@ class DetailAssignmentApprovalPageState
                             ),
                             Expanded(
                               child: Text(
-                                assignment.working_start,
+                                formatHourTime(assignment.working_start, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -349,7 +366,7 @@ class DetailAssignmentApprovalPageState
                             ),
                             Expanded(
                               child: Text(
-                                assignment.working_end,
+                                formatHourTime(assignment.working_end, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),

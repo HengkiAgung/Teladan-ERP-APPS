@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/models/Summaries.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../bloc/attendance_log/attendance_log_bloc.dart';
 import '../bloc/attendance_today/attendance_today_bloc.dart';
@@ -24,6 +26,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final attendanceLog = BlocProvider.of<AttendanceTodayBloc>(context);
@@ -43,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     DateTime now = DateTime.now();
-    var formatter = DateFormat('hh');
+    var formatter = DateFormat('HH');
     int formattedHour = int.parse(formatter.format(now));
 
     String time;
@@ -136,6 +154,9 @@ class _HomePageState extends State<HomePage> {
                         } else if (state is AttendanceTodayLoadSuccess) {
                           Attendance attendance = state.attendance;
 
+                          String checkIn = formatDateToHourTime(attendance.check_in, gmt);
+                          String checkOut = formatDateToHourTime(attendance.check_out, gmt);
+
                           return Column(
                             children: [
                               Container(
@@ -182,16 +203,10 @@ class _HomePageState extends State<HomePage> {
                                             );
                                           },
                                         ),
+                                        
                                         attendance.check_in != ""
                                             ? Text(
-                                                attendance.check_in
-                                                    .split(' ')[1]
-                                                    .substring(
-                                                        0,
-                                                        attendance.check_in
-                                                                .split(' ')[1]
-                                                                .length -
-                                                            3),
+                                                checkIn,
                                                 textAlign: TextAlign.center,
                                                 style: GoogleFonts.poppins(
                                                   textStyle: const TextStyle(
@@ -242,14 +257,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         attendance.check_out != ""
                                             ? Text(
-                                                attendance.check_out
-                                                    .split(' ')[1]
-                                                    .substring(
-                                                        0,
-                                                        attendance.check_out
-                                                                .split(' ')[1]
-                                                                .length -
-                                                            3),
+                                                checkOut,
                                                 textAlign: TextAlign.center,
                                                 style: GoogleFonts.poppins(
                                                   textStyle: const TextStyle(

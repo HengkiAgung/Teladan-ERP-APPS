@@ -1,7 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
+import 'package:teladan/bloc/current_shift/current_shift_bloc.dart';
 import 'package:teladan/page/request/shift/form_shift_request_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
@@ -38,8 +41,19 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
     }
   }
 
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
   @override
   void initState() {
+    getGMT();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
@@ -53,6 +67,13 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
       Middleware().authenticated(context);
 
       context.read<RequestShiftListBloc>().add(GetRequestList());
+    }
+
+    final currentShift = BlocProvider.of<CurrentShiftBloc>(context);
+    if (currentShift.state is! CurrentShiftLoadSuccess) {
+      Middleware().authenticated(context);
+
+      context.read<CurrentShiftBloc>().add(GetCurrentShift());
     }
 
     return Scaffold(
@@ -117,12 +138,83 @@ class _ShiftRequestPageState extends State<ShiftRequestPage> {
                     Middleware().authenticated(context);
 
                     context.read<RequestShiftListBloc>().add(GetRequestList());
+                    context.read<CurrentShiftBloc>().add(GetCurrentShift());
+
                     setState(() {
                       page = 1;
                     });
                   },
                   child: Column(
                     children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                          left: 20,
+                          right: 20,
+                        ),
+                        padding: const EdgeInsets.only(
+                          top: 20,
+                          bottom: 20,
+                          left: 20,
+                          right: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          border: Border.all(
+                            color: const Color.fromARGB(160, 158, 158, 158),
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(15)),
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Shift saat ini",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        const Color.fromARGB(255, 51, 51, 51),
+                                  ),
+                                ),
+                                BlocBuilder<CurrentShiftBloc, CurrentShiftState>(
+                                  builder: (context, state) {
+                                    if (state is CurrentShiftLoadSuccess) {
+                                      return Text(
+                                        "${state.workingShift.name} \n ${formatHourTime(state.workingShift.working_start, gmt)} - ${formatHourTime(state.workingShift.working_end, gmt)}",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
+                                      );
+                                    } else if (state is CurrentShiftLoadFailure) {
+                                      return Text(
+                                        state.error,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
+                                      );
+                                    } else {
+                                      return const SizedBox();
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            const SizedBox(
+                              width: 12,
+                            )
+                          ],
+                        ),
+                      ),
                       Expanded(
                         child: ListView.builder(
                           controller: _userShiftRequest.length > 9

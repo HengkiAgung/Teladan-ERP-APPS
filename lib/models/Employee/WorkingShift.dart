@@ -10,8 +10,8 @@ class WorkingShift {
 
   late int min_check_in;
   late int max_check_out;
-  late int overtime_before;
-  late int overtime_after;
+  late String overtime_before;
+  late String overtime_after;
   late int show_in_request;
 
   WorkingShift({
@@ -41,10 +41,10 @@ class WorkingShift {
     late_check_in = json['late_check_in'] ?? 0;
     late_check_out = json['late_check_out'] ?? 0;
     
-    min_check_in = json['min_check_in'] ?? 0;
-    max_check_out = json['max_check_out'] ?? 0;
-    overtime_before = json['overtime_before'] ?? 0;
-    overtime_after = json['overtime_after'] ?? 0;
+    min_check_in = json['start_attend'] ?? 0;
+    max_check_out = json['end_attend'] ?? 0;
+    overtime_before = json['overtime_before'] ?? "";
+    overtime_after = json['overtime_after'] ?? "";
     show_in_request = json['show_in_request'] ?? 0;
   }
 }

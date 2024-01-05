@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/bloc/notification_badge/notification_badge_bloc.dart';
 import 'package:teladan/components/request_item_component.dart';
 import 'package:teladan/page/inbox/approval/attendance/detail_attendance_approval_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../../bloc/approval_detail/approval_detail_bloc.dart';
 import '../../../../bloc/approval_list/approval_list_bloc.dart';
@@ -39,10 +41,21 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
     }
   }
 
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    getGMT();
 
     super.initState();
   }
@@ -150,7 +163,7 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
                           ),
                           request.check_in != ""
                               ? Text(
-                                  "Check In pada ${request.check_in}",
+                                  "Check In pada ${formatDateTime(request.check_in, gmt)}",
                                   style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     color: Colors.grey,
@@ -159,7 +172,7 @@ class _AttendanceApprovalPageState extends State<AttendanceApprovalPage> {
                               : const SizedBox(),
                           request.check_out != ""
                               ? Text(
-                                  "Check Out pada ${request.check_out}",
+                                  "Check Out pada ${formatDateTime(request.check_out, gmt)}",
                                   style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     color: Colors.grey,

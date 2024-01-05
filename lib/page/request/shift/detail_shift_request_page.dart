@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/models/Attendance/UserShiftRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../../bloc/request_detail/request_detail_bloc.dart';
 import '../../../bloc/request_shift_list/request_shift_list_bloc.dart';
@@ -22,6 +24,22 @@ class DetailShiftRequestPage extends StatefulWidget {
 
 class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
   final int id;
+
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
 
   void onCancle() {
     Middleware().authenticated(context);
@@ -196,7 +214,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                             ),
                             Expanded(
                               child: Text(
-                                "${request.workingShift.name}, ${request.workingShift.working_start} - ${request.workingShift.working_end}",
+                                "${request.workingShift.name}, ${formatHourTime(request.workingShift.working_start, gmt)} - ${formatHourTime(request.workingShift.working_end, gmt)}",
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -277,9 +295,7 @@ class DetailShiftRequestPageState extends State<DetailShiftRequestPage> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          request.approvalLine!.name +
-                                              ", " +
-                                              request.approvalLine!.email,
+                                          "${request.approvalLine!.name}, ${request.approvalLine!.email}",
                                           style: GoogleFonts.poppins(
                                             fontSize: 13,
                                             color: const Color.fromARGB(

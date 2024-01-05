@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class StringToPDF extends StatelessWidget {
   final String data;
@@ -23,10 +22,6 @@ class StringToPDF extends StatelessWidget {
           ),
           title: const Text("Assignment"),
         ),
-
-        body:SfPdfViewer.file(
-          pdfFile()
-        )
     );
   }
 

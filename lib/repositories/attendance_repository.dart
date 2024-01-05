@@ -44,6 +44,7 @@ class AttendanceRepository {
     final image = await ImagePicker().pickImage(
       source: ImageSource.camera,
       imageQuality: 25,
+      preferredCameraDevice: CameraDevice.front,
     );
     if (image == null) return;
 

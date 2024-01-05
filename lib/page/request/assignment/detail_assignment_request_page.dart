@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/bloc/request_assigment_detail/request_assignment_detail_bloc.dart';
 import 'package:teladan/bloc/request_assignment_list/request_assignment_list_bloc.dart';
 import 'package:teladan/components/modal_bottom_sheet_component.dart';
@@ -28,6 +29,22 @@ class DetailAssignmentRequestPage extends StatefulWidget {
 class DetailAssignmentRequestPageState
     extends State<DetailAssignmentRequestPage> {
   final int id;
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
+  @override
+  void initState() {
+    getGMT();
+    super.initState();
+  }
+
 
   void onCancle() {
     Middleware().authenticated(context);
@@ -335,7 +352,7 @@ class DetailAssignmentRequestPageState
                             ),
                             Expanded(
                               child: Text(
-                                assignment.working_start,
+                                formatHourTime(assignment.working_start, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),
@@ -372,7 +389,7 @@ class DetailAssignmentRequestPageState
                             ),
                             Expanded(
                               child: Text(
-                                assignment.working_end,
+                                formatHourTime(assignment.working_end, gmt),
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   color: const Color.fromARGB(255, 51, 51, 51),

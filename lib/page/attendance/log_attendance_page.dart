@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:locale_plus/locale_plus.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../../bloc/attendance_detail/attendance_detail_bloc.dart';
 import '../../bloc/attendance_log/attendance_log_bloc.dart';
@@ -17,6 +19,16 @@ class LogAttendance extends StatefulWidget {
 }
 
 class _LogAttendanceState extends State<LogAttendance> {
+  int gmt = 0;
+
+  getGMT() async {
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    setState(() {
+      gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+    });
+  }
+
   List<Attendance> _logAtendance = [];
 
   late ScrollController _scrollController;
@@ -34,6 +46,7 @@ class _LogAttendanceState extends State<LogAttendance> {
 
   @override
   void initState() {
+    getGMT();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
@@ -231,12 +244,8 @@ class _LogAttendanceState extends State<LogAttendance> {
                     itemCount: _logAtendance.length,
                     itemBuilder: (BuildContext context, int index) {
                       var attendance = _logAtendance[index];
-                      var check_in = attendance.check_in != ""
-                          ? attendance.check_in.split(' ')[1].substring(0, 5)
-                          : "-";
-                      var check_out = attendance.check_out != ""
-                          ? attendance.check_out.split(' ')[1].substring(0, 5)
-                          : "-";
+                      String checkIn = formatDateToHourTime(attendance.check_in, gmt) != "" ? formatDateToHourTime(attendance.check_in, gmt) : "-";
+                      String checkOut = formatDateToHourTime(attendance.check_out, gmt) != "" ? formatDateToHourTime(attendance.check_out, gmt) : "-";
 
                       return Container(
                         padding: const EdgeInsets.only(
@@ -285,7 +294,7 @@ class _LogAttendanceState extends State<LogAttendance> {
                                     Container(
                                       width: 50,
                                       child: Text(
-                                        check_in,
+                                        checkIn,
                                         style: GoogleFonts.poppins(
                                           fontSize: 15,
                                           color: Colors.black,
@@ -296,7 +305,7 @@ class _LogAttendanceState extends State<LogAttendance> {
                                     Container(
                                       width: 50,
                                       child: Text(
-                                        check_out,
+                                        checkOut,
                                         style: GoogleFonts.poppins(
                                           fontSize: 15,
                                           color: Colors.black,

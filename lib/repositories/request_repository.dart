@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:locale_plus/locale_plus.dart';
 import 'package:teladan/models/Assignment/Assignment.dart';
+import 'package:teladan/utils/helper.dart';
 
 import '../components/modal_bottom_sheet_component.dart';
 import '../config.dart';
@@ -94,6 +96,10 @@ class RequestRepository {
     request.fields['date'] = "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}";
     request.fields['notes'] = descriptionController!.text;
 
+    final secondsFromGMT = await LocalePlus().getSecondsFromGMT();
+
+    int gmt = ((secondsFromGMT ?? 0) / 3600).round() - 8;
+
     if (selectedTimeIn != null) {
       String hour = selectedTimeIn.hour.toString();
       if (hour.length < 2) {
@@ -103,7 +109,7 @@ class RequestRepository {
       if (minute.length < 2) {
         minute = "0$minute";
       }
-      request.fields['check_in'] = "$hour:$minute";
+      request.fields['check_in'] = formatHourTime("$hour:$minute", gmt);
     } 
     if (selectedTimeOut != null) {
       String hour = selectedTimeOut.hour.toString();
@@ -114,7 +120,7 @@ class RequestRepository {
       if (minute.length < 2) {
         minute = "0$minute";
       }
-      request.fields['check_out'] = "$hour:$minute";
+      request.fields['check_out'] = formatHourTime("$hour:$minute", gmt);
     }
 
     try {
@@ -155,8 +161,8 @@ class RequestRepository {
     if (response.statusCode == 200) {
       Iterable it = jsonDecode(response.body)["data"];
       List<WorkingShift> shift = it.map((e) {
-        var attendance = WorkingShift.fromJson(e);
-        return attendance;
+        var shift = WorkingShift.fromJson(e);
+        return shift;
       }).toList();
 
       return shift;

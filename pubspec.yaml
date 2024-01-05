@@ -1,7 +1,7 @@
 name: teladan
 description: A new Flutter project.
 publish_to: 'none'
-version: 0.4.5+16
+version: 0.4.6+17
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -43,8 +43,7 @@ dependencies:
   month_picker_dialog: ^2.4.0
   flutter_html: ^3.0.0-beta.2
   flutter_html_to_pdf: ^0.7.0
-  syncfusion_flutter_pdfviewer: ^20.1.58-beta
-
+  locale_plus: ^1.5.0
 
   # flutter_file_downloader: ^1.2.0
   # flutter_osm_plugin: ^0.70.3
